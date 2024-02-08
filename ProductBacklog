@@ -1,6 +1,8 @@
 Organizer:
 
 US 01.01.01 As an organizer, I want to create a new event and generate a unique QR code for attendee check-ins.
+  - Story Points: 5
+  - Risk Level: Medium
 
 US 01.01.02 As an organizer, I want the option to reuse an existing QR code for attendee check-ins.
 
@@ -22,6 +24,7 @@ US 01.09.01 As an organizer, I want to see how many times an attendee has checke
 
 
 Attendee:
+
 US 02.01.01 As an attendee, I want to quickly check into an event by scanning the provided QR code.
 
 US 02.02.01 As an attendee, I want to upload a profile picture for a more personalized experience.
@@ -42,6 +45,7 @@ Both:
 US 03.02.01 As a user, I want the option to enable or disable geolocation tracking for event verification.
 
 Administrator:
+
 US 04.01.01 As an administrator, I want to be able to remove events.
 
 US 04.02.01 As an administrator, I want to be able to remove profiles.
@@ -53,4 +57,9 @@ US 04.04.01 As an administrator, I want to be able to browse events.
 US 04.05.01 As an administrator, I want to be able to browse profiles.
 
 US 04.06.01 As an administrator, I want to be able to browse images.
+
+
+
+
+The user stories to be released for the half-way checkpoint are:
 
