@@ -1,7 +1,7 @@
 Organizer:
 
 US 01.01.01 As an organizer, I want to create a new event and generate a unique QR code for attendee check-ins.
-  - Story Points: 5
+  - Story Points: 3
   - Risk Level: Medium
 
 US 01.01.02 As an organizer, I want the option to reuse an existing QR code for attendee check-ins.
