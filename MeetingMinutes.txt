@@ -8,10 +8,10 @@ rosybudhathoki and kaylemnicee will work on it and check to see if they are on t
 points and risk level. The rest of the team will go through it together on saturday and give their input.
 
 - Design the layout of your main user interface and major dialogs
-frashid2 and PARINAYKAPOOR will individually start this part and match their findings, the rest of the team will add and edit this further.
+iqbalfahim094 and PARINAYKAPOOR will individually start this part and match their findings, the rest of the team will add and edit this further.
 
 - Object-Oriented Analysis:
-iqbalfahim094 and manahil3 will individually start this part and match their findings, the rest of the team will add and edit this further.
+frashid2 and manahil3 will individually start this part and match their findings, the rest of the team will add and edit this further.
 
 - Tool use (GitHub):
 Everyone will commit the progress to their respective branch on github. Once the entire team meets again and decides on the outcome, we will merge it all to main.
@@ -26,10 +26,10 @@ Discussions and Panning:
 rosybudhathoki and kaylemnicee presented and discussed the ways to improve their work. Will work on suggestions and verify channges by Monday.
 
 - Design the layout of your main user interface and major dialogs
-frashid2 and PARINAYKAPOOR discussed about their work on user interface and design ideas.
+iqbalfahim094 and PARINAYKAPOOR discussed about their work on user interface and design ideas.
 
 - Object-Oriented Analysis:
-iqbalfahim094 shared and discussed about possibles classes and CRC cards.
+frashid2 shared and discussed about possible classes and CRC cards.
 
 - Tool use (GitHub):
 Everyone added their work to their respective branch on GitHub.
