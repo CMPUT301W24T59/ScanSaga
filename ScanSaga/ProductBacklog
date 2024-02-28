@@ -1,0 +1,65 @@
+Organizer:
+
+US 01.01.01 As an organizer, I want to create a new event and generate a unique QR code for attendee check-ins.
+  - Story Points: 3
+  - Risk Level: Medium
+
+US 01.01.02 As an organizer, I want the option to reuse an existing QR code for attendee check-ins.
+
+US 01.02.01 As an organizer, I want to view the list of attendees who have checked in to my event.
+
+US 01.03.01 As an organizer, I want to send notifications to all attendees through the app.
+
+US 01.04.01 As an organizer, I want to upload an event poster to provide visual information to attendees.
+
+US 01.05.01 As an organizer, I want to track real-time attendance and receive alerts for important milestones.
+
+US 01.06.01 As an organizer, I want to share a generator QR code image to other apps so I can email or update other documents with the QR code.
+
+US 01.07.01 As an organizer, I want to create a new event and generate a unique promotion QR code that links to the event description and event poster in the app.
+
+US 01.08.01 As an organizer, I want to see on a map where users are checking in from.
+
+US 01.09.01 As an organizer, I want to see how many times an attendee has checked into an event.
+
+
+Attendee:
+
+US 02.01.01 As an attendee, I want to quickly check into an event by scanning the provided QR code.
+
+US 02.02.01 As an attendee, I want to upload a profile picture for a more personalized experience.
+
+US 02.02.02 As an attendee, I want to remove profile pictures if need be.
+
+US 02.02.03 As an attendee, I want to update information such as name, homepage, and contact information on my profile.
+
+US 02.03.01 As an attendee, I want to receive push notifications with important updates from the event organizers.
+
+US 02.04.01 As an attendee, I want to view event details and announcements within the app.
+
+US 02.05.01 As an attendee, I want my profile picture to be deterministically generated from my profile name if I haven't uploaded an profile image yet.
+
+US 02.06.01 As an attendee, I do not want to login to the app. No username, no password.
+
+Both:
+US 03.02.01 As a user, I want the option to enable or disable geolocation tracking for event verification.
+
+Administrator:
+
+US 04.01.01 As an administrator, I want to be able to remove events.
+
+US 04.02.01 As an administrator, I want to be able to remove profiles.
+
+US 04.03.01 As an administrator, I want to be able to remove images.
+
+US 04.04.01 As an administrator, I want to be able to browse events.
+
+US 04.05.01 As an administrator, I want to be able to browse profiles.
+
+US 04.06.01 As an administrator, I want to be able to browse images.
+
+
+
+
+The user stories to be released for the half-way checkpoint are:
+
