@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "765749651888",
+    "project_id": "lab5-8b633",
+    "storage_bucket": "lab5-8b633.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765749651888:android:62d1ff17c14ff708344e75",
+        "android_client_info": {
+          "package_name": "com.example.listycity5"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDArt7aPySQTyypi7GKKbEQUsJC4pDuIhU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:765749651888:android:fc0d06e74939b0ef344e75",
+        "android_client_info": {
+          "package_name": "com.example.scansaga"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDArt7aPySQTyypi7GKKbEQUsJC4pDuIhU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
