@@ -45,7 +45,5 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    public void setPhone(String phone) {this.phone = phone;}
 }
