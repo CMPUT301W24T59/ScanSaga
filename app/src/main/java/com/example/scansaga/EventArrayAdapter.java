@@ -35,11 +35,13 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         Event event = getItem(position);
         if (event != null) {
             TextView eventNameTextView = view.findViewById(R.id.event_text);
-            TextView eventYearTextView = view.findViewById(R.id.year_text);
+            TextView eventTimeTextView = view.findViewById(R.id.time_text);
+            TextView eventVenueTextView = view.findViewById(R.id.venue_text);
             ImageView qrCodeImageView = view.findViewById(R.id.qr_code_image);
 
             eventNameTextView.setText("Event Name: " + event.getName());
-            eventYearTextView.setText("Time: " + event.getDate());
+            eventTimeTextView.setText("Time: " + event.getDate());
+            eventVenueTextView.setText("Venue: " + event.getVenue());
             qrCodeImageView.setImageBitmap(event.getQrCodeBitmap());
         }
 

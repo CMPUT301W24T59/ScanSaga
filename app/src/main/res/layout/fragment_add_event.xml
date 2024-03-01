@@ -17,16 +17,26 @@
         android:maxLength="50"
         tools:ignore="LabelFor" />
 
-
-
     <EditText
         android:id="@+id/edit_date_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:hint="Date"
         android:inputType="none"
-        android:focusable="false"
-        android:onClick="showDatePickerDialog" />
+        android:onClick="showDatePickerDialog"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/edit_venue_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="Venue"
+        android:inputType="text"
+        android:maxLength="50"
+        tools:ignore="LabelFor"/>
 
     <Button
         android:id="@+id/button_delete"
@@ -37,7 +47,7 @@
 
     <Button
         android:id="@+id/view_event_button"
-        android:layout_width="wrap_content"
+        android:layout_width="217dp"
         android:layout_height="wrap_content"
         android:text="Go to Event Homepage" />
 
