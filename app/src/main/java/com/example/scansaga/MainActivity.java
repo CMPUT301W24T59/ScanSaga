@@ -2,8 +2,9 @@ package com.example.scansaga;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,46 +15,73 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+/**
+ * This activity allows users to sign in or register for the app.
+ */
 public class MainActivity extends AppCompatActivity {
-
-    private static final String PREFS_NAME = "MyPrefs";
-    private static final String DETAILS_ENTERED_KEY = "detailsEntered";
-
+    ArrayList<User> userDataList;
+    UserArrayAdapter userArrayAdapter;
     private EditText firstNameEditText, lastNameEditText, emailEditText, phoneNumberEditText;
     private Button addUserButton;
-    private SharedPreferences sharedPreferences;
     private FirebaseFirestore db;
+    private CollectionReference usernamesRef;
+    private String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize SharedPreferences
-        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        // Initialize EditText fields and Button
+        firstNameEditText = findViewById(R.id.Firstname_editText);
+        lastNameEditText = findViewById(R.id.lastname_editText);
+        emailEditText = findViewById(R.id.email_editText);
+        phoneNumberEditText = findViewById(R.id.phonenumber_editText);
+        addUserButton = findViewById(R.id.confirm_button);
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
+        usernamesRef = db.collection("users");
+        userDataList = new ArrayList<>();
+        userArrayAdapter = new UserArrayAdapter(this, userDataList);
 
-        // Check if user has already entered details
-        boolean detailsEntered = sharedPreferences.getBoolean(DETAILS_ENTERED_KEY, false);
-        if (detailsEntered) {
-            // User has already entered details, proceed to next activity
-            startActivity(new Intent(MainActivity.this, EventActivity.class));
-            finish(); // Finish this activity to prevent going back
-            return;
-        }
+        // Get the unique device ID
+        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // Initialize EditText fields and Button
-        firstNameEditText = findViewById(R.id.Firstname_textview);
-        lastNameEditText = findViewById(R.id.lastname_textview);
-        emailEditText = findViewById(R.id.email_textview);
-        phoneNumberEditText = findViewById(R.id.phonenumber_textview);
-        addUserButton = findViewById(R.id.confirm_button);
+        // Check if user exists based on device ID
+        usernamesRef.whereEqualTo("DeviceId", deviceId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        String firstName = snapshot.getString("Firstname");
+                        String lastName = snapshot.getString("Lastname");
+                        String email = snapshot.getString("Email");
+                        String phoneNumber = snapshot.getString("PhoneNumber");
 
+                        // Create a User object with the retrieved data
+                        User user = new User(firstName, lastName, email, phoneNumber);
+                        // Device ID exists, navigate to HomepageActivity
+                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                        intent.putExtra("user", user);
+                        startActivity(intent);
+                        finish(); // Finish MainActivity so that it's not kept in the back stack
+                        // Break the loop as we only need to navigate once
+                        break;
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error checking for device ID", e);
+                });
+
+        // Add click listener to the addUserButton
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,38 +97,49 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Save the flag indicating that user has entered details
-                sharedPreferences.edit().putBoolean(DETAILS_ENTERED_KEY, true).apply();
+                // Add the new user to Firestore
+                addNewUser(new User(firstName, lastName, email, phoneNumber));
 
-                // Add user details to Firestore
-                addUserToFirestore(firstName, lastName, email, phoneNumber);
-
-                // Proceed to next activity
-                startActivity(new Intent(MainActivity.this, EventActivity.class));
-                finish(); // Finish this activity to prevent going back
+                // Clear EditText fields after adding user
+                firstNameEditText.setText("");
+                lastNameEditText.setText("");
+                emailEditText.setText("");
+                phoneNumberEditText.setText("");
             }
         });
     }
 
-    private void addUserToFirestore(String firstName, String lastName, String email, String phoneNumber) {
-        // Create a User object with the retrieved data
-        User user = new User(firstName, lastName, email, phoneNumber);
+    /**
+     * Adds a new user to Firestore.
+     *
+     * @param user The user to be added.
+     */
+    private void addNewUser(User user) {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("Lastname", user.getLastname());
+        data.put("Firstname", user.getFirstname());
+        data.put("Email", user.getEmail());
+        data.put("PhoneNumber", user.getPhone());
+        data.put("DeviceId", deviceId);
 
-        // Add the user to Firestore
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        // Add user data to Firestore
+        usernamesRef.document(user.getLastname()).set(data);
+        usernamesRef.document(user.getFirstname() + user.getPhone())
+                .set(data)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        // User added to Firestore successfully
-                        Toast.makeText(MainActivity.this, "User added to Firestore successfully", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firestore", "DocumentSnapshot successfully written!");
+                        // After adding the user, start the HomepageActivity
+                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                        intent.putExtra("user", user);
+                        startActivity(intent);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Failed to add user to Firestore
-                        Toast.makeText(MainActivity.this, "Failed to add user to Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("Firebase", "Error adding user to Firestore", e);
                     }
                 });
     }

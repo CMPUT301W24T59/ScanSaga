@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * This activity displays the homepage of a specific event, including the event name and its QR code.
+ */
 public class EventHomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
