@@ -15,8 +15,12 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class EventArrayAdapter extends ArrayAdapter<Event> {
+    private ArrayList<Event> events;
+    private Context context;
     public EventArrayAdapter(Context context, ArrayList<Event> events) {
         super(context, 0, events);
+        this.events = events;
+        this.context = context;
     }
     @SuppressLint("SetTextI18n")
     @NonNull
@@ -25,25 +29,26 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
     getView(int position, @Nullable View convertView, @NonNull ViewGroup
             parent) {
 
-        View view;
-        if (convertView == null) {
+        View view = convertView;
+        if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.content,
                     parent, false);
         } else {
             view = convertView;
         }
-        Event event = getItem(position);
-        if (event != null) {
-            TextView eventNameTextView = view.findViewById(R.id.event_text);
-            TextView eventTimeTextView = view.findViewById(R.id.time_text);
-            TextView eventVenueTextView = view.findViewById(R.id.venue_text);
-            ImageView qrCodeImageView = view.findViewById(R.id.qr_code_image);
+        Event event = events.get(position);
 
-            eventNameTextView.setText("Event Name: " + event.getName());
-            eventTimeTextView.setText("Time: " + event.getDate());
-            eventVenueTextView.setText("Venue: " + event.getVenue());
-            qrCodeImageView.setImageBitmap(event.getQrCodeBitmap());
-        }
+
+        TextView eventNameTextView = view.findViewById(R.id.event_text);
+        TextView eventTimeTextView = view.findViewById(R.id.time_text);
+        TextView eventVenueTextView = view.findViewById(R.id.venue_text);
+        ImageView qrCodeImageView = view.findViewById(R.id.qr_code_image);
+
+        eventNameTextView.setText(event.getName());
+        eventTimeTextView.setText(event.getDate());
+        eventVenueTextView.setText(event.getVenue());
+        qrCodeImageView.setImageBitmap(event.getQrCodeBitmap());
+
 
         return view;
     }

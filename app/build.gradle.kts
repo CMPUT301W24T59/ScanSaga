@@ -33,6 +33,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    android {
+        defaultConfig {
+            vectorDrawables.useSupportLibrary = true
+        }
+    }
 }
 
 dependencies {

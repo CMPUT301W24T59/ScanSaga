@@ -8,9 +8,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
@@ -22,35 +22,55 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Calendar;
-import java.util.List;
 
 public class AddEventFragment extends DialogFragment {
 
     // Interface for communication with the Main activity
     interface AddEventDialogListener {
-        void addEvent(Event event);
-
+        void addNewEvent(Event event);
+        void editEvent(Event event);
         void deleteEvent(Event event);
+    }
+    // Correcting the newInstance method
+    static AddEventFragment newInstance(Event event) {
+        Bundle args = new Bundle();
+        args.putSerializable("event", event); // Change "book" to "event"
+        AddEventFragment fragment = new AddEventFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private AddEventDialogListener listener; // Listener for communicating with the main activity
     private EditText editEventName; // EditText for event name
     private EditText editDate; // EditText for date
     private EditText editVenue; // EditText for venue
+    private Button deleteButton;
     private TextView txtQrCode; // TextView to display the generated QR code
+    private Event eventToEdit;
 
-    @NonNull
+    // Method to set the listener
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            listener = (AddEventDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement AddEventDialogListener");
+        }
+    }
+
+
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_add_event, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.add_event_fragment, null);
 
         // Get references to EditText fields
         editEventName = view.findViewById(R.id.edit_text_event_text);
         editDate = view.findViewById(R.id.edit_date_text);
         editVenue = view.findViewById(R.id.edit_venue_text);
-
+        deleteButton = view.findViewById(R.id.delete_event_button);
 
         // Set click listener for date EditText to show date picker dialog
         editDate.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +79,36 @@ public class AddEventFragment extends DialogFragment {
                 showDatePickerDialog();
             }
         });
+
+        Bundle args = getArguments();
+        if (args != null) {
+            eventToEdit = (Event) args.getSerializable("event");
+
+            //if the event object is not null then edit the contents
+            if (eventToEdit != null) {
+                // Populate the EditText fields with existing event details when editing
+                editEventName.setText(eventToEdit.getName());
+                editDate.setText(eventToEdit.getDate());
+                editVenue.setText(eventToEdit.getVenue());
+            }
+        }
+
+        //listen if the delete button is clicked
+        deleteButton.setOnClickListener(v -> {
+            if (eventToEdit != null) {
+                listener.deleteEvent(eventToEdit); // Call the deleteBook method of the listener
+                dismiss(); // Close the dialog after deletion
+            }
+            else{
+                // Display an error message if any field is empty
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Empty Event List. ")
+                        .setMessage("Sorry, can't delete any events.\nThe event list is empty.")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
+        });
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         return builder
@@ -75,26 +125,26 @@ public class AddEventFragment extends DialogFragment {
                         // Display error message if any field is empty
                         Toast.makeText(requireContext(), "Please fill in all details of the event", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Generate QR code for the event
-                        String qrContent = generateQRContent(eventName, date, venue);
-                        Bitmap qr = generateQRCodeBitmap(qrContent); // Display QR code
-                        // Add the event using the listener
-                        listener.addEvent(new Event(eventName, date, venue, qr));
+                        if (eventToEdit != null) {
+                            eventToEdit.setName(eventName);
+                            eventToEdit.setDate(date);
+                            eventToEdit.setVenue(venue);
+                            String qrContent = generateQRContent(eventName, date, venue);
+                            Bitmap qr = generateQRCodeBitmap(qrContent);
+                            eventToEdit.setQrCodeBitmap(qr);
+                            listener.editEvent(eventToEdit);
+                        } else {
+                            String qrContent = generateQRContent(eventName, date, venue);
+                            Bitmap qr = generateQRCodeBitmap(qrContent);
+                            // Add the event using the listener
+                            listener.addNewEvent(new Event(eventName, date, venue, qr));
+                        }
+
                     }
                 })
                 .create();
     }
 
-    // Method to set the listener
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            listener = (AddEventDialogListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement AddEventDialogListener");
-        }
-    }
 
     // Method to show the date picker dialog
     private void showDatePickerDialog() {

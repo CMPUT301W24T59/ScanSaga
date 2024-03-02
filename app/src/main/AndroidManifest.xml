@@ -23,11 +23,24 @@
             </intent-filter>
         </activity>
 
-        <!-- Add EventActivity declaration -->
+        <!-- Add Homepage declaration -->
         <activity
             android:name=".HomepageActivity"
-            android:label="Event Activity"
-            android:theme="@style/Theme.ScanSaga" />
+            android:exported="true">
+        </activity>
+
+        <!-- Add AddEvent declaration -->
+        <activity
+            android:name=".AddEvent"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".MyProfile"
+            android:exported="true">
+        </activity>
+
+
     </application>
 
 </manifest>
