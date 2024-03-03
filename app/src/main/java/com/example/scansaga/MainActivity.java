@@ -1,31 +1,33 @@
 package com.example.scansaga;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Build;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * This activity allows users to sign in or register for the app.
- */
 public class MainActivity extends AppCompatActivity {
     ArrayList<User> userDataList;
     UserArrayAdapter userArrayAdapter;
@@ -49,14 +51,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
-        usernamesRef = db.collection("users");
+        usernamesRef=db.collection("users");
         userDataList = new ArrayList<>();
         userArrayAdapter = new UserArrayAdapter(this, userDataList);
 
-        // Get the unique device ID
+
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // Check if user exists based on device ID
         usernamesRef.whereEqualTo("DeviceId", deviceId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("Firestore", "Error checking for device ID", e);
                 });
 
-        // Add click listener to the addUserButton
+
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,40 +98,39 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Add the new user to Firestore
                 addNewUser(new User(firstName, lastName, email, phoneNumber));
 
-                // Clear EditText fields after adding user
+                if (userArrayAdapter != null) {
+                    userArrayAdapter.notifyDataSetChanged();
+                }
+                userArrayAdapter.notifyDataSetChanged();
                 firstNameEditText.setText("");
                 lastNameEditText.setText("");
                 emailEditText.setText("");
                 phoneNumberEditText.setText("");
             }
         });
+
+
     }
 
-    /**
-     * Adds a new user to Firestore.
-     *
-     * @param user The user to be added.
-     */
     private void addNewUser(User user) {
         HashMap<String, String> data = new HashMap<>();
         data.put("Lastname", user.getLastname());
         data.put("Firstname", user.getFirstname());
         data.put("Email", user.getEmail());
         data.put("PhoneNumber", user.getPhone());
-        data.put("DeviceId", deviceId);
+        data.put("DeviceId",deviceId);
 
-        // Add user data to Firestore
-        usernamesRef.document(user.getLastname()).set(data);
-        usernamesRef.document(user.getFirstname() + user.getPhone())
+
+        usernamesRef
+                .document(user.getFirstname() + user.getPhone())
                 .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Firestore", "DocumentSnapshot successfully written!");
-                        // After adding the user, start the HomepageActivity
+                        // After adding the user, start the EventActivity
                         Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
                         intent.putExtra("user", user);
                         startActivity(intent);
@@ -139,8 +139,9 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("Firebase", "Error adding user to Firestore", e);
+                        Log.d("Firebase", e.getMessage());
                     }
                 });
     }
+
 }

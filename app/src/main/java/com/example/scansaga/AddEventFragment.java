@@ -25,9 +25,6 @@ import androidx.fragment.app.DialogFragment;
 import java.io.Serializable;
 import java.util.Calendar;
 
-/**
- * Fragment for adding or editing an event.
- */
 public class AddEventFragment extends DialogFragment {
 
     // Interface for communication with the Main activity
@@ -36,13 +33,7 @@ public class AddEventFragment extends DialogFragment {
         void editEvent(Event event);
         void deleteEvent(Event event);
     }
-
-    /**
-     * Creates a new instance of AddEventFragment.
-     *
-     * @param event The event to be added or edited.
-     * @return A new instance of AddEventFragment.
-     */
+    // Correcting the newInstance method
     static AddEventFragment newInstance(Event event) {
         Bundle args = new Bundle();
         args.putSerializable("event", event); // Change "book" to "event"
@@ -69,6 +60,7 @@ public class AddEventFragment extends DialogFragment {
             throw new ClassCastException(context.toString() + " must implement AddEventDialogListener");
         }
     }
+
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -117,6 +109,7 @@ public class AddEventFragment extends DialogFragment {
             }
         });
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         return builder
                 .setView(view)
@@ -126,6 +119,8 @@ public class AddEventFragment extends DialogFragment {
                     String eventName = editEventName.getText().toString();
                     String date = editDate.getText().toString();
                     String venue = editVenue.getText().toString();
+                    String qrContent = generateQRContent(eventName, date, venue);
+                    Bitmap qr = generateQRCodeBitmap(qrContent);
 
                     // Validate input fields
                     if (eventName.isEmpty() || date.isEmpty() || venue.isEmpty()) {
@@ -136,13 +131,10 @@ public class AddEventFragment extends DialogFragment {
                             eventToEdit.setName(eventName);
                             eventToEdit.setDate(date);
                             eventToEdit.setVenue(venue);
-                            String qrContent = generateQRContent(eventName, date, venue);
-                            Bitmap qr = generateQRCodeBitmap(qrContent);
                             eventToEdit.setQrCodeBitmap(qr);
                             listener.editEvent(eventToEdit);
+
                         } else {
-                            String qrContent = generateQRContent(eventName, date, venue);
-                            Bitmap qr = generateQRCodeBitmap(qrContent);
                             // Add the event using the listener
                             listener.addNewEvent(new Event(eventName, date, venue, qr));
                         }
@@ -151,6 +143,7 @@ public class AddEventFragment extends DialogFragment {
                 })
                 .create();
     }
+
 
     // Method to show the date picker dialog
     private void showDatePickerDialog() {
@@ -170,8 +163,7 @@ public class AddEventFragment extends DialogFragment {
         datePickerDialog.show();
     }
 
-    //Citation : geeksforgeeks,2024
-    // Source URL https://www.geeksforgeeks.org/how-to-build-a-qr-code-android-app-using-firebase/
+    //FOR CITATION LATER: https://www.geeksforgeeks.org/how-to-build-a-qr-code-android-app-using-firebase/
 
     // Method to generate QR content for the event
     private String generateQRContent(String eventName, String date, String venue) {
@@ -198,4 +190,3 @@ public class AddEventFragment extends DialogFragment {
         return bitmap;
     }
 }
-

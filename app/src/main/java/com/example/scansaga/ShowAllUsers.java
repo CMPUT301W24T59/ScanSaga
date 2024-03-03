@@ -1,10 +1,13 @@
 package com.example.scansaga;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.AdapterView; // Add import statement
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,10 +17,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
-/**
- * This activity displays a list of users fetched from Firestore.
- * Users can be deleted from the list and Firestore database.
- */
+
 public class ShowAllUsers extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference usersRef;
@@ -51,22 +51,17 @@ public class ShowAllUsers extends AppCompatActivity {
             // Get the selected user based on the position clicked
             User selectedUser = userList.get(position);
             if (selectedUser != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ShowAllUsers.this);
-                builder.setTitle("Delete User");
-                builder.setMessage("Are you sure you want to delete this user?");
-                builder.setPositiveButton("Yes", (dialog, which) -> {
+                delete.setOnClickListener(v -> {
                     deleteUserFromFirestore(selectedUser);
-                    dialog.dismiss();
+                    userAdapter.notifyDataSetChanged();
+
                 });
-                builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
-                builder.create().show();
             }
         });
     }
 
-    /**
-     * Fetches users from Firestore and updates the user list.
-     */
+
+    // Method to fetch users from Firestore
     private void fetchUsersFromFirestore() {
         usersRef.addSnapshotListener((querySnapshots, error) -> {
             if (error != null) {
@@ -88,10 +83,7 @@ public class ShowAllUsers extends AppCompatActivity {
         });
     }
 
-    /**
-     * Deletes a user from Firestore and updates the user list.
-     * @param user The user to be deleted.
-     */
+    // Method to delete a user from Firestore
     private void deleteUserFromFirestore(User user) {
         usersRef.document(user.getLastname())
                 .delete()

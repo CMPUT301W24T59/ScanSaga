@@ -1,5 +1,4 @@
 package com.example.scansaga;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +7,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.scansaga.AddEventFragment;
+import com.example.scansaga.Event;
+import com.example.scansaga.EventArrayAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -18,9 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * This activity allows users to add, delete, and edit events.
- */
 public class AddEvent extends AppCompatActivity implements AddEventFragment.AddEventDialogListener {
     ListView eventList;
     ArrayList<Event> eventDataList;
@@ -28,11 +28,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
 
-    /**
-     * Adds a new event to the list and Firestore.
-     *
-     * @param event The event to be added.
-     */
     @Override
     public void addNewEvent(Event event) {
         eventDataList.add(event);
@@ -40,11 +35,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         addEventToFirestore(event);
     }
 
-    /**
-     * Deletes an event from the list and Firestore.
-     *
-     * @param event The event to be deleted.
-     */
     @Override
     public void deleteEvent(Event event) {
         eventDataList.remove(event);
@@ -52,11 +42,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         deleteEventFromFirestore(event);
     }
 
-    /**
-     * Edits an existing event.
-     *
-     * @param event The event to be edited.
-     */
     @Override
     public void editEvent(Event event) {
         eventArrayAdapter.notifyDataSetChanged();
@@ -96,6 +81,8 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         HashMap<String, String> data = new HashMap<>();
         data.put("Date", event.getDate());
         data.put("Venue", event.getVenue());
+        data.put("Name", event.getName());
+        //data.put("QR", event.getQrCodeBitmap().toString());
         // Add more fields as needed
 
         eventsRef.document(event.getName()).set(data)
@@ -116,9 +103,9 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
                     String name = doc.getId();
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
-                    Bitmap qr = (Bitmap) doc.get("QR");
+                    //Bitmap qr = (Bitmap) doc.get("QR");
                     Log.d("Firestore", String.format("Event(%s, %s) fetched", name, date));
-                    eventDataList.add(new Event(name, date, venue, qr));
+                    eventDataList.add(new Event(name, date, venue, null));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
