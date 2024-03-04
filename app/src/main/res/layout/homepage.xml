@@ -28,6 +28,14 @@
         android:layout_marginBottom="16dp"/>
 
     <Button
+        android:id="@+id/show_all_users_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show all users"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
         android:id="@+id/add_event_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

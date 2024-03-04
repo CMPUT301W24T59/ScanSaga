@@ -119,6 +119,8 @@ public class AddEventFragment extends DialogFragment {
                     String eventName = editEventName.getText().toString();
                     String date = editDate.getText().toString();
                     String venue = editVenue.getText().toString();
+                    String qrContent = generateQRContent(eventName, date, venue);
+                    Bitmap qr = generateQRCodeBitmap(qrContent);
 
                     // Validate input fields
                     if (eventName.isEmpty() || date.isEmpty() || venue.isEmpty()) {
@@ -129,13 +131,10 @@ public class AddEventFragment extends DialogFragment {
                             eventToEdit.setName(eventName);
                             eventToEdit.setDate(date);
                             eventToEdit.setVenue(venue);
-                            String qrContent = generateQRContent(eventName, date, venue);
-                            Bitmap qr = generateQRCodeBitmap(qrContent);
                             eventToEdit.setQrCodeBitmap(qr);
                             listener.editEvent(eventToEdit);
+
                         } else {
-                            String qrContent = generateQRContent(eventName, date, venue);
-                            Bitmap qr = generateQRCodeBitmap(qrContent);
                             // Add the event using the listener
                             listener.addNewEvent(new Event(eventName, date, venue, qr));
                         }
@@ -191,4 +190,3 @@ public class AddEventFragment extends DialogFragment {
         return bitmap;
     }
 }
-

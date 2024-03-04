@@ -11,18 +11,32 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
+/**
+ * Custom ArrayAdapter to display a list of User objects in a ListView.
+ */
 public class UserArrayAdapter extends ArrayAdapter<User> {
 
     private Context context;
     private ArrayList<User> Users;
 
+    /**
+     * Constructor for UserArrayAdapter.
+     * @param context The current context.
+     * @param Users The list of User objects to display.
+     */
     public UserArrayAdapter(Context context, ArrayList<User> Users) {
         super(context, 0, Users);
         this.Users = Users;
         this.context = context;
-
     }
 
+    /**
+     * Get a View that displays the data at the specified position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent that this view will eventually be attached to.
+     * @return A View corresponding to the data at the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @NonNull View convertView, @NonNull ViewGroup parent) {
@@ -47,7 +61,6 @@ public class UserArrayAdapter extends ArrayAdapter<User> {
         lastNameTextView.setText(user.getLastname());
         emailTextView.setText(user.getEmail());
         phoneTextView.setText(user.getPhone());
-
 
         // Return the completed view to render on screen
         return view;

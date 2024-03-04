@@ -1,5 +1,4 @@
 package com.example.scansaga;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -82,6 +81,8 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         HashMap<String, String> data = new HashMap<>();
         data.put("Date", event.getDate());
         data.put("Venue", event.getVenue());
+        data.put("Name", event.getName());
+        //data.put("QR", event.getQrCodeBitmap().toString());
         // Add more fields as needed
 
         eventsRef.document(event.getName()).set(data)
@@ -102,9 +103,9 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
                     String name = doc.getId();
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
-                    Bitmap qr = (Bitmap) doc.get("QR");
+                    //Bitmap qr = (Bitmap) doc.get("QR");
                     Log.d("Firestore", String.format("Event(%s, %s) fetched", name, date));
-                    eventDataList.add(new Event(name, date, venue, qr));
+                    eventDataList.add(new Event(name, date, venue, null));
                 }
                 eventArrayAdapter.notifyDataSetChanged();
             }
@@ -119,5 +120,3 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
                 .addOnFailureListener(e -> Log.e("Firestore", "Error deleting event", e));
     }
 }
-
-
