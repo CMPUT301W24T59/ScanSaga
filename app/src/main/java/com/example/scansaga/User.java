@@ -2,13 +2,25 @@ package com.example.scansaga;
 
 import java.io.Serializable;
 
+/**
+ * User class representing a user entity.
+ */
+
 public class User implements Serializable {
     private String lastname;
     private String firstname;
     private String email;
     private String phone;
 
-    public User(String lastname, String firstname, String email, String phone) {
+    /**
+     * Constructor for creating a User object.
+     * @param firstname The first name of the user.
+     * @param lastname The last name of the user.
+     * @param email The email of the user.
+     * @param phone The phone number of the user.
+     */
+
+    public User(String firstname, String lastname,  String email, String phone) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.email = email;
@@ -45,7 +57,5 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    public void setPhone(String phone) {this.phone = phone;}
 }

@@ -33,6 +33,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    android {
+        defaultConfig {
+            vectorDrawables.useSupportLibrary = true
+        }
+    }
 }
 
 dependencies {
@@ -40,6 +45,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-storage:20.0.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.firebase:firebase-auth:21.0.0") // Replace version number with the latest version
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.android.material:material:1.11.0")
