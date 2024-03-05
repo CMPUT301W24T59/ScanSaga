@@ -25,7 +25,11 @@
 
         <!-- Add EventActivity declaration -->
         <activity
+<<<<<<<< HEAD:ScanSaga/ScanSaga/app/src/main/AndroidManifest.xml
             android:name=".EventActivity"
+========
+            android:name=".HomepageActivity"
+>>>>>>>> cf1e9aa67fccf84893740e7b71be66973be26f16:app/src/main/AndroidManifest.xml
             android:label="Event Activity"
             android:theme="@style/Theme.ScanSaga" />
     </application>
