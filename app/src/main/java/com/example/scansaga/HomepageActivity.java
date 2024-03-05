@@ -42,6 +42,7 @@ public class HomepageActivity extends AppCompatActivity implements AddEventFragm
     private EventArrayAdapter eventAdapter;
     ListView listView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private Button showAllEventsButton;
 
     // Reference to the collection where you want to store events
 
@@ -68,6 +69,17 @@ public class HomepageActivity extends AppCompatActivity implements AddEventFragm
             public void onClick(View v) {
                 // Show the AddEventFragment when the FloatingActionButton is clicked
                 new AddEventFragment().show(getSupportFragmentManager(), "Add Event");
+            }
+        });
+
+        // Set OnClickListener for the button that shows all events
+        showAllEventsButton = findViewById(R.id.show_all_events_button);
+        showAllEventsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start ShowAllEvents activity
+                Intent intent = new Intent(HomepageActivity.this, ShowAllEvents.class);
+                startActivity(intent);
             }
         });
     }
