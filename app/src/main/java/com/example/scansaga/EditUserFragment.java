@@ -3,6 +3,7 @@ package com.example.scansaga;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class EditUserFragment extends DialogFragment {
 
     private User userToEdit;
+    private String deviceID;
 
     /**
      * Creates a new instance of EditUserFragment with user information.
@@ -73,7 +75,6 @@ public class EditUserFragment extends DialogFragment {
                     String lastName = editLastName.getText().toString();
                     String email = editEmail.getText().toString();
                     String phone = editPhone.getText().toString();
-
                     updateUserInFirestore(firstName, lastName, email, phone);
 
                     dismiss();

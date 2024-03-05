@@ -6,20 +6,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.scansaga.AddEventFragment;
-import com.example.scansaga.Event;
-import com.example.scansaga.EventArrayAdapter;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+
 
 public class AddEvent extends AppCompatActivity implements AddEventFragment.AddEventDialogListener {
     ListView eventList;
@@ -39,7 +33,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
     public void deleteEvent(Event event) {
         eventDataList.remove(event);
         eventArrayAdapter.notifyDataSetChanged();
-        deleteEventFromFirestore(event);
     }
 
     @Override
@@ -63,16 +56,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         FloatingActionButton fab = findViewById(R.id.add_event_button);
         fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));
 
-        eventList.setOnItemClickListener((parent, view, position, id) -> {
-            Event selectedEvent = (Event) parent.getItemAtPosition(position);
-            if (selectedEvent != null) {
-                AddEventFragment editEventFragment = AddEventFragment.newInstance(selectedEvent);
-                editEventFragment.show(getSupportFragmentManager(), "Edit Event");
-            }
-        });
-
-        // Fetch events from Firestore
-        fetchEventsFromFirestore();
     }
 
     // Method to add a new event to Firestore
@@ -90,33 +73,4 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
                 .addOnFailureListener(e -> Log.e("Firestore", "Error adding event", e));
     }
 
-    // Method to fetch events from Firestore
-    private void fetchEventsFromFirestore() {
-        eventsRef.addSnapshotListener((querySnapshots, error) -> {
-            if (error != null) {
-                Log.e("Firestore", error.toString());
-                return;
-            }
-            if (querySnapshots != null) {
-                eventDataList.clear();
-                for (QueryDocumentSnapshot doc : querySnapshots) {
-                    String name = doc.getId();
-                    String date = doc.getString("Date");
-                    String venue = doc.getString("Venue");
-                    //Bitmap qr = (Bitmap) doc.get("QR");
-                    Log.d("Firestore", String.format("Event(%s, %s) fetched", name, date));
-                    eventDataList.add(new Event(name, date, venue, null));
-                }
-                eventArrayAdapter.notifyDataSetChanged();
-            }
-        });
-    }
-
-    // Method to delete an event from Firestore
-    private void deleteEventFromFirestore(Event event) {
-        eventsRef.document(event.getName())
-                .delete()
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event deleted successfully!"))
-                .addOnFailureListener(e -> Log.e("Firestore", "Error deleting event", e));
-    }
 }
