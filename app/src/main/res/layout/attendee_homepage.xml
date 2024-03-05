@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- TextView for the welcome message -->
+    <TextView
+        android:id="@+id/welcome_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to the ScanSaga home page"
+        android:background="#0BC6B5"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Button to show all events -->
+    <Button
+        android:id="@+id/show_all_events_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show All Events"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/add_event_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add an Event"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Button to sign up for an event -->
+    <Button
+        android:id="@+id/sign_up_event_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up for an Event"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Button for quick scan and check-in -->
+    <Button
+        android:id="@+id/scan_and_attend_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quick Scan and Check-in"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Button to edit profile -->
+    <Button
+        android:id="@+id/edit_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Profile"
+        android:layout_gravity="center"/>
+
+    <!-- Rest of your layout content below -->
+    <!-- Add your EditTexts, Button, etc. here -->
+
+</LinearLayout>
