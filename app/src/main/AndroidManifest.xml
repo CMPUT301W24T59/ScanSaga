@@ -26,9 +26,13 @@
         </activity>
 
         <!-- Add Homepage declaration -->
-        <activity
-            android:name=".HomepageActivity"
+        <activity android:name=".HomepageActivity"
             android:exported="true">
+            <!-- Intent filter for HomepageActivity -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!-- Add AddEvent declaration -->
