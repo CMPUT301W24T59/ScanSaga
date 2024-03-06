@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:background="#00BCD4"
         android:gravity="center"
-        android:text="You are hosting the following events"
+        android:text="Add an Event"
         android:textSize="30dp"
         android:textStyle="bold" />
 

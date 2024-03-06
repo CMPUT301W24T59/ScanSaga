@@ -37,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference usernamesRef;
     private String deviceId;
 
+    // Method to validate email format
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    // Method to validate phone number format
+    private boolean isValidPhoneNumber(String phone) {
+        return phone.matches("\\d{10}");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +77,32 @@ public class MainActivity extends AppCompatActivity {
                         String email = snapshot.getString("Email");
                         String phoneNumber = snapshot.getString("PhoneNumber");
 
-                        // Create a User object with the retrieved data
-                        User user = new User(firstName, lastName, email, phoneNumber);
-                        // Device ID exists, navigate to HomepageActivity
-                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
-                        intent.putExtra("user", user);
-                        startActivity(intent);
-                        finish(); // Finish MainActivity so that it's not kept in the back stack
+                        // Check if the user exists in the admin collection
+                        CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
+                        adminRef.document(firstName + phoneNumber)
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        // User exists in the regular user collection
+                                        // Navigate to HomepageActivity
+                                        User user = new User(firstName, lastName, email, phoneNumber);
+                                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                                        intent.putExtra("user", user);
+                                        startActivity(intent);
+                                        finish(); // Finish MainActivity so that it's not kept in the back stack
+                                    }
+                                    else{
+                                        User user = new User(firstName, lastName, email, phoneNumber);
+                                        Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
+                                        intent.putExtra("user", user);
+                                        startActivity(intent);
+                                        finish(); // Finish MainActivity so that it's not kept in the back stack
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Error checking for admin document", e);
+                                });
+
                         // Break the loop as we only need to navigate once
                         break;
                     }
@@ -97,8 +126,17 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (isValidEmail(email) && isValidPhoneNumber(phoneNumber)) {
+                    addNewUser(new User(firstName, lastName, email, phoneNumber));
+                } else if (!isValidEmail(email)){
+                    // Display error message if email or phone number is invalid
+                    Toast.makeText(MainActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    // Display error message if email or phone number is invalid
+                    Toast.makeText(MainActivity.this, "Invalid Phone Number. Please enter a 10 digits phone number", Toast.LENGTH_SHORT).show();
+                }
 
-                addNewUser(new User(firstName, lastName, email, phoneNumber));
 
                 if (userArrayAdapter != null) {
                     userArrayAdapter.notifyDataSetChanged();
@@ -111,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void addNewUser(User user) {
@@ -120,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         data.put("Firstname", user.getFirstname());
         data.put("Email", user.getEmail());
         data.put("PhoneNumber", user.getPhone());
-        data.put("DeviceId",deviceId);
+        data.put("DeviceId", deviceId);
 
 
         usernamesRef
@@ -129,11 +166,25 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Firestore", "DocumentSnapshot successfully written!");
-                        // After adding the user, start the EventActivity
-                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
-                        intent.putExtra("user", user);
-                        startActivity(intent);
+                        CollectionReference adminRef = db.collection("admin");
+                        adminRef.document(user.getFirstname() + user.getPhone())
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                                        intent.putExtra("user", user);
+                                        startActivity(intent);
+                                        finish(); // Finish MainActivity so that it's not kept in the back stack
+                                    } else {
+                                        Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
+                                        intent.putExtra("user", user);
+                                        startActivity(intent);
+                                        finish(); // Finish MainActivity so that it's not kept in the back stack
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore", "Error checking for admin document", e);
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -142,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Firebase", e.getMessage());
                     }
                 });
+
     }
 
 }

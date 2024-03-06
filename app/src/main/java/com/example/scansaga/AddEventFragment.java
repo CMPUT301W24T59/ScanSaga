@@ -126,7 +126,7 @@ public class AddEventFragment extends DialogFragment {
                     if (eventName.isEmpty() || date.isEmpty() || venue.isEmpty()) {
                         // Display error message if any field is empty
                         Toast.makeText(requireContext(), "Please fill in all details of the event", Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else {/*
                         if (eventToEdit != null) {
                             eventToEdit.setName(eventName);
                             eventToEdit.setDate(date);
@@ -134,10 +134,10 @@ public class AddEventFragment extends DialogFragment {
                             eventToEdit.setQrCodeBitmap(qr);
                             listener.editEvent(eventToEdit);
 
-                        } else {
+                        } else {*/
                             // Add the event using the listener
                             listener.addNewEvent(new Event(eventName, date, venue, qr));
-                        }
+
 
                     }
                 })
@@ -164,7 +164,6 @@ public class AddEventFragment extends DialogFragment {
     }
 
     //FOR CITATION LATER: https://www.geeksforgeeks.org/how-to-build-a-qr-code-android-app-using-firebase/
-
     // Method to generate QR content for the event
     private String generateQRContent(String eventName, String date, String venue) {
         return "Event: " + eventName + "\nDate: " + date + "\nVenue: " + venue;
