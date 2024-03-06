@@ -1,8 +1,13 @@
 package com.example.scansaga;
 
 import static androidx.test.espresso.Espresso.onIdle;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import static java.util.regex.Pattern.matches;
 
 import android.content.Intent;
 import android.widget.Button;
@@ -159,4 +164,19 @@ public class HomepageActivityTest {
         Intent expectedIntent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), ShowAllUsers.class);
         assertEquals(expectedIntent.getComponent(), actualIntent.getComponent());
     }
+
+//    @Test
+//    public void testButtonsDisplayed() {
+//        ActivityScenario<HomepageActivity> scenario = activityScenarioRule.getScenario();
+//        scenario.onActivity(activity -> {
+//            // Check if the "Add Event" button is displayed
+//            Espresso.onView(withId(R.id.add_event_button)).check(matches(isDisplayed()));
+//            // Check if the "Show All Events" button is displayed
+//            Espresso.onView(withId(R.id.show_all_events_button)).check(matches(isDisplayed()));
+//            // Check if the "Sign Up Event" button is displayed
+//            Espresso.onView(withId(R.id.sign_up_event_button)).check(matches(isDisplayed()));
+//            // Check if the "Show All Users" button is displayed
+//            Espresso.onView(withId(R.id.show_all_users_button)).check(matches(isDisplayed()));
+//        });
+//    }
 }
