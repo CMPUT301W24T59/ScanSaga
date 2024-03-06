@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,20 +24,42 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class EditUserFragment extends DialogFragment {
 
     private User userToEdit;
-    private String deviceID;
+    private String deviceId;
+    private static OnUserUpdatedListener listener;
+
+    /**
+     * Interface definition for a callback to be invoked when a user is updated.
+     */
+    public interface OnUserUpdatedListener {
+        void onUserUpdated(User updatedUser);
+    }
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    // Method to validate phone number format
+    private boolean isValidPhoneNumber(String phone) {
+        return phone.matches("\\d{10}");
+    }
 
     /**
      * Creates a new instance of EditUserFragment with user information.
      *
-     * @param user The user to edit.
+     * @param currentUser The user to edit.
+     * @param deviceId The see which user is on.
      * @return An instance of EditUserFragment.
      */
-    static EditUserFragment newInstance(User user) {
+    public static EditUserFragment newInstance(String deviceId, User currentUser) {
         Bundle args = new Bundle();
-        args.putSerializable("user", user);
+        args.putString("deviceId", deviceId);
+        args.putSerializable("currentUser", currentUser);
         EditUserFragment fragment = new EditUserFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private void setListener(OnUserUpdatedListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -50,20 +71,19 @@ public class EditUserFragment extends DialogFragment {
         EditText editLastName = view.findViewById(R.id.edit_text_lastname);
         EditText editEmail = view.findViewById(R.id.edit_text_email);
         EditText editPhone = view.findViewById(R.id.edit_text_phone);
-        Button deleteButton = view.findViewById(R.id.button_delete);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            userToEdit = (User) args.getSerializable("user");
-            if (userToEdit != null) {
-                editFirstName.setText(userToEdit.getFirstname());
-                editLastName.setText(userToEdit.getLastname());
-                editEmail.setText(userToEdit.getEmail());
-                editPhone.setText(userToEdit.getPhone());
+        if (getArguments() != null) {
+            deviceId = getArguments().getString("deviceId");
+            User currentUser = (User) getArguments().getSerializable("currentUser");
+
+            // Use deviceId and currentUser as needed
+            if (currentUser != null) {
+                editFirstName.setText(currentUser.getFirstname());
+                editLastName.setText(currentUser.getLastname());
+                editEmail.setText(currentUser.getEmail());
+                editPhone.setText(currentUser.getPhone());
             }
         }
-
-        deleteButton.setOnClickListener(v -> dismiss());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         return builder
@@ -75,9 +95,21 @@ public class EditUserFragment extends DialogFragment {
                     String lastName = editLastName.getText().toString();
                     String email = editEmail.getText().toString();
                     String phone = editPhone.getText().toString();
-                    updateUserInFirestore(firstName, lastName, email, phone);
+
+                    if (!isValidEmail(email)) {
+                        // Show error message for invalid email
+                        Toast.makeText(requireContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (!isValidPhoneNumber(phone)) {
+                        // Show error message for invalid phone number
+                        Toast.makeText(requireContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     dismiss();
+                    updateUserInFirestore(firstName, lastName, email, phone);
                 })
                 .create();
     }
@@ -92,24 +124,12 @@ public class EditUserFragment extends DialogFragment {
      */
     private void updateUserInFirestore(String firstName, String lastName, String email, String phone) {
         CollectionReference usersRef = FirebaseFirestore.getInstance().collection("users");
-        Query query = usersRef.whereEqualTo("phone", userToEdit.getPhone());
-
-        query.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    document.getReference().update(
-                                    "firstname", firstName,
-                                    "lastname", lastName,
-                                    "phone", phone,
-                                    "email", email
-                            ).addOnSuccessListener(aVoid ->
-                                    Toast.makeText(requireContext(), "User Profile Updated Successfully", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(e ->
-                                    Toast.makeText(requireContext(), "Failed to update user information: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                }
-            } else {
-                Toast.makeText(requireContext(), "Failed to fetch user information: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        usersRef.document(deviceId).update(
+                "Firstname", firstName,
+                "Lastname", lastName,
+                "PhoneNumber", phone,
+                "Email", email
+        );
     }
 }
+
