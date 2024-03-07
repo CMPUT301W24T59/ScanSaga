@@ -1,4 +1,6 @@
 package com.example.scansaga;
 
-public class ScanAndGo {
+import android.app.Activity;
+
+public class ScanAndGo extends Activity {
 }

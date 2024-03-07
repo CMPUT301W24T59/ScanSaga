@@ -82,4 +82,20 @@
         android:layout_marginStart="16dp"
         android:textSize="16sp"
         />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="385dp"
+        android:layout_marginEnd="185dp"
+        android:layout_marginBottom="217dp"
+        android:foregroundGravity="right"
+        android:src="@android:drawable/ic_input_add"
+        tools:ignore="SpeakableTextPresentCheck" />
 </RelativeLayout>

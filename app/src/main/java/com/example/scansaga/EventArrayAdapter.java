@@ -2,6 +2,9 @@ package com.example.scansaga;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -23,8 +29,9 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
     /**
      * Constructor for the EventArrayAdapter.
+     *
      * @param context The context of the activity or fragment.
-     * @param events The list of Event objects to be displayed.
+     * @param events  The list of Event objects to be displayed.
      */
     public EventArrayAdapter(Context context, ArrayList<Event> events) {
         super(context, 0, events);
@@ -34,32 +41,41 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
 
     /**
      * Get a View that displays the data at the specified position in the data set.
-     * @param position The position of the item within the adapter's data set.
+     *
+     * @param position    The position of the item within the adapter's data set.
      * @param convertView The old view to reuse, if possible.
-     * @param parent The parent that this view will eventually be attached to.
+     * @param parent      The parent that this view will eventually be attached to.
      * @return A View corresponding to the data at the specified position.
      */
     @SuppressLint("SetTextI18n")
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.content, parent, false);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // Check if an existing view is being reused, otherwise inflate the view
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.content, parent, false);
         }
+        // Lookup view for data population
+        TextView eventName = convertView.findViewById(R.id.event_text);
+        TextView eventDate = convertView.findViewById(R.id.time_text);
+        TextView eventVenue = convertView.findViewById(R.id.venue_text);
+        ImageView eventImage = convertView.findViewById(R.id.poster_image); // Your ImageView in the layout
 
-        Event event = events.get(position);
+        // Get the data item for this position
+        Event event = getItem(position);
 
-        TextView eventNameTextView = view.findViewById(R.id.event_text);
-        TextView eventTimeTextView = view.findViewById(R.id.time_text);
-        TextView eventVenueTextView = view.findViewById(R.id.venue_text);
-        ImageView qrCodeImageView = view.findViewById(R.id.qr_code_image);
+        // Populate the data into the template view using the data object
+        eventName.setText(event.getName());
+        eventDate.setText(event.getDate());
+        eventVenue.setText(event.getVenue());
 
-        eventNameTextView.setText(event.getName());
-        eventTimeTextView.setText(event.getDate());
-        eventVenueTextView.setText(event.getVenue());
-        qrCodeImageView.setImageBitmap(event.getQrCodeBitmap());
+        // Use Glide to load the event image
+        Glide.with(getContext())
+                .load(event.getImageUrl())
+                .into(eventImage);
+        Log.d("EventArrayAdapter", "Loading image from URL: " + event.getImageUrl());
 
-        return view;
+        // Return the completed view to render on screen
+        return convertView;
     }
 }

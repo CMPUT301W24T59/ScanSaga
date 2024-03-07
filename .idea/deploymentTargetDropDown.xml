@@ -2,21 +2,20 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MainActivity">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\rosyb\.android\avd\Pixel_2_API_30.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-05T15:13:52.111793200Z" />
-        </State>
+      <entry key="AddEventTest">
+        <State />
+      </entry>
+      <entry key="EventTest">
+        <State />
+      </entry>
+      <entry key="HomePageActivityTest">
+        <State />
+      </entry>
+      <entry key="MyProfileTest">
+        <State />
+      </entry>
+      <entry key="ShowAllEventsTest">
+        <State />
       </entry>
       <entry key="app">
         <State>
@@ -31,7 +30,7 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-29T20:41:42.632472200Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-03-06T06:45:08.741206Z" />
         </State>
       </entry>
     </value>
