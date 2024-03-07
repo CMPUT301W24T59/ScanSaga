@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         usernamesRef
-                .document(user.getFirstname() + user.getPhone())
+                .document(deviceId)
                 .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
