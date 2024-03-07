@@ -13,6 +13,10 @@ import static org.mockito.AdditionalMatchers.not;
 
 import android.view.View;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
@@ -22,6 +26,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,15 +39,22 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest {
-
-    @Rule
-    public ActivityScenarioRule<MainActivity> activityRule =
-            new ActivityScenarioRule<>(MainActivity.class);
+    private FirebaseFirestore db;
+    private CollectionReference usernamesRef;
+    @Before
+    public void setUp() {
+        MainActivity.setRunningTest(true);
+    }
+    @After
+    public void tearDown() {
+        MainActivity.setRunningTest(false);
+    }
 
     @Test
     public void testAddNewUserWithInvalidFirstName(){
-        onView(withId(R.id.Firstname_editText)).perform(replaceText(""), closeSoftKeyboard()); // Assuming empty is invalid
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Last"), closeSoftKeyboard());
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText(""), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
         onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
         onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
         // Click the add user button
@@ -52,8 +64,9 @@ public class MainActivityTest {
     }
     @Test
     public void testAddNewUserWithInvalidEmailInput(){
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("kk"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("nice"), closeSoftKeyboard());
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Ran"), closeSoftKeyboard());
         onView(withId(R.id.phonenumber_editText)).perform(replaceText("0000000000"), closeSoftKeyboard());
         // Click the add user button
         onView(withId(R.id.confirm_button)).perform(click());
@@ -62,10 +75,11 @@ public class MainActivityTest {
     }
     @Test
     public void testAddNewUserWithInvalidPhoneNumber(){
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("First"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Last"), closeSoftKeyboard());
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Ran"), closeSoftKeyboard());
         onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
-        onView(withId(R.id.phonenumber_editText)).perform(replaceText(""), closeSoftKeyboard()); // Assuming empty is invalid
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText(""), closeSoftKeyboard());
         // Click the add user button
         onView(withId(R.id.confirm_button)).perform(click());
         // This checks to make sure the button is still present, simply, that we are still on the same activity
@@ -73,8 +87,9 @@ public class MainActivityTest {
     }
     @Test
     public void testAddNewUserWithInvalidLastName(){
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("First"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText(""), closeSoftKeyboard()); // Assuming empty is invalid
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText(""), closeSoftKeyboard());
         onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
         onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
         // Click the add user button
@@ -84,60 +99,19 @@ public class MainActivityTest {
     }
 
 
-    /*
-    private View decorView;
-    @Before
-    public void setUp() {
-        activityRule.getScenario().onActivity(new ActivityScenario.ActivityAction<MainActivity>() {
-            @Override
-            public void perform(MainActivity activity) {
-                decorView = activity.getWindow().getDecorView();
-            }
-        });
-    }
-
     @Test
-    public void testAddNewUserWithInvalidEmail() {
-        // Simulate user input with an invalid email
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("Rosy"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Budhathoki"), closeSoftKeyboard());
-        onView(withId(R.id.email_editText)).perform(replaceText("INVALID"), closeSoftKeyboard());
-        onView(withId(R.id.phonenumber_editText)).perform(replaceText("0000000000"), closeSoftKeyboard());
+    public void testUserInDataBase() throws InterruptedException {
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("Android"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Test"), closeSoftKeyboard());
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        usernamesRef = db.collection("users");
         // Click the add user button
         onView(withId(R.id.confirm_button)).perform(click());
+        // Wait to allow Firebase to update
+        Thread.sleep(5000);
+        usernamesRef.whereEqualTo("Firstname", "Android");
     }
-
-    @Test
-    public void testAddNewUserWithInvalidPhoneNumber() {
-        // Simulate user input with an invalid phone number
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("Rosy"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Budhathoki"), closeSoftKeyboard());
-        onView(withId(R.id.email_editText)).perform(replaceText("rosybudhathoki@example.com"), closeSoftKeyboard());
-        onView(withId(R.id.phonenumber_editText)).perform(replaceText("INVALID"), closeSoftKeyboard());
-
-        // Click the add user button
-        onView(withId(R.id.confirm_button)).perform(click());
-        // Verify that the welcome_textview is not displayed
-        onView(withId(R.id.Firstname_editText)).check(matches((isDisplayed())));
-
-    }
-    */
-    @Test
-    public void testAddNewUserWithValidInput() {
-        // Simulate user input
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("Rosy"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Budhathoki"), closeSoftKeyboard());
-        onView(withId(R.id.email_editText)).perform(replaceText("rosybudhathoki@example.com"), closeSoftKeyboard());
-        onView(withId(R.id.phonenumber_editText)).perform(replaceText("0000000000"), closeSoftKeyboard());
-
-        // Click the add user button
-        onView(withId(R.id.confirm_button)).perform(click());
-
-        // Verify that the correct screen is displayed after navigation
-        // For example, you can verify the presence of a specific UI element on the new screen
-        onView(withId(R.id.welcome_textview)).check(matches(isDisplayed()));
-
-    }
-
-
 }

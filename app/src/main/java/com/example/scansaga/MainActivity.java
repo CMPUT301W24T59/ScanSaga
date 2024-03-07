@@ -37,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference usernamesRef;
     private String deviceId;
 
+    // These isRunningTest is only used when trying to bypass the automatic sign in for andriodTest
+    private static boolean isRunningTest = false;
+
+    public static boolean isRunningTest() {
+        return isRunningTest;
+    }
+    public static void setRunningTest(boolean runningTest) {
+        isRunningTest = runningTest;
+    }
+
     // Method to validate email format
     private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -65,51 +75,51 @@ public class MainActivity extends AppCompatActivity {
         userDataList = new ArrayList<>();
         userArrayAdapter = new UserArrayAdapter(this, userDataList);
 
+        if((!MainActivity.isRunningTest())) {
+            deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            usernamesRef.whereEqualTo("DeviceId", deviceId)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            String firstName = snapshot.getString("Firstname");
+                            String lastName = snapshot.getString("Lastname");
+                            String email = snapshot.getString("Email");
+                            String phoneNumber = snapshot.getString("PhoneNumber");
 
-        usernamesRef.whereEqualTo("DeviceId", deviceId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                        String firstName = snapshot.getString("Firstname");
-                        String lastName = snapshot.getString("Lastname");
-                        String email = snapshot.getString("Email");
-                        String phoneNumber = snapshot.getString("PhoneNumber");
+                            // Check if the user exists in the admin collection
+                            CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
+                            adminRef.document(firstName + phoneNumber)
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        if (documentSnapshot.exists()) {
+                                            // User exists in the regular user collection
+                                            // Navigate to HomepageActivity
+                                            User user = new User(firstName, lastName, email, phoneNumber);
+                                            Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                                            intent.putExtra("user", user);
+                                            startActivity(intent);
+                                            finish(); // Finish MainActivity so that it's not kept in the back stack
+                                        } else {
+                                            User user = new User(firstName, lastName, email, phoneNumber);
+                                            Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
+                                            intent.putExtra("user", user);
+                                            startActivity(intent);
+                                            finish(); // Finish MainActivity so that it's not kept in the back stack
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("Firestore", "Error checking for admin document", e);
+                                    });
 
-                        // Check if the user exists in the admin collection
-                        CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
-                        adminRef.document(firstName + phoneNumber)
-                                .get()
-                                .addOnSuccessListener(documentSnapshot -> {
-                                    if (documentSnapshot.exists()) {
-                                        // User exists in the regular user collection
-                                        // Navigate to HomepageActivity
-                                        User user = new User(firstName, lastName, email, phoneNumber);
-                                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
-                                        intent.putExtra("user", user);
-                                        startActivity(intent);
-                                        finish(); // Finish MainActivity so that it's not kept in the back stack
-                                    }
-                                    else{
-                                        User user = new User(firstName, lastName, email, phoneNumber);
-                                        Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
-                                        intent.putExtra("user", user);
-                                        startActivity(intent);
-                                        finish(); // Finish MainActivity so that it's not kept in the back stack
-                                    }
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("Firestore", "Error checking for admin document", e);
-                                });
-
-                        // Break the loop as we only need to navigate once
-                        break;
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error checking for device ID", e);
-                });
+                            // Break the loop as we only need to navigate once
+                            break;
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "Error checking for device ID", e);
+                    });
+        }
 
 
         addUserButton.setOnClickListener(new View.OnClickListener() {
