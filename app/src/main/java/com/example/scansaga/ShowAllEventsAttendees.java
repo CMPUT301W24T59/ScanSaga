@@ -56,12 +56,13 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
             if (querySnapshots != null) {
                 eventList.clear();
                 for (QueryDocumentSnapshot doc : querySnapshots) {
-                    String name = doc.getId();
+                    String name = doc.getString("Name"); // Assuming the document ID is the name; adjust if needed
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
-                    Bitmap qr = (Bitmap) doc.get("QR");
+                    String qrImageUrl = doc.getString("qr");
+                    String ImageUrl = doc.getString("imageUrl"); // Replace "PosterUrl" with the correct field name
                     Log.d("Firestore", String.format("Event(%s, %s) fetched", name, date));
-                    eventList.add(new Event(name, date, venue, qr));
+                    eventList.add(new Event(name, date, venue,ImageUrl)); // Pass null for qrCodeBitmap as we're dealing with URLs now
                 }
                 eventAdapter.notifyDataSetChanged();
             }
