@@ -66,7 +66,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/upload_poster"
         app:layout_constraintTop_toBottomOf="@id/edit_venue_text" />
-
+    <ImageView
+        android:id="@+id/image_view_poster"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/upload_poster"
+        android:scaleType="fitCenter"
+        app:layout_constraintDimensionRatio="H,16:9"
+        app:layout_constraintTop_toBottomOf="@id/edit_venue_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/upload_poster" />
     <!-- Upload Poster Button -->
     <Button
         android:id="@+id/upload_poster"

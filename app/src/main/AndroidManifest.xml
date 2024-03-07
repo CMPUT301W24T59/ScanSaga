@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
 
     <application
         android:allowBackup="true"
@@ -13,7 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScanSaga"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity android:name=".EventSignUp">
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -61,6 +67,7 @@
             android:name=".ShowAllEventsAttendees"
             android:exported="true">
         </activity>
+
 
 
     </application>
