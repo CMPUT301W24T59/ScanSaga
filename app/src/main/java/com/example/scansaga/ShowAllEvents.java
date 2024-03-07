@@ -75,7 +75,7 @@ public class ShowAllEvents extends AppCompatActivity {
     }
 
     // Method to fetch users from Firestore
-    private void fetchEventsFromFirestore() {
+    void fetchEventsFromFirestore() {
         eventsRef.addSnapshotListener((querySnapshots, error) -> {
             if (error != null) {
                 Log.e(TAG, "Firestore error: ", error);
@@ -104,7 +104,7 @@ public class ShowAllEvents extends AppCompatActivity {
     }
 
 
-    private void deleteEventFromFirestore(Event event) {
+    void deleteEventFromFirestore(Event event) {
         eventsRef.document(event.getName())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
