@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:hint="Phone Number"
             android:padding="20dp"
-            android:inputType="number"
+
             android:textColorHint="#3F51B5"
             android:textSize="20sp"
             tools:ignore="TextSizeCheck" />

@@ -7,44 +7,62 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
+/**
+ * Custom ArrayAdapter to display a list of User objects in a ListView.
+ */
 public class UserArrayAdapter extends ArrayAdapter<User> {
 
-    private Context mContext;
-    private ArrayList<User> mUserList;
+    private Context context;
+    private ArrayList<User> Users;
 
-    public UserArrayAdapter(Context context, ArrayList<User> userList) {
-        super(context, 0, userList);
-        mContext = context;
-        mUserList = userList;
+    /**
+     * Constructor for UserArrayAdapter.
+     * @param context The current context.
+     * @param Users The list of User objects to display.
+     */
+    public UserArrayAdapter(Context context, ArrayList<User> Users) {
+        super(context, 0, Users);
+        this.Users = Users;
+        this.context = context;
     }
 
+    /**
+     * Get a View that displays the data at the specified position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent that this view will eventually be attached to.
+     * @return A View corresponding to the data at the specified position.
+     */
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @NonNull View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
-        User user = getItem(position);
+        View view = convertView;
 
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.user_content, parent, false);
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.user_content, parent, false);
         }
+
+        User user = Users.get(position);
 
         // Lookup view for data population
-        TextView firstNameTextView = convertView.findViewById(R.id.textview_first_name);
-        TextView lastNameTextView = convertView.findViewById(R.id.textview_last_name);
-        TextView emailTextView = convertView.findViewById(R.id.textview_email);
-        TextView phoneTextView = convertView.findViewById(R.id.textview_phone);
+        TextView firstNameTextView = view.findViewById(R.id.textview_first_name);
+        TextView lastNameTextView = view.findViewById(R.id.textview_last_name);
+        TextView emailTextView = view.findViewById(R.id.textview_email);
+        TextView phoneTextView = view.findViewById(R.id.textview_phone);
 
         // Populate the data into the template view using the data object
-        if (user != null) {
-            firstNameTextView.setText(user.getFirstname());
-            lastNameTextView.setText(user.getLastname());
-            emailTextView.setText(user.getEmail());
-            phoneTextView.setText(user.getPhone());
-        }
+        firstNameTextView.setText(user.getFirstname());
+        lastNameTextView.setText(user.getLastname());
+        emailTextView.setText(user.getEmail());
+        phoneTextView.setText(user.getPhone());
 
         // Return the completed view to render on screen
-        return convertView;
+        return view;
     }
 }

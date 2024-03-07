@@ -24,16 +24,5 @@
         android:divider="@null"
         android:dividerHeight="0dp"/>
 
-    <!-- Delete button -->
-    <Button
-        android:id="@+id/button_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="16dp"
-        android:background="#D10F0F"
-        android:text="-"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
 
 </LinearLayout>
