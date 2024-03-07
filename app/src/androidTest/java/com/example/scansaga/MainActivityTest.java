@@ -49,6 +49,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+
+/**
+ * Espresso tests for {@link MainActivity} focusing on user input validation and Firestore database interactions.
+ */
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest {
@@ -56,6 +61,10 @@ public class MainActivityTest {
     private CollectionReference usernamesRef;
     private FirestoreTaskIdlingResource idlingResource;
 
+    /**
+     * Sets up the testing environment before each test.
+     * This includes setting a flag to indicate a running test and registering an idling resource for async tasks.
+     */
     @Before
     public void setUp() {
         MainActivity.setRunningTest(true);
@@ -63,12 +72,19 @@ public class MainActivityTest {
         IdlingRegistry.getInstance().register(idlingResource);
     }
 
+    /**
+     * Cleans up the testing environment after each test.
+     * This involves resetting the test flag and unregistering the idling resource.
+     */
+
     @After
     public void tearDown() {
         MainActivity.setRunningTest(false);
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
-
+    /**
+     * Tests adding a new user with an invalid first name (empty string) and verifies that the operation fails.
+     */
     @Test
     public void testAddNewUserWithInvalidFirstName() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
@@ -82,6 +98,9 @@ public class MainActivityTest {
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
 
+    /**
+     * Tests adding a new user with an invalid email (missing input) and verifies that the operation fails.
+     */
     @Test
     public void testAddNewUserWithInvalidEmailInput() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
@@ -93,6 +112,10 @@ public class MainActivityTest {
         // This checks to make sure the button is still present, simply, that we are still on the same activity
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
+
+    /**
+     * Tests adding a new user with an invalid phone number (empty string) and verifies that the operation fails.
+     */
 
     @Test
     public void testAddNewUserWithInvalidPhoneNumber() {
@@ -107,6 +130,10 @@ public class MainActivityTest {
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
 
+    /**
+     * Tests adding a new user with an invalid last name (empty string) and verifies that the operation fails.
+     */
+
     @Test
     public void testAddNewUserWithInvalidLastName() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
@@ -120,6 +147,11 @@ public class MainActivityTest {
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
 
+    /**
+     * Tests the Firestore database to verify that a new user can be added successfully.
+     * It performs UI actions to add a user and then queries the Firestore database to confirm the user's existence.
+     */
+
     @Test
     public void testUserInDataBase() {
         // Launch the Activity
@@ -132,7 +164,7 @@ public class MainActivityTest {
         onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
         onView(withId(R.id.confirm_button)).perform(click());
 
-        // Assume that click() triggers a Firestore operation and it is tracked by IdlingResource
+        // click() triggers the Firestore operation and it is tracked by IdlingResource
         // Espresso will wait for IdlingResource to be idle before moving on
 
         // Get the Firestore instance

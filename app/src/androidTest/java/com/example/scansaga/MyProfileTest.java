@@ -15,12 +15,27 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+
+/**
+ * Tests for the MyProfile activity of the ScanSaga application.
+ * This class verifies that the profile information is displayed correctly to the user.
+ */
+
 @RunWith(AndroidJUnit4.class)
 public class MyProfileTest {
+
+    /**
+     * Rule to launch the MyProfile activity before each test execution.
+     */
 
     @Rule
     public ActivityScenarioRule<MyProfile> activityScenarioRule =
             new ActivityScenarioRule<>(MyProfile.class);
+
+    /**
+     * Verifies that the user's first name, last name, email, and phone number are displayed correctly
+     * in the MyProfile activity.
+     */
 
     @Test
     public void testProfileDisplay() {
