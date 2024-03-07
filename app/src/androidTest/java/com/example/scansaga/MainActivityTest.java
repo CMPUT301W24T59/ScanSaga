@@ -38,6 +38,52 @@ public class MainActivityTest {
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
+
+    @Test
+    public void testAddNewUserWithInvalidFirstName(){
+        onView(withId(R.id.Firstname_editText)).perform(replaceText(""), closeSoftKeyboard()); // Assuming empty is invalid
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Last"), closeSoftKeyboard());
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
+        // Click the add user button
+        onView(withId(R.id.confirm_button)).perform(click());
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testAddNewUserWithInvalidEmailInput(){
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("kk"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("nice"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText("0000000000"), closeSoftKeyboard());
+        // Click the add user button
+        onView(withId(R.id.confirm_button)).perform(click());
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testAddNewUserWithInvalidPhoneNumber(){
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("First"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Last"), closeSoftKeyboard());
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText(""), closeSoftKeyboard()); // Assuming empty is invalid
+        // Click the add user button
+        onView(withId(R.id.confirm_button)).perform(click());
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
+    }
+    @Test
+    public void testAddNewUserWithInvalidLastName(){
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("First"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText(""), closeSoftKeyboard()); // Assuming empty is invalid
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
+        // Click the add user button
+        onView(withId(R.id.confirm_button)).perform(click());
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
+    }
+
+
     /*
     private View decorView;
     @Before

@@ -71,12 +71,6 @@
             android:name=".ShowAllEventsAttendees"
             android:exported="true">
         </activity>
-        <activity
-            android:name=".EventSignUp"
-            android:exported="true">
-        </activity>
-
-
 
     </application>
 

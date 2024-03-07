@@ -16,7 +16,7 @@ public class EventTest {
         Bitmap qrCodeBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
 
         // When
-        Event event = new Event(name, date, venue, qrCodeBitmap);
+        Event event = new Event(name, date, venue, qrCodeBitmap.toString());
 
         // Then
         assertNotNull(event);
