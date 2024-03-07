@@ -119,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                         Log.e("Firestore", "Error checking for device ID", e);
                     });
+        } else{
+            deviceId = null;
         }
 
 
@@ -169,6 +171,9 @@ public class MainActivity extends AppCompatActivity {
         data.put("PhoneNumber", user.getPhone());
         data.put("DeviceId", deviceId);
 
+        if(MainActivity.isRunningTest()){
+            deviceId = Long.toString((long) (Math.random() * 1_000_000_0000L) + 1_000_000_000L);
+        }
 
         usernamesRef
                 .document(deviceId)

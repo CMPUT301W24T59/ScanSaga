@@ -146,9 +146,6 @@ public class MainActivityTest {
                 .whereEqualTo("PhoneNumber", "1234567890")
                 .get();
 
-        // Set up the IdlingResource for this Firestore task
-        FirestoreTaskIdlingResource idlingResource = new FirestoreTaskIdlingResource();
-        IdlingRegistry.getInstance().register(idlingResource);
         idlingResource.increment();
 
         task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
