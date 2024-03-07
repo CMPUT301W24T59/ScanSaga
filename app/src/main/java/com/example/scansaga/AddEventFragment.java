@@ -365,7 +365,7 @@ public class AddEventFragment extends DialogFragment {
 
     private AddEventDialogListener listener;
     private EditText editEventName, editDate, editVenue;
-    private Button deleteButton, uploadPosterButton;
+    private Button uploadPosterButton;
     private Event eventToEdit;
 
     static AddEventFragment newInstance(Event event) {
@@ -395,7 +395,6 @@ public class AddEventFragment extends DialogFragment {
         editEventName = view.findViewById(R.id.edit_text_event_text);
         editDate = view.findViewById(R.id.edit_date_text);
         editVenue = view.findViewById(R.id.edit_venue_text);
-        deleteButton = view.findViewById(R.id.delete_event_button);
         uploadPosterButton = view.findViewById(R.id.upload_poster);
         imageView = view.findViewById(R.id.image_view_poster);
 
@@ -418,12 +417,6 @@ public class AddEventFragment extends DialogFragment {
 
         uploadPosterButton.setOnClickListener(v -> openFileChooser());
 
-        deleteButton.setOnClickListener(v -> {
-            if (eventToEdit != null) {
-                listener.deleteEvent(eventToEdit);
-                dismiss();
-            }
-        });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dismiss());
         builder.setPositiveButton("Add", (dialog, which) -> uploadImageAndSaveEventData());
