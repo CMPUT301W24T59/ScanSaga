@@ -3,9 +3,9 @@ package com.example.scansaga;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,28 +14,53 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * A DialogFragment for editing user information.
+ */
 public class EditUserFragment extends DialogFragment {
 
     private User userToEdit;
-    private String number;
+    private String deviceId;
+    private static OnUserUpdatedListener listener;
 
-    // Method to create a new instance of EditUserFragment with user information
-    static EditUserFragment newInstance(User user) {
+    /**
+     * Interface definition for a callback to be invoked when a user is updated.
+     */
+    public interface OnUserUpdatedListener {
+        void onUserUpdated(User updatedUser);
+    }
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    // Method to validate phone number format
+    private boolean isValidPhoneNumber(String phone) {
+        return phone.matches("\\d{10}");
+    }
+
+    /**
+     * Creates a new instance of EditUserFragment with user information.
+     *
+     * @param currentUser The user to edit.
+     * @param deviceId The see which user is on.
+     * @return An instance of EditUserFragment.
+     */
+    public static EditUserFragment newInstance(String deviceId, User currentUser) {
         Bundle args = new Bundle();
-        args.putSerializable("user", user);
+        args.putString("deviceId", deviceId);
+        args.putSerializable("currentUser", currentUser);
         EditUserFragment fragment = new EditUserFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
+    private void setListener(OnUserUpdatedListener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -46,26 +71,19 @@ public class EditUserFragment extends DialogFragment {
         EditText editLastName = view.findViewById(R.id.edit_text_lastname);
         EditText editEmail = view.findViewById(R.id.edit_text_email);
         EditText editPhone = view.findViewById(R.id.edit_text_phone);
-        Button deleteButton = view.findViewById(R.id.button_delete);
 
-        // Retrieve user information from arguments
-        Bundle args = getArguments();
-        if (args != null) {
-            userToEdit = (User) args.getSerializable("user");
-            number = String.valueOf(editPhone.getText());
+        if (getArguments() != null) {
+            deviceId = getArguments().getString("deviceId");
+            User currentUser = (User) getArguments().getSerializable("currentUser");
 
-            if (userToEdit != null) {
-                editFirstName.setText(userToEdit.getFirstname());
-                editLastName.setText(userToEdit.getLastname());
-                editEmail.setText(userToEdit.getEmail());
-                editPhone.setText(userToEdit.getPhone());
+            // Use deviceId and currentUser as needed
+            if (currentUser != null) {
+                editFirstName.setText(currentUser.getFirstname());
+                editLastName.setText(currentUser.getLastname());
+                editEmail.setText(currentUser.getEmail());
+                editPhone.setText(currentUser.getPhone());
             }
         }
-
-        deleteButton.setOnClickListener(v -> {
-            // Implement deletion logic here
-            dismiss();
-        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         return builder
@@ -78,42 +96,40 @@ public class EditUserFragment extends DialogFragment {
                     String email = editEmail.getText().toString();
                     String phone = editPhone.getText().toString();
 
-                    // Update user information in Firestore
-                    updateUserInFirestore(firstName, lastName, email, phone);
+                    if (!isValidEmail(email)) {
+                        // Show error message for invalid email
+                        Toast.makeText(requireContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (!isValidPhoneNumber(phone)) {
+                        // Show error message for invalid phone number
+                        Toast.makeText(requireContext(), "Invalid phone number", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     dismiss();
+                    updateUserInFirestore(firstName, lastName, email, phone);
                 })
                 .create();
     }
 
+    /**
+     * Updates user information in Firestore.
+     *
+     * @param firstName The updated first name.
+     * @param lastName  The updated last name.
+     * @param email     The updated email.
+     * @param phone     The updated phone number.
+     */
     private void updateUserInFirestore(String firstName, String lastName, String email, String phone) {
-        // Assuming you have a reference to the Firestore collection where user data is stored
         CollectionReference usersRef = FirebaseFirestore.getInstance().collection("users");
-
-        // Query the user document based on the email
-        Query query = usersRef.whereEqualTo("phone", number);
-
-        query.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    // Update the user document in Firestore
-                    document.getReference().update(
-                            "firstname", firstName,
-                            "lastname", lastName,
-                            "phone", phone,
-                            "email",email
-                    ).addOnSuccessListener(aVoid -> {
-                        // Update successful
-                        Toast.makeText(requireContext(), "User Profile Updated Successfully", Toast.LENGTH_SHORT).show();
-                    }).addOnFailureListener(e -> {
-                        // Update failed
-                        Toast.makeText(requireContext(), "Failed to update user information: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-                }
-            } else {
-                // Handle errors
-                Toast.makeText(requireContext(), "Failed to fetch user information: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        usersRef.document(deviceId).update(
+                "Firstname", firstName,
+                "Lastname", lastName,
+                "PhoneNumber", phone,
+                "Email", email
+        );
     }
 }
+
