@@ -1,20 +1,15 @@
 package com.example.scansaga;
 
 import static androidx.test.espresso.Espresso.onIdle;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import static java.util.regex.Pattern.matches;
 
 import android.content.Intent;
 import android.widget.Button;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -30,7 +25,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class HomepageActivityTest {
+public class HomepageActivityUITest {
     @Rule
     public ActivityScenarioRule<HomepageActivity> activityScenarioRule = new ActivityScenarioRule<>(HomepageActivity.class);
     private IdlingResource idlingResource;

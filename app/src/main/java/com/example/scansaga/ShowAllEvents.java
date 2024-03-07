@@ -32,7 +32,7 @@ public class ShowAllEvents extends AppCompatActivity {
     private Button delete;
     private ListView listView;
     private EventArrayAdapter eventAdapter;
-    private ArrayList<Event> eventList;
+    ArrayList<Event> eventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class ShowAllEvents extends AppCompatActivity {
     }
 
     // Method to fetch users from Firestore
-    private void fetchEventsFromFirestore() {
+    void fetchEventsFromFirestore() {
         eventsRef.addSnapshotListener((querySnapshots, error) -> {
             if (error != null) {
                 Log.e("Firestore", error.toString());

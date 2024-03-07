@@ -1,7 +1,6 @@
 package com.example.scansaga;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
-public class EventArrayAdapterTest {
+public class EventArrayAdapterUITest {
     private Context context;
     private EventArrayAdapter adapter;
     private ArrayList<Event> events;

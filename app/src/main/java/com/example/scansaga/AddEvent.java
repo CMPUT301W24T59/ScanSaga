@@ -59,7 +59,7 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
     }
 
     // Method to add a new event to Firestore
-    private void addEventToFirestore(Event event) {
+    void addEventToFirestore(Event event) {
         // Add the event to the database
         HashMap<String, String> data = new HashMap<>();
         data.put("Date", event.getDate());

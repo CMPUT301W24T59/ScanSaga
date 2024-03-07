@@ -19,7 +19,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AttendeeHomepageTest {
+public class AttendeeHomepageUITest {
 
     @Rule
     public ActivityScenarioRule<AttendeeHomePage> activityRule = new ActivityScenarioRule<AttendeeHomePage>(AttendeeHomePage.class);
