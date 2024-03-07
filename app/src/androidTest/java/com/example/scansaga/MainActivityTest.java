@@ -9,16 +9,25 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.not;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -36,22 +45,32 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest {
     private FirebaseFirestore db;
     private CollectionReference usernamesRef;
+    private FirestoreTaskIdlingResource idlingResource;
+
     @Before
     public void setUp() {
         MainActivity.setRunningTest(true);
+        idlingResource = new FirestoreTaskIdlingResource();
+        IdlingRegistry.getInstance().register(idlingResource);
     }
+
     @After
     public void tearDown() {
         MainActivity.setRunningTest(false);
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
     @Test
-    public void testAddNewUserWithInvalidFirstName(){
+    public void testAddNewUserWithInvalidFirstName() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
         onView(withId(R.id.Firstname_editText)).perform(replaceText(""), closeSoftKeyboard());
         onView(withId(R.id.lastname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
@@ -62,8 +81,9 @@ public class MainActivityTest {
         // This checks to make sure the button is still present, simply, that we are still on the same activity
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
+
     @Test
-    public void testAddNewUserWithInvalidEmailInput(){
+    public void testAddNewUserWithInvalidEmailInput() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
         onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
         onView(withId(R.id.lastname_editText)).perform(replaceText("Ran"), closeSoftKeyboard());
@@ -73,8 +93,9 @@ public class MainActivityTest {
         // This checks to make sure the button is still present, simply, that we are still on the same activity
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
+
     @Test
-    public void testAddNewUserWithInvalidPhoneNumber(){
+    public void testAddNewUserWithInvalidPhoneNumber() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
         onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
         onView(withId(R.id.lastname_editText)).perform(replaceText("Ran"), closeSoftKeyboard());
@@ -85,8 +106,9 @@ public class MainActivityTest {
         // This checks to make sure the button is still present, simply, that we are still on the same activity
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
+
     @Test
-    public void testAddNewUserWithInvalidLastName(){
+    public void testAddNewUserWithInvalidLastName() {
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
         onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
         onView(withId(R.id.lastname_editText)).perform(replaceText(""), closeSoftKeyboard());
@@ -98,20 +120,62 @@ public class MainActivityTest {
         onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
 
-
     @Test
-    public void testUserInDataBase() throws InterruptedException {
+    public void testUserInDataBase() {
+        // Launch the Activity
         ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+
+        // Perform UI actions
         onView(withId(R.id.Firstname_editText)).perform(replaceText("Android"), closeSoftKeyboard());
         onView(withId(R.id.lastname_editText)).perform(replaceText("Test"), closeSoftKeyboard());
         onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
         onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        usernamesRef = db.collection("users");
-        // Click the add user button
         onView(withId(R.id.confirm_button)).perform(click());
-        // Wait to allow Firebase to update
-        Thread.sleep(5000);
-        usernamesRef.whereEqualTo("Firstname", "Android");
+
+        // Assume that click() triggers a Firestore operation and it is tracked by IdlingResource
+        // Espresso will wait for IdlingResource to be idle before moving on
+
+        // Get the Firestore instance
+        db = FirebaseFirestore.getInstance();
+        CollectionReference usersRef = db.collection("users");
+
+        // Query Firestore for the user
+        Task<QuerySnapshot> task = usersRef.whereEqualTo("Firstname", "Android")
+                .whereEqualTo("Lastname", "Test")
+                .whereEqualTo("Email", "user@example.com")
+                .whereEqualTo("PhoneNumber", "1234567890")
+                .get();
+
+        // Set up the IdlingResource for this Firestore task
+        FirestoreTaskIdlingResource idlingResource = new FirestoreTaskIdlingResource();
+        IdlingRegistry.getInstance().register(idlingResource);
+        idlingResource.increment();
+
+        task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (!querySnapshot.isEmpty()) {
+                        for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                            // Assert that the user was added and then delete the document
+                            assertEquals("Android", documentSnapshot.getString("Firstname"));
+
+                            // Delete the user after verification to clean up
+                            documentSnapshot.getReference().delete();
+                        }
+                    } else {
+                        fail("No user found to delete");
+                    }
+                } else {
+                    fail("Failed to query user for deletion");
+                }
+                // Decrement IdlingResource as operation is finished
+                idlingResource.decrement();
+            }
+        });
+
+        // Unregister the IdlingResource after the test
+        IdlingRegistry.getInstance().unregister(idlingResource);
     }
 }
