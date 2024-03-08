@@ -23,9 +23,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
  */
 public class EditUserFragment extends DialogFragment {
 
-    private User userToEdit;
-    private String deviceId;
-    private static OnUserUpdatedListener listener;
+    User userToEdit;
+    String deviceId;
+    static OnUserUpdatedListener listener;
 
     /**
      * Interface definition for a callback to be invoked when a user is updated.
@@ -33,12 +33,12 @@ public class EditUserFragment extends DialogFragment {
     public interface OnUserUpdatedListener {
         void onUserUpdated(User updatedUser);
     }
-    private boolean isValidEmail(String email) {
+    boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     // Method to validate phone number format
-    private boolean isValidPhoneNumber(String phone) {
+    boolean isValidPhoneNumber(String phone) {
         return phone.matches("\\d{10}");
     }
 
@@ -122,7 +122,7 @@ public class EditUserFragment extends DialogFragment {
      * @param email     The updated email.
      * @param phone     The updated phone number.
      */
-    private void updateUserInFirestore(String firstName, String lastName, String email, String phone) {
+    void updateUserInFirestore(String firstName, String lastName, String email, String phone) {
         CollectionReference usersRef = FirebaseFirestore.getInstance().collection("users");
         usersRef.document(deviceId).update(
                 "Firstname", firstName,

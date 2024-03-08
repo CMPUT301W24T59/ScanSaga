@@ -16,7 +16,7 @@ public class MyProfile extends AppCompatActivity {
     private TextView firstNameTextView, lastNameTextView, emailTextView, phoneNumberTextView;
     private String deviceId;
     private User currentUser;
-    private ListenerRegistration userDataListener;
+    ListenerRegistration userDataListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class MyProfile extends AppCompatActivity {
 
     }
 
-    private void fetchUserDataFromFirestore(String deviceId) {
+    void fetchUserDataFromFirestore(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         userDataListener = db.collection("users")

@@ -48,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Method to validate email format
-    private boolean isValidEmail(String email) {
+    boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     // Method to validate phone number format
-    private boolean isValidPhoneNumber(String phone) {
+    boolean isValidPhoneNumber(String phone) {
         return phone.matches("\\d{10}");
     }
 

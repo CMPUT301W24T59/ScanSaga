@@ -19,13 +19,13 @@ import java.util.ArrayList;
 
 
 public class ShowAllUsers extends AppCompatActivity {
-    private FirebaseFirestore db;
-    private CollectionReference usersRef;
+    FirebaseFirestore db;
+    CollectionReference usersRef;
 
     private ListView listView;
     private Button delete;
     private UserArrayAdapter userAdapter;
-    private ArrayList<User> userList;
+    ArrayList<User> userList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class ShowAllUsers extends AppCompatActivity {
 
 
     // Method to fetch users from Firestore
-    private void fetchUsersFromFirestore() {
+    void fetchUsersFromFirestore() {
         usersRef.addSnapshotListener((querySnapshots, error) -> {
             if (error != null) {
                 Log.e("Firestore", error.toString());
@@ -84,7 +84,7 @@ public class ShowAllUsers extends AppCompatActivity {
     }
 
     // Method to delete a user from Firestore
-    private void deleteUserFromFirestore(User user) {
+    void deleteUserFromFirestore(User user) {
         usersRef.document(user.getLastname())
                 .delete()
                 .addOnSuccessListener(aVoid -> {

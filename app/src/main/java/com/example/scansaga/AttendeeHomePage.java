@@ -15,7 +15,6 @@ public class AttendeeHomePage extends AppCompatActivity {
         setContentView(R.layout.attendee_homepage);
 
         // Initialize buttons
-        Button signUpEventButton = findViewById(R.id.sign_up_event_button);
         Button scanAndGoButton = findViewById(R.id.scan_and_attend_button);
         Button editProfileButton = findViewById(R.id.edit_profile_button);
         Button showAllEventsButton = findViewById(R.id.show_all_events_button);
@@ -24,22 +23,12 @@ public class AttendeeHomePage extends AppCompatActivity {
         // Retrieve the user details passed from MainActivity
         User user = (User) getIntent().getSerializableExtra("user");
 
-
-        signUpEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start SignUpEventActivity
-                Intent intent = new Intent(AttendeeHomePage.this, EventSignUp.class);
-                startActivity(intent);
-            }
-        });
-
         // Set click listeners for each button
         showAllEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start ShowAllEventsActivity
-                Intent intent = new Intent(AttendeeHomePage.this, ShowAllEvents.class);
+                Intent intent = new Intent(AttendeeHomePage.this, ShowAllEventsAttendees.class);
                 startActivity(intent);
             }
         });
