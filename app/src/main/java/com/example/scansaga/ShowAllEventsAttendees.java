@@ -68,6 +68,10 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         });
     }
 
+
+    //Citation: Sanchhaya Education Private Limited, GeeksforGeeks,2024
+    //URL : https://www.geeksforgeeks.org/how-to-retrieve-image-from-firebase-in-realtime-in-android/
+
     // Method to fetch users from Firestore
     @SuppressLint("RestrictedApi")
     private void fetchEventsFromFirestore() {
