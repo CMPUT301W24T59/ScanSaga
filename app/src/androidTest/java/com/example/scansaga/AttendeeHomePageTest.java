@@ -12,12 +12,14 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import com.example.scansaga.Model.MyProfile;
 import com.example.scansaga.Views.AttendeeHomePage;
 import com.example.scansaga.Views.ShowAllEventsAttendees;
 
+/**
+ * Test class for {@link AttendeeHomePage} activity UI interactions.
+ */
 @RunWith(AndroidJUnit4.class)
 public class AttendeeHomePageTest {
 
@@ -25,6 +27,9 @@ public class AttendeeHomePageTest {
     public ActivityScenarioRule<AttendeeHomePage> activityScenarioRule =
             new ActivityScenarioRule<>(AttendeeHomePage.class);
 
+    /**
+     * Verifies that clicking on the "Show All Events" button launches the {@link ShowAllEventsAttendees} activity.
+     */
     @Test
     public void testShowAllEventsButton() {
         // Click the show all events button
@@ -35,6 +40,9 @@ public class AttendeeHomePageTest {
         assertNotNull(showAllEventsActivityScenario);
     }
 
+    /**
+     * Verifies that clicking on the "Edit Profile" button launches the {@link MyProfile} activity.
+     */
     @Test
     public void testEditProfileButton() {
         // Click the edit profile button
@@ -45,6 +53,9 @@ public class AttendeeHomePageTest {
         assertNotNull(myProfileActivityScenario);
     }
 
+    /**
+     * Verifies that clicking on the "Add Event" button launches the {@link AttendeeHomePage.AddEvent} activity.
+     */
     @Test
     public void testAddEventButton() {
         // Click the add event button

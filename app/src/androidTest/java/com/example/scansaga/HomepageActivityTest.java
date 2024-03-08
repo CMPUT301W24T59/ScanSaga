@@ -28,22 +28,35 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * Espresso tests for {@link HomepageActivity} button clicks and intent verifications.
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class HomepageActivityTest {
     @Rule
     public ActivityScenarioRule<HomepageActivity> activityScenarioRule = new ActivityScenarioRule<>(HomepageActivity.class);
     private IdlingResource idlingResource;
+
+    /**
+     * Sets up the necessary components before each test.
+     */
     @Before
     public void setUp() {
         Intents.init();
     }
 
+    /**
+     * Cleans up after each test.
+     */
     @After
     public void tearDown() {
         Intents.release();
     }
 
+    /**
+     * Verifies that clicking the "Show All Events" button correctly launches the {@link ShowAllEvents} activity.
+     */
     @Test
     public void testShowAllEventsButtonClick() {
         // Get the activity scenario
@@ -66,6 +79,9 @@ public class HomepageActivityTest {
         assertEquals(expectedIntent.getComponent(), actualIntent.getComponent());
     }
 
+    /**
+     * Verifies that clicking the "Add Event" button correctly launches the {@link AddEvent} activity.
+     */
     @Test
     public void testAddEventButtonClick() {
         // Get the activity scenario
@@ -88,6 +104,9 @@ public class HomepageActivityTest {
         assertEquals(expectedIntent.getComponent(), actualIntent.getComponent());
     }
 
+    /**
+     * Verifies that clicking the "Show All Users" button correctly launches the {@link ShowAllUsers} activity.
+     */
     @Test
     public void testShowAllUsersButtonClick() {
         // Get the activity scenario
