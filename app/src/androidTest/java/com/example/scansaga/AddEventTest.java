@@ -1,90 +1,77 @@
 package com.example.scansaga;
 
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNotNull;
+
+import com.example.scansaga.Views.AttendeeHomePage;
+
+import java.util.Calendar;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class AddEventTest {
 
     @Rule
-    public ActivityScenarioRule<AddEvent> activityRule =
-            new ActivityScenarioRule<>(AddEvent.class);
+    public ActivityScenarioRule<AttendeeHomePage.AddEvent> activityScenarioRule =
+            new ActivityScenarioRule<>(AttendeeHomePage.AddEvent.class);
 
     @Test
-    public void testAddNewEvent() {
-        activityRule.getScenario().onActivity(activity -> {
-            ArrayList<Event> eventDataList = activity.eventDataList;
-            int initialSize = eventDataList.size();
+    public void testAddEventButtonOpensFragment() {
+        // Click the add event button
+        Espresso.onView(ViewMatchers.withId(R.id.add_event_button)).perform(ViewActions.click());
 
-            Event newEvent = new Event("Test Event", "Test Venue", "2024-03-06", null);
-            activity.addNewEvent(newEvent);
-
-            assertEquals(initialSize + 1, eventDataList.size());
-            assertEquals(newEvent, eventDataList.get(eventDataList.size() - 1));
-        });
+        onView(withId(R.id.edit_text_event_text)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void testDeleteEvent() {
-        // Launch the activity
-        activityRule.getScenario().onActivity(activity -> {
-            ArrayList<Event> eventDataList = activity.eventDataList;
+    public void testAddEventButtonAndQR() {
+        // Click the add event button
+        Espresso.onView(ViewMatchers.withId(R.id.add_event_button)).perform(ViewActions.click());
 
-            Event event1 = new Event("Event 1", "Venue 1", "2024-03-06", null);
-            Event event2 = new Event("Event 2", "Venue 2", "2024-03-07", null);
+        // Enter event details
+        String eventName = "Test Event";
+        String eventVenue = "Test Venue";
+        Espresso.onView(ViewMatchers.withId(R.id.edit_text_event_text)).perform(ViewActions.typeText(eventName));
+        Espresso.onView(ViewMatchers.withId(R.id.edit_venue_text)).perform(ViewActions.typeText(eventVenue));
 
-            eventDataList.add(event1);
-            eventDataList.add(event2);
+        // Click the button to add the event
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        String currentDate = String.format("%02d/%02d/%d", month, dayOfMonth, year);
+        onView(withId(R.id.edit_date_text)).perform(ViewActions.replaceText(currentDate));
 
-            activity.deleteEvent(event1);
+        // Click the "Add" button in the dialog
+        Espresso.onView(withText("Add"))
+                .inRoot(RootMatchers.isDialog())
+                .check(matches(isDisplayed()))
+                .perform(ViewActions.click());
 
-            assertEquals(1, eventDataList.size());
-            assertFalse(eventDataList.contains(event1));
-        });
+        // Check if the event is added to the ListView
+        Espresso.onView(ViewMatchers.withId(R.id.event_list)).check(matches(isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.event_text)).check(matches(isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.time_text)).check(matches(isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.venue_text)).check(matches(isDisplayed()));
+        Espresso.onView(ViewMatchers.withId(R.id.qr_code_image)).check(matches(isDisplayed()));
+
     }
 
-    @Test
-    public void testAddEventButtonDisplayed() {
-        onView(ViewMatchers.withId(R.id.add_event_button))
-                .check(matches(isDisplayed()));
-    }
-
-//    @Test
-//    public void testEditEvent() {
-//        activityRule.getScenario().onActivity(activity -> {
-//            ArrayList<Event> eventDataList = activity.eventDataList;
-//
-//            // Assuming there's an existing event to edit
-//            Event existingEvent = new Event("Existing Event", "Existing Venue", "2024-03-06", null);
-//            eventDataList.add(existingEvent);
-//
-//            // Edit the event
-//            Event editedEvent = new Event("Edited Event", "Edited Venue", "2024-03-06", null);
-//            activity.editEvent(existingEvent, editedEvent);
-//
-//            // Check if the event is edited correctly
-//            assertEquals(1, eventDataList.size());
-//            assertTrue(eventDataList.contains(editedEvent));
-//            assertFalse(eventDataList.contains(existingEvent));
-//        });
-//    }
 }
 

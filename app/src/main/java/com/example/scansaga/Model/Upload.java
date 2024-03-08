@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Model;
 
 /**
  * Represents an upload with an associated image URL.

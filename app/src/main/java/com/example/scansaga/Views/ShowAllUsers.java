@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Views;
 
 import static androidx.core.content.ContentProviderCompat.requireContext;
 
@@ -11,6 +11,9 @@ import android.widget.AdapterView; // Add import statement
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.scansaga.Model.User;
+import com.example.scansaga.R;
+import com.example.scansaga.Controllers.UserArrayAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

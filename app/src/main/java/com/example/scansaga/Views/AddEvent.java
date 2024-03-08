@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Views;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -6,6 +6,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.scansaga.Controllers.EventArrayAdapter;
+import com.example.scansaga.Model.Event;
+import com.example.scansaga.R;
+import com.example.scansaga.Views.AddEventFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +31,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
     public void addNewEvent(Event event) {
         eventDataList.add(event);
         eventArrayAdapter.notifyDataSetChanged();
-        addEventToFirestore(event);
     }
 
     @Override
@@ -56,21 +60,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         FloatingActionButton fab = findViewById(R.id.add_event_button);
         fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));
 
-    }
-
-    // Method to add a new event to Firestore
-    private void addEventToFirestore(Event event) {
-        // Add the event to the database
-        HashMap<String, String> data = new HashMap<>();
-        data.put("Date", event.getDate());
-        data.put("Venue", event.getVenue());
-        data.put("Name", event.getName());
-        //data.put("QR", event.getQrCodeBitmap().toString());
-        // Add more fields as needed
-
-        eventsRef.document(event.getName()).set(data)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added successfully!"))
-                .addOnFailureListener(e -> Log.e("Firestore", "Error adding event", e));
     }
 
 }

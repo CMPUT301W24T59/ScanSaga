@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -18,8 +17,9 @@
         android:theme="@style/Theme.ScanSaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".Model.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ScanSaga">
@@ -31,46 +31,45 @@
 
         <!-- Add Homepage declaration -->
         <activity
-            android:name=".HomepageActivity"
+            android:name=".Views.HomepageActivity"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".AttendeeHomePage"
+            android:name=".Views.AttendeeHomePage"
             android:exported="true">
         </activity>
 
         <!-- Add AddEvent declaration -->
         <activity
-            android:name=".AddEvent"
+            android:name=".Views.AttendeeHomePage$AddEvent"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".MyProfile"
+            android:name=".Model.MyProfile"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ShowAllEvents"
+            android:name=".Views.ShowAllEvents"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ShowAllUsers"
+            android:name=".Views.ShowAllUsers"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ShowAllEventsAttendees"
+            android:name=".Views.ShowAllEventsAttendees"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ShowAllImagesFromStorage"
+            android:name=".Views.ShowAllImagesFromStorage"
             android:exported="true">
         </activity>
-
 
     </application>
 
