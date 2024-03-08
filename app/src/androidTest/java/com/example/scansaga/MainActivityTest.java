@@ -9,12 +9,25 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.not;
 
+import android.support.annotation.NonNull;
 import android.view.View;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -22,6 +35,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,67 +45,166 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+
+/**
+ * Espresso tests for {@link MainActivity} focusing on user input validation and Firestore database interactions.
+ */
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest {
+    private FirebaseFirestore db;
+    private CollectionReference usernamesRef;
+    private FirestoreTaskIdlingResource idlingResource;
 
-    @Rule
-    public ActivityScenarioRule<MainActivity> activityRule =
-            new ActivityScenarioRule<>(MainActivity.class);
-    /*
-    private View decorView;
+    /**
+     * Sets up the testing environment before each test.
+     * This includes setting a flag to indicate a running test and registering an idling resource for async tasks.
+     */
     @Before
     public void setUp() {
-        activityRule.getScenario().onActivity(new ActivityScenario.ActivityAction<MainActivity>() {
-            @Override
-            public void perform(MainActivity activity) {
-                decorView = activity.getWindow().getDecorView();
-            }
-        });
+        MainActivity.setRunningTest(true);
+        idlingResource = new FirestoreTaskIdlingResource();
+        IdlingRegistry.getInstance().register(idlingResource);
     }
 
+    /**
+     * Cleans up the testing environment after each test.
+     * This involves resetting the test flag and unregistering the idling resource.
+     */
+
+    @After
+    public void tearDown() {
+        MainActivity.setRunningTest(false);
+        IdlingRegistry.getInstance().unregister(idlingResource);
+    }
+    /**
+     * Tests adding a new user with an invalid first name (empty string) and verifies that the operation fails.
+     */
     @Test
-    public void testAddNewUserWithInvalidEmail() {
-        // Simulate user input with an invalid email
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("Rosy"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Budhathoki"), closeSoftKeyboard());
-        onView(withId(R.id.email_editText)).perform(replaceText("INVALID"), closeSoftKeyboard());
+    public void testAddNewUserWithInvalidFirstName() {
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText(""), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
+        // Click the add user button
+        onView(withId(R.id.confirm_button)).perform(click());
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
+    }
+
+    /**
+     * Tests adding a new user with an invalid email (missing input) and verifies that the operation fails.
+     */
+    @Test
+    public void testAddNewUserWithInvalidEmailInput() {
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Ran"), closeSoftKeyboard());
         onView(withId(R.id.phonenumber_editText)).perform(replaceText("0000000000"), closeSoftKeyboard());
         // Click the add user button
         onView(withId(R.id.confirm_button)).perform(click());
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
+
+    /**
+     * Tests adding a new user with an invalid phone number (empty string) and verifies that the operation fails.
+     */
 
     @Test
     public void testAddNewUserWithInvalidPhoneNumber() {
-        // Simulate user input with an invalid phone number
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("Rosy"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Budhathoki"), closeSoftKeyboard());
-        onView(withId(R.id.email_editText)).perform(replaceText("rosybudhathoki@example.com"), closeSoftKeyboard());
-        onView(withId(R.id.phonenumber_editText)).perform(replaceText("INVALID"), closeSoftKeyboard());
-
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Ran"), closeSoftKeyboard());
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText(""), closeSoftKeyboard());
         // Click the add user button
         onView(withId(R.id.confirm_button)).perform(click());
-        // Verify that the welcome_textview is not displayed
-        onView(withId(R.id.Firstname_editText)).check(matches((isDisplayed())));
-
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
-    */
+
+    /**
+     * Tests adding a new user with an invalid last name (empty string) and verifies that the operation fails.
+     */
+
     @Test
-    public void testAddNewUserWithValidInput() {
-        // Simulate user input
-        onView(withId(R.id.Firstname_editText)).perform(replaceText("Rosy"), closeSoftKeyboard());
-        onView(withId(R.id.lastname_editText)).perform(replaceText("Budhathoki"), closeSoftKeyboard());
-        onView(withId(R.id.email_editText)).perform(replaceText("rosybudhathoki@example.com"), closeSoftKeyboard());
-        onView(withId(R.id.phonenumber_editText)).perform(replaceText("0000000000"), closeSoftKeyboard());
-
+    public void testAddNewUserWithInvalidLastName() {
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("AndroidTest"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText(""), closeSoftKeyboard());
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
         // Click the add user button
         onView(withId(R.id.confirm_button)).perform(click());
-
-        // Verify that the correct screen is displayed after navigation
-        // For example, you can verify the presence of a specific UI element on the new screen
-        onView(withId(R.id.welcome_textview)).check(matches(isDisplayed()));
-
+        // This checks to make sure the button is still present, simply, that we are still on the same activity
+        onView(withId(R.id.Firstname_editText)).check(matches(isDisplayed()));
     }
 
+    /**
+     * Tests the Firestore database to verify that a new user can be added successfully.
+     * It performs UI actions to add a user and then queries the Firestore database to confirm the user's existence.
+     */
 
+    @Test
+    public void testUserInDataBase() {
+        // Launch the Activity
+        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+
+        // Perform UI actions
+        onView(withId(R.id.Firstname_editText)).perform(replaceText("Android"), closeSoftKeyboard());
+        onView(withId(R.id.lastname_editText)).perform(replaceText("Test"), closeSoftKeyboard());
+        onView(withId(R.id.email_editText)).perform(replaceText("user@example.com"), closeSoftKeyboard());
+        onView(withId(R.id.phonenumber_editText)).perform(replaceText("1234567890"), closeSoftKeyboard());
+        onView(withId(R.id.confirm_button)).perform(click());
+
+        // click() triggers the Firestore operation and it is tracked by IdlingResource
+        // Espresso will wait for IdlingResource to be idle before moving on
+
+        // Get the Firestore instance
+        db = FirebaseFirestore.getInstance();
+        CollectionReference usersRef = db.collection("users");
+
+        // Query Firestore for the user
+        Task<QuerySnapshot> task = usersRef.whereEqualTo("Firstname", "Android")
+                .whereEqualTo("Lastname", "Test")
+                .whereEqualTo("Email", "user@example.com")
+                .whereEqualTo("PhoneNumber", "1234567890")
+                .get();
+
+        idlingResource.increment();
+
+        task.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (!querySnapshot.isEmpty()) {
+                        for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                            // Assert that the user was added and then delete the document
+                            assertEquals("Android", documentSnapshot.getString("Firstname"));
+
+                            // Delete the user after verification to clean up
+                            documentSnapshot.getReference().delete();
+                        }
+                    } else {
+                        fail("No user found to delete");
+                    }
+                } else {
+                    fail("Failed to query user for deletion");
+                }
+                // Decrement IdlingResource as operation is finished
+                idlingResource.decrement();
+            }
+        });
+
+        // Unregister the IdlingResource after the test
+        IdlingRegistry.getInstance().unregister(idlingResource);
+    }
 }
