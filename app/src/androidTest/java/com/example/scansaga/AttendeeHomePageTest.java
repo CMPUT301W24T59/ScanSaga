@@ -1,8 +1,5 @@
 package com.example.scansaga;
 
-import android.content.Intent;
-import android.widget.Button;
-
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -16,6 +13,10 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+
+import com.example.scansaga.Model.MyProfile;
+import com.example.scansaga.Views.AttendeeHomePage;
+import com.example.scansaga.Views.ShowAllEventsAttendees;
 
 @RunWith(AndroidJUnit4.class)
 public class AttendeeHomePageTest {
@@ -50,7 +51,7 @@ public class AttendeeHomePageTest {
         onView(withId(R.id.add_event_button)).perform(click());
 
         // Ensure AddEventActivity is launched
-        ActivityScenario<AddEvent> addEventActivityScenario = ActivityScenario.launch(AddEvent.class);
+        ActivityScenario<AttendeeHomePage.AddEvent> addEventActivityScenario = ActivityScenario.launch(AttendeeHomePage.AddEvent.class);
         assertNotNull(addEventActivityScenario);
     }
 }

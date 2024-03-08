@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Controllers;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import com.example.scansaga.Model.User;
+import com.example.scansaga.R;
 
 import java.util.ArrayList;
 

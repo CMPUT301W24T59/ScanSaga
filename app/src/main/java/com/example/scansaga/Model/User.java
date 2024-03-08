@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Model;
 
 import java.io.Serializable;
 

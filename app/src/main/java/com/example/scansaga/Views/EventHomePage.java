@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Views;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.scansaga.R;
 
 /**
  * This activity displays the homepage of a specific event, including the event name and its QR code.
