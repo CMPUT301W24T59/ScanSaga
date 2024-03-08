@@ -8,28 +8,48 @@
     <!-- Toolbar -->
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:text="Enter Event Details"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:gravity="center"
         android:textColor="#FFFFFF"
         app:navigationIcon="?android:attr/homeAsUpIndicator"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ImageView for Poster -->
+    <ImageView
+        android:id="@+id/image_view_poster"
+        android:layout_width="371dp"
+        android:layout_height="117dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="Upload Poster"
+        android:scaleType="fitCenter"
+        app:layout_constraintDimensionRatio="H,16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <!-- Event Name EditText -->
     <EditText
         android:id="@+id/edit_text_event_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Event Name"
         android:inputType="text"
         android:maxLength="50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@id/image_view_poster" />
 
     <!-- Date EditText -->
     <EditText
@@ -40,22 +60,35 @@
         android:hint="Date"
         android:inputType="none"
         android:onClick="showDatePickerDialog"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_text_event_text" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_text_event_text"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp" />
 
     <!-- Venue EditText -->
+
+    <!-- View Event Button -->
+
     <EditText
         android:id="@+id/edit_venue_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="26dp"
         android:ems="10"
         android:hint="Venue"
         android:inputType="text"
         android:maxLength="50"
+        app:layout_constraintBottom_toTopOf="@+id/upload_poster"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_date_text" />
+        app:layout_constraintTop_toBottomOf="@id/edit_date_text"
+        app:layout_constraintVertical_bias="0.083" />
 
     <!-- View Event Button -->
     <Button
@@ -70,13 +103,16 @@
     <!-- Upload Poster Button -->
     <Button
         android:id="@+id/upload_poster"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="Upload Poster"
-        app:layout_constraintStart_toEndOf="@id/view_event_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/view_event_button"
-        app:layout_constraintBottom_toBottomOf="@id/view_event_button" />
+        app:layout_constraintHorizontal_bias="0.469"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_date_text"
+        app:layout_constraintVertical_bias="0.401" />
 
     <!-- Delete Event Button -->
     <Button

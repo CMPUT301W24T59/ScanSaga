@@ -1,6 +1,5 @@
 package com.example.scansaga;
 import android.graphics.Bitmap;
-import android.media.metrics.Event;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -60,7 +59,7 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
     }
 
     // Method to add a new event to Firestore
-    void addEventToFirestore(Event event) {
+    private void addEventToFirestore(Event event) {
         // Add the event to the database
         HashMap<String, String> data = new HashMap<>();
         data.put("Date", event.getDate());
