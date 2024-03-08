@@ -32,7 +32,7 @@
             android:layout_width="43dp"
             android:layout_height="43dp"
             android:layout_marginEnd="15dp"
-            android:src="@drawable/profile" />
+            android:src="@drawable/profile_icon_black" />
 
         <Button
             android:id="@+id/edit_profile_button"
@@ -83,11 +83,12 @@
 
         <!-- Button to sign up for an event -->
         <Button
-            android:id="@+id/sign_up_event_button"
+            android:id="@+id/show_all_images_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign Up for an Event"
+            android:text="Show All Images"
             android:layout_marginBottom="16dp"/>
+
 
     </LinearLayout>
 

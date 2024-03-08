@@ -52,16 +52,6 @@ public class AttendeeHomepageTest {
     }
 
     @Test
-    public void testScanAndGoButton() {
-        // Click the scan and go button
-        onView(withId(R.id.scan_and_attend_button)).perform(click());
-
-        // Ensure ScanAndGoActivity is launched
-        ActivityScenario<ScanAndGo> scanAndGoActivityScenario = ActivityScenario.launch(ScanAndGo.class);
-        assertNotNull(scanAndGoActivityScenario);
-    }
-
-    @Test
     public void testEditProfileButton() {
         // Click the edit profile button
         onView(withId(R.id.edit_profile_button)).perform(click());

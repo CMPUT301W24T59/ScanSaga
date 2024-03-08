@@ -32,7 +32,7 @@
             android:layout_width="43dp"
             android:layout_height="43dp"
             android:layout_marginEnd="15dp"
-            android:src="@drawable/profile" />
+            android:src="@drawable/profile_icon_black" />
 
         <Button
             android:id="@+id/edit_profile_button"

@@ -22,6 +22,6 @@
         android:layout_below="@id/event_name_text_view"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-         />
+        />
 
 </RelativeLayout>

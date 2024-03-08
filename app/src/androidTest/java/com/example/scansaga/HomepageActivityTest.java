@@ -17,6 +17,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.example.scansaga.Views.HomepageActivity;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -62,43 +64,7 @@ public class HomepageActivityTest {
     }
 
 
-//    @Test
-//    public void testSignUpEventButtonClick() {
-//        // Get the activity scenario
-//        ActivityScenario<HomepageActivity> scenario = activityScenarioRule.getScenario();
-//        scenario.onActivity(activity -> {
-//            // Find the "Sign Up Event" button
-//            Button signUpEventButton = activity.findViewById(R.id.sign_up_event_button);
-//            assertNotNull(signUpEventButton);
 //
-//            // Perform click on the button
-//            signUpEventButton.performClick();
-//        });
-//
-//        // Wait for Espresso to be idle before verifying the launched activity
-//        onIdle();
-//
-//        // Verify that the correct activity is launched
-//        Intent actualIntent = Intents.getIntents().get(0);
-//        Intent expectedIntent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), EventSignUp.class);
-//        assertEquals(expectedIntent.getComponent(), actualIntent.getComponent());
-//    }
-//
-//    @Test
-//    public void testScanAndGoButtonClick() {
-//        ActivityScenario<HomepageActivity> scenario = activityScenarioRule.getScenario();
-//        scenario.onActivity(activity -> {
-//            Button scanAndGoButton = activity.findViewById(R.id.scan_and_attend_button);
-//            assertNotNull(scanAndGoButton);
-//
-//            scanAndGoButton.performClick();
-//
-//            Intent expectedIntent = new Intent(activity, ScanAndGo.class);
-//            Intent actualIntent = ApplicationProvider.getApplicationContext().getPackageManager().getLaunchIntentForPackage(expectedIntent.getComponent().getPackageName());
-//
-//            assertEquals(expectedIntent.getComponent(), actualIntent.getComponent());
-//        });
-//    }
 //
 //    @Test
 //    public void testEditProfileButtonClick() {
