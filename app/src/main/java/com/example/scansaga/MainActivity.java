@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 // Check if email and phone number are valid
                 if (isValidEmail(email) && isValidPhoneNumber(phoneNumber)) {
                     addNewUser(new User(firstName, lastName, email, phoneNumber, null));
+
                 } else if (!isValidEmail(email)){
                     // Display error message if email is invalid
                     Toast.makeText(MainActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
