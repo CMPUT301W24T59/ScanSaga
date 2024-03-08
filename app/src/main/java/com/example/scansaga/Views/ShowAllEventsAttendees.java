@@ -1,35 +1,33 @@
-package com.example.scansaga;
+package com.example.scansaga.Views;
+
 import static androidx.fragment.app.FragmentManager.TAG;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.scansaga.EventArrayAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.scansaga.Controllers.EventArrayAdapter;
+import com.example.scansaga.Model.Event;
+import com.example.scansaga.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ShowAllEvents extends AppCompatActivity {
+public class ShowAllEventsAttendees extends AppCompatActivity {
     private FirebaseFirestore db;
 
     // Initialize Firebase Storage
@@ -43,11 +41,10 @@ public class ShowAllEvents extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_events);
+        setContentView(R.layout.show_events_attendees);
 
         listView = findViewById(R.id.listView);
         eventList = new ArrayList<>();
-        delete = findViewById(R.id.button_delete);
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
@@ -65,14 +62,16 @@ public class ShowAllEvents extends AppCompatActivity {
             // Get the selected user based on the position clicked
             Event selectedEvent = eventList.get(position);
             if (selectedEvent != null) {
-                delete.setOnClickListener(v -> {
-                    deleteEventFromFirestore(selectedEvent);
+
                     eventAdapter.notifyDataSetChanged();
 
-                });
             }
         });
     }
+
+
+    //Citation: Sanchhaya Education Private Limited, GeeksforGeeks,2024
+    //URL : https://www.geeksforgeeks.org/how-to-retrieve-image-from-firebase-in-realtime-in-android/
 
     // Method to fetch users from Firestore
     @SuppressLint("RestrictedApi")
@@ -105,21 +104,6 @@ public class ShowAllEvents extends AppCompatActivity {
         });
     }
 
-
-    private void deleteEventFromFirestore(Event event) {
-        eventsRef.document(event.getName() + "_" + event.getDate())
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "Event deleted successfully!");
-                    // Remove the deleted user from the userList
-                    eventList.remove(event);
-                    // Notify the adapter of the dataset change
-                    eventAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> Log.e("Firestore", "Error deleting event", e));
-    }
-
-
     private void DownloadEventFromFirestore() {
 
         Log.d("CALL", "TESTINGGG");
@@ -136,7 +120,7 @@ public class ShowAllEvents extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 // Got the download URL, now use Glide to display the image
-                Glide.with(ShowAllEvents.this)
+                Glide.with(ShowAllEventsAttendees.this)
                         .load(imageRef)
                         .into(imageView);
                 Log.d("IMAGESSSSSS", "IMAGESSSS" +  imageRef);
@@ -149,5 +133,3 @@ public class ShowAllEvents extends AppCompatActivity {
         });
     }
 }
-
-

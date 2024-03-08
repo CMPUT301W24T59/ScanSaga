@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Model;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.scansaga.Views.EditUserFragment;
+import com.example.scansaga.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
