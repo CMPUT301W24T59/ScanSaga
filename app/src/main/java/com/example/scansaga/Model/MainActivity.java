@@ -45,16 +45,35 @@ public class MainActivity extends AppCompatActivity {
     private String profilePictureString;
     private ImageView imageView;
 
-    // Method to validate email format
+    /**
+     * Helper method to validate the format of an email address.
+     *
+     * @param email The email address to validate.
+     * @return true if the email is in a valid format, false otherwise.
+     */
     private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    /**
+     * Helper method to validate the format of a phone number.
+     *
+     * @param phone The phone number to validate.
+     * @return true if the phone number is a valid 10-digit number, false otherwise.
+     */
     // Method to validate phone number format
     private boolean isValidPhoneNumber(String phone) {
         return phone.matches("\\d{10}");
     }
 
+    /**
+     * Called when the activity is first created. Initializes UI elements, Firestore,
+     * and handles initial user login logic based on device ID.
+     *
+     * @param savedInstanceState  If the activity is being re-initialized after previously
+     *                            being shut down then this Bundle contains the data it most
+     *                            recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +142,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("Firestore", "Error checking for device ID", e);
                 });
 
-        // Add click listener for the addUserButton
+        /**
+         * Adds a new user to the Firestore database. Checks if the user should be
+         * placed in the 'admin' collection or the regular 'users' collection.
+         * Navigates to either the HomepageActivity or AttendeeHomePage, passing the
+         * user object to the next activity.
+         *
+         * @param user The User object representing the new user to be added.
+         */
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
