@@ -101,7 +101,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.469"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_date_text"
+        app:layout_constraintTop_toBottomOf="@id/edit_venue_text"
         app:layout_constraintVertical_bias="0.401" />
 
     <!-- ImageView below Upload Poster Button -->
