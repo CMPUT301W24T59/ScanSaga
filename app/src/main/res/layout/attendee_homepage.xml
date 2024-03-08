@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:paddingStart="20dp"
-        android:text="Admin HomePage"
+        android:text="Your HomePage"
         android:textSize="30sp"
         android:textColor="#2D2D2D"
         android:textStyle="bold"
@@ -25,7 +25,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
+        android:gravity="center"
         android:padding="30dp">
 
         <ImageView
@@ -75,12 +75,6 @@
             android:layout_marginBottom="16dp"/>
 
         <!-- Button to sign up for an event -->
-        <Button
-            android:id="@+id/sign_up_event_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sign Up for an Event"
-            android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 

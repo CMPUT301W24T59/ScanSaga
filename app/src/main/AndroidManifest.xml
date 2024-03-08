@@ -55,10 +55,6 @@
             android:name=".ShowAllEvents"
             android:exported="true">
         </activity>
-        <activity
-            android:name=".ScanAndGo"
-            android:exported="true">
-        </activity>
 
         <activity
             android:name=".ShowAllUsers"
