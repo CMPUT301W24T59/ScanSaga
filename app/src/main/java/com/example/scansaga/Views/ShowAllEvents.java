@@ -36,6 +36,15 @@ public class ShowAllEvents extends AppCompatActivity {
     private EventArrayAdapter eventAdapter;
     private ArrayList<Event> eventList;
 
+    /**
+     * Called when the activity is created. Initializes UI elements, sets up Firestore
+     * references, creates the adapter for the event list, and sets listeners for
+     * fetching data.
+     *
+     * @param savedInstanceState  If the activity is being re-initialized after previously
+     *                            being shut down then this Bundle contains the data it most
+     *                            recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +78,9 @@ public class ShowAllEvents extends AppCompatActivity {
             }
         });
     }
+    /**
+     *  Fetches all events from Firestore and populates the ListView.
+     */
 
     // Method to fetch users from Firestore
     @SuppressLint("RestrictedApi")
@@ -101,7 +113,11 @@ public class ShowAllEvents extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Deletes the selected event from Firestore.
+     *
+     * @param event The Event object to be deleted.
+     */
     private void deleteEventFromFirestore(Event event) {
         eventsRef.document(event.getName() + "_" + event.getDate())
                 .delete()
@@ -115,6 +131,12 @@ public class ShowAllEvents extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e("Firestore", "Error deleting event", e));
     }
 
+    /**
+     * Downloads an image from Firebase Storage and displays it in an ImageView.
+     * Please note: This function has potential issues, as it seems to be downloading
+     * a hardcoded image reference instead of being tied to the events displayed
+     * in the ListView.
+     */
 
     private void DownloadEventFromFirestore() {
 
