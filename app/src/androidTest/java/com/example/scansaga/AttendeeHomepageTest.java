@@ -20,6 +20,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.example.scansaga.Model.MyProfile;
+import com.example.scansaga.Views.AttendeeHomePage;
+import com.example.scansaga.Views.ShowAllEventsAttendees;
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AttendeeHomepageTest {
@@ -73,7 +77,7 @@ public class AttendeeHomepageTest {
         onView(withId(R.id.add_event_button)).perform(click());
 
         // Ensure AddEventActivity is launched
-        ActivityScenario<AddEvent> addEventActivityScenario = ActivityScenario.launch(AddEvent.class);
+        ActivityScenario<AttendeeHomePage.AddEvent> addEventActivityScenario = ActivityScenario.launch(AttendeeHomePage.AddEvent.class);
         assertNotNull(addEventActivityScenario);
     }
 }

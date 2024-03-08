@@ -4,22 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".Model.MainActivity"
+    android:layout_margin="10dp">
 
     <TextView
         android:id="@+id/welcome_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:paddingStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5sp"
+        android:paddingStart="10dp"
         android:text="Welcome"
-        android:textSize="60sp"
+        android:textSize="50sp"
         android:textColor="#2D2D2D"
         android:textStyle="bold"
         android:fontFamily="sans-serif-condensed-medium"
-        android:gravity="start"
-        android:padding="10sp" />
+        android:gravity="start" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -28,6 +29,23 @@
         android:layout_below="@id/welcome_textview"
         android:layout_marginTop="20dp"
         android:orientation="vertical">
+
+        <!-- Profile button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/profile_icon_black" />
+
+
+        </LinearLayout>
+
 
         <EditText
             android:id="@+id/Firstname_editText"
@@ -75,11 +93,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/phonenumber_editText"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:paddingStart="10dp"
-            android:paddingTop="20dp"
             android:paddingEnd="20dp"
-            android:paddingBottom="20dp"
+
             android:text="Confirm User"
             android:textSize="20dp"
             android:textColor="#FFFFFF"

@@ -1,22 +1,30 @@
-package com.example.scansaga;
+package com.example.scansaga.Model;
+
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.scansaga.EditUserFragment;
+import com.bumptech.glide.Glide;
+import com.example.scansaga.Views.EditUserFragment;
+import com.example.scansaga.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+/**
+ * MyProfile class displays the user's profile information.
+ */
 public class MyProfile extends AppCompatActivity {
 
     private TextView firstNameTextView, lastNameTextView, emailTextView, phoneNumberTextView;
+    private ImageView profileImageView;
     private String deviceId;
     private User currentUser;
-    ListenerRegistration userDataListener;
+    private ListenerRegistration userDataListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +36,15 @@ public class MyProfile extends AppCompatActivity {
         lastNameTextView = findViewById(R.id.last_name_text_view);
         emailTextView = findViewById(R.id.email_text_view);
         phoneNumberTextView = findViewById(R.id.phone_number_text_view);
+        profileImageView = findViewById(R.id.profile_image_view);
 
+        // Get the unique device ID
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // Fetch user data from Firestore
         fetchUserDataFromFirestore(deviceId);
 
+        // Set click listener for the edit profile button
         FloatingActionButton fab = findViewById(R.id.edit_profile_button);
         fab.setOnClickListener(v -> {
             // Pass the deviceId and currentUser to the EditUserFragment
@@ -43,7 +54,12 @@ public class MyProfile extends AppCompatActivity {
 
     }
 
-    void fetchUserDataFromFirestore(String deviceId) {
+    /**
+     * Fetches user data from Firestore based on the device ID.
+     *
+     * @param deviceId The unique device ID
+     */
+    private void fetchUserDataFromFirestore(String deviceId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         userDataListener = db.collection("users")
@@ -61,12 +77,23 @@ public class MyProfile extends AppCompatActivity {
                             String lastName = documentSnapshot.getString("Lastname");
                             String email = documentSnapshot.getString("Email");
                             String retrievedPhone = documentSnapshot.getString("PhoneNumber");
+                            String profilePictureUrl = documentSnapshot.getString("ProfilePicture");
 
                             firstNameTextView.setText(retrievedFirstName);
                             lastNameTextView.setText(lastName);
                             emailTextView.setText(email);
                             phoneNumberTextView.setText(retrievedPhone);
-                            currentUser = new User(retrievedFirstName,lastName,email,retrievedPhone);
+
+                            // Load profile picture using the profilePictureUrl
+                            if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+                                Glide.with(this).load(profilePictureUrl).into(profileImageView);
+                            } else {
+                                // Load default profile picture
+                                Glide.with(this).load(R.drawable.profile_icon_black).into(profileImageView);
+                            }
+
+                            // Initialize currentUser object with fetched data
+                            currentUser = new User(retrievedFirstName, lastName, email, retrievedPhone, profilePictureUrl);
                         }
                     }
                 });

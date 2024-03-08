@@ -1,4 +1,4 @@
-package com.example.scansaga;
+package com.example.scansaga.Views;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -6,6 +6,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.scansaga.Controllers.EventArrayAdapter;
+import com.example.scansaga.Model.Event;
+import com.example.scansaga.R;
+import com.example.scansaga.Views.AddEventFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;

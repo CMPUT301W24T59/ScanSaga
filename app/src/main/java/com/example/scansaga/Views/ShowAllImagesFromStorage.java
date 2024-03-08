@@ -1,19 +1,17 @@
-package com.example.scansaga;
+package com.example.scansaga.Views;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.scansaga.Controllers.ImageAdapter;
+import com.example.scansaga.R;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
