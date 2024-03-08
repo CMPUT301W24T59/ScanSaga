@@ -28,6 +28,8 @@ public class ShowAllImagesFromStorage extends AppCompatActivity {
     ProgressBar progressBar;
     ImageAdapter adapter;
 
+    //Citation: Sanchhaya Education Private Limited, GeeksforGeeks,2024
+    //URL : https://www.geeksforgeeks.org/how-to-retrieve-image-from-firebase-in-realtime-in-android/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
