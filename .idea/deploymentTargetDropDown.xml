@@ -5,13 +5,13 @@
       <entry key="EventTest">
         <State />
       </entry>
-      <entry key="MainActivity">
-        <State />
-      </entry>
       <entry key="MainActivityTest">
         <State />
       </entry>
       <entry key="ShowAllEventsTest">
+        <State />
+      </entry>
+      <entry key="Tests in 'com.example.scansaga'">
         <State />
       </entry>
       <entry key="UserArrayAdapterTest">
