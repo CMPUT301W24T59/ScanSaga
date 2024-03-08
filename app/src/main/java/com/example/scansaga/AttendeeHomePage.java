@@ -33,7 +33,7 @@ public class AttendeeHomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Start ShowAllEventsActivity
-                Intent intent = new Intent(AttendeeHomePage.this, ShowAllEvents.class);
+                Intent intent = new Intent(AttendeeHomePage.this, ShowAllEventsAttendees.class);
                 startActivity(intent);
             }
         });
