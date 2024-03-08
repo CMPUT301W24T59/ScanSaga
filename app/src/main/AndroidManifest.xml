@@ -18,8 +18,7 @@
         android:theme="@style/Theme.ScanSaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity android:name=".EventSignUp">
-        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -57,10 +56,6 @@
             android:name=".ShowAllEvents"
             android:exported="true">
         </activity>
-        <activity
-            android:name=".ScanAndGo"
-            android:exported="true">
-        </activity>
 
         <activity
             android:name=".ShowAllUsers"
@@ -71,12 +66,11 @@
             android:name=".ShowAllEventsAttendees"
             android:exported="true">
         </activity>
+
         <activity
-            android:name=".EventSignUp"
+            android:name=".ShowAllImagesFromStorage"
             android:exported="true">
         </activity>
-
-
 
     </application>
 
