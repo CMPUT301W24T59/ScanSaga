@@ -75,6 +75,7 @@ public class ShowAllEvents extends AppCompatActivity {
     }
 
     // Method to fetch users from Firestore
+    @SuppressLint("RestrictedApi")
     private void fetchEventsFromFirestore() {
         eventsRef.addSnapshotListener((querySnapshots, error) -> {
             if (error != null) {
@@ -88,6 +89,7 @@ public class ShowAllEvents extends AppCompatActivity {
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
                     String qrCodeUrl = doc.getString("QRCodeUrl"); // Adjust the field name as in your Firestore
+                    //Bitmap qr = null;
                     String imageUrl = doc.getString("imageUrl"); // Adjust the field name as in your Firestore
                     Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                     if (imageUrl != null) {
@@ -105,7 +107,7 @@ public class ShowAllEvents extends AppCompatActivity {
 
 
     private void deleteEventFromFirestore(Event event) {
-        eventsRef.document(event.getName())
+        eventsRef.document(event.getName() + "_" + event.getDate())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firestore", "Event deleted successfully!");
