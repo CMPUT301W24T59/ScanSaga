@@ -1,9 +1,7 @@
-package com.example.scansaga;
+package com.example.scansaga.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
+import com.example.scansaga.Model.Event;
+import com.example.scansaga.R;
 
 import java.util.ArrayList;
 
