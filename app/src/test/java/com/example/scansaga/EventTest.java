@@ -1,51 +1,98 @@
 package com.example.scansaga;
 
-import android.graphics.Bitmap;
+import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
+/**
+ * Unit tests for the Event class.
+ */
 public class EventTest {
 
-    @Test
-    public void testEventConstructor() {
-        // Given
-        String name = "Test Event";
-        String date = "2024-03-05";
-        String venue = "Test Venue";
-        Bitmap qrCodeBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+    private static final String INITIAL_NAME = "Event Name";
+    private static final String INITIAL_DATE = "2021-01-01";
+    private static final String INITIAL_VENUE = "Event Venue";
+    private static final String INITIAL_IMAGE_URL = "https://example.com/image.jpg";
 
-        // When
-        Event event = new Event(name, date, venue, qrCodeBitmap.toString());
+    private Event event;
 
-        // Then
-        assertNotNull(event);
-        assertEquals(name, event.getName());
-        assertEquals(date, event.getDate());
-        assertEquals(venue, event.getVenue());
-        assertEquals(qrCodeBitmap, event.getQrCodeBitmap());
+    /**
+     * Sets up the test fixture before each test method.
+     */
+    @Before
+    public void setUp() {
+        event = new Event(INITIAL_NAME, INITIAL_DATE, INITIAL_VENUE, INITIAL_IMAGE_URL);
     }
 
+    /**
+     * Test for verifying the correct retrieval of the event name.
+     */
     @Test
-    public void testEventSetters() {
-        // Given
-        Event event = new Event("Old Event", "3/11/2024", "Old Venue", null);
+    public void testNameGetter() {
+        assertEquals("Event name should be retrieved correctly", INITIAL_NAME, event.getName());
+    }
 
-        // When
-        String newName = "New Event";
-        String newDate = "3/11/2024";
-        String newVenue = "New Venue";
-        Bitmap newQrCodeBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-
+    /**
+     * Test for verifying the correct update of the event name.
+     */
+    @Test
+    public void testNameSetter() {
+        String newName = "New Event Name";
         event.setName(newName);
-        event.setDate(newDate);
-        event.setVenue(newVenue);
-        event.setQrCodeBitmap(newQrCodeBitmap);
+        assertEquals("Event name should be updated correctly", newName, event.getName());
+    }
 
-        // Then
-        assertEquals(newName, event.getName());
-        assertEquals(newDate, event.getDate());
-        assertEquals(newVenue, event.getVenue());
-        assertEquals(newQrCodeBitmap, event.getQrCodeBitmap());
+    /**
+     * Test for verifying the correct retrieval of the event date.
+     */
+    @Test
+    public void testDateGetter() {
+        assertEquals("Event date should be retrieved correctly", INITIAL_DATE, event.getDate());
+    }
+
+    /**
+     * Test for verifying the correct update of the event date.
+     */
+    @Test
+    public void testDateSetter() {
+        String newDate = "2022-02-02";
+        event.setDate(newDate);
+        assertEquals("Event date should be updated correctly", newDate, event.getDate());
+    }
+
+    /**
+     * Test for verifying the correct retrieval of the event venue.
+     */
+    @Test
+    public void testVenueGetter() {
+        assertEquals("Event venue should be retrieved correctly", INITIAL_VENUE, event.getVenue());
+    }
+
+    /**
+     * Test for verifying the correct update of the event venue.
+     */
+    @Test
+    public void testVenueSetter() {
+        String newVenue = "New Event Venue";
+        event.setVenue(newVenue);
+        assertEquals("Event venue should be updated correctly", newVenue, event.getVenue());
+    }
+
+    /**
+     * Test for verifying the correct retrieval of the event's image URL.
+     */
+    @Test
+    public void testImageUrlGetter() {
+        assertEquals("Image URL should be retrieved correctly", INITIAL_IMAGE_URL, event.getImageUrl());
+    }
+
+    /**
+     * Test for verifying the correct update of the event's image URL.
+     */
+    @Test
+    public void testImageUrlSetter() {
+        String newImageUrl = "https://example.com/newimage.jpg";
+        event.setImageUrl(newImageUrl);
+        assertEquals("Image URL should be updated correctly", newImageUrl, event.getImageUrl());
     }
 }
