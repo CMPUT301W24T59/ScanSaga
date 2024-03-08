@@ -353,7 +353,7 @@ import java.util.UUID;
 
 public class AddEventFragment extends DialogFragment {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
 

@@ -1,96 +1,95 @@
 //package com.example.scansaga;
 //
-//import android.widget.EditText;
+//import static androidx.test.espresso.Espresso.onView;
+//import static androidx.test.espresso.action.ViewActions.clearText;
+//import static androidx.test.espresso.action.ViewActions.click;
+//import static androidx.test.espresso.action.ViewActions.typeText;
+//import static androidx.test.espresso.matcher.ViewMatchers.withId;
+//import static androidx.test.espresso.matcher.ViewMatchers.withText;
+//import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertFalse;
+//import static org.junit.Assert.assertNotNull;
+//import static org.junit.Assert.assertNull;
+//import static org.junit.Assert.assertTrue;
 //
-//import androidx.fragment.app.FragmentActivity;
-//import androidx.fragment.app.FragmentManager;
-//import androidx.test.core.app.ActivityScenario;
+//import android.os.Bundle;
+//import android.widget.TextView;
+//
+//import androidx.fragment.app.testing.FragmentScenario;
+//import androidx.test.ext.junit.rules.ActivityScenarioRule;
 //import androidx.test.ext.junit.runners.AndroidJUnit4;
+//import androidx.test.filters.LargeTest;
+//import androidx.test.rule.ActivityTestRule;
 //
-//import com.google.android.gms.tasks.Task;
-//import com.google.android.gms.tasks.Tasks;
-//import com.google.firebase.firestore.CollectionReference;
-//import com.google.firebase.firestore.DocumentSnapshot;
-//import com.google.firebase.firestore.FirebaseFirestore;
-//import com.google.firebase.firestore.Query;
-//import com.google.firebase.firestore.QueryDocumentSnapshot;
-//import com.google.firebase.firestore.QuerySnapshot;
-//import com.google.firebase.firestore.WriteBatch;
-//
-//import org.junit.Before;
+//import org.junit.Rule;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.junit.Assert.assertEquals;
-//
 //@RunWith(AndroidJUnit4.class)
+//@LargeTest
 //public class EditUserFragmentTest {
 //
-//    private ActivityScenario<FragmentActivity> activityScenario;
+//    @Rule
+//    public ActivityScenarioRule<EditUserFragment> activityRule = new ActivityScenarioRule<>(EditUserFragment.class);
 //
-//    @Before
-//    public void setUp() {
-//        activityScenario = ActivityScenario.launch(FragmentActivity.class);
+//    @Test
+//    public void testEditUserFragmentInitialization() {
+//        User testUser = new User("John", "Doe", "john.doe@example.com", "1234567890");
+//        String testDeviceId = "testDevice123";
+//        Bundle args = new Bundle();
+//        args.putString("deviceId", testDeviceId);
+//        args.putSerializable("currentUser", testUser);
+//
+//        FragmentScenario<EditUserFragment> scenario = FragmentScenario.launchInContainer(EditUserFragment.class, args);
+//        scenario.onFragment(fragment -> {
+//            assertNotNull(fragment);
+//            assertEquals(testUser, fragment.userToEdit);
+//            assertEquals(testDeviceId, fragment.deviceId);
+//            assertNull(fragment.listener);
+//
+//            TextView titleTextView = fragment.getView().findViewById(R.id.title_text_view);
+//            assertEquals("Edit User", titleTextView.getText().toString());
+//        });
+//
+//    @Test
+//    public void testEmailValidation() {
+//        EditUserFragment fragment = new EditUserFragment();
+//        assertTrue(fragment.isValidEmail("test@example.com"));
+//        assertFalse(fragment.isValidEmail("invalid-email"));
+//    }
+//
+//    @Test
+//    public void testPhoneNumberValidation() {
+//        EditUserFragment fragment = new EditUserFragment();
+//        assertTrue(fragment.isValidPhoneNumber("1234567890"));
+//        assertFalse(fragment.isValidPhoneNumber("123")); // Invalid length
+//        assertFalse(fragment.isValidPhoneNumber("abcdefg")); // Non-numeric characters
+//    }
+//
+//    @Test
+//    public void testEditUserFragmentSaveButton() {
+//        User testUser = new User("John", "Doe", "john.doe@example.com", "1234567890");
+//        String testDeviceId = "testDevice123";
+//        EditUserFragment fragment = EditUserFragment.newInstance(testDeviceId, testUser);
+//        fragment.show(activityRule.getActivity().getSupportFragmentManager(), "edit_user_fragment");
+//        onView(withId(R.id.edit_text_firstname)).perform(clearText(), typeText("Jane"));
+//        onView(withId(R.id.edit_text_lastname)).perform(clearText(), typeText("Doe"));
+//        onView(withId(R.id.edit_text_email)).perform(clearText(), typeText("jane.doe@example.com"));
+//        onView(withId(R.id.edit_text_phone)).perform(clearText(), typeText("9876543210"));
+//        onView(withText("Save")).perform(click());
+//        // Check if the user information is updated correctly
+//        // Assert the expected behavior based on the update operation
 //    }
 //
 //    @Test
 //    public void testUpdateUserInFirestore() {
-//        activityScenario.onActivity(activity -> {
-//            // Mock user data
-//            User user = new User("John", "Doe", "john.doe@example.com", "1234567890");
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("user", user);
-//
-//            // Create EditUserFragment
-//            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-//            EditUserFragment editUserFragment = new EditUserFragment();
-//            editUserFragment.setArguments(bundle);
-//            editUserFragment.show(fragmentManager, "EditUserFragment");
-//
-//            // Perform update
-//            EditText editFirstName = editUserFragment.getView().findViewById(R.id.edit_text_firstname);
-//            EditText editLastName = editUserFragment.getView().findViewById(R.id.edit_text_lastname);
-//            EditText editEmail = editUserFragment.getView().findViewById(R.id.edit_text_email);
-//            EditText editPhone = editUserFragment.getView().findViewById(R.id.edit_text_phone);
-//
-//            editFirstName.setText("Jane");
-//            editLastName.setText("Smith");
-//            editEmail.setText("jane.smith@example.com");
-//            editPhone.setText("0987654321");
-//
-//            // Get Firestore instance and collection reference
-//            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-//            CollectionReference usersCollection = firestore.collection("users");
-//
-//            // Add a test document to the collection
-//            Task<Void> addTask = usersCollection.document("testUser").set(user);
-//            Tasks.await(addTask); // Wait for the task to complete
-//
-//            // Call the update method
-//            editUserFragment.updateUserInFirestore(
-//                    editFirstName.getText().toString(),
-//                    editLastName.getText().toString(),
-//                    editEmail.getText().toString(),
-//                    editPhone.getText().toString()
-//            );
-//
-//            // Verify Firestore update
-//            Task<QuerySnapshot> queryTask = usersCollection.whereEqualTo("phone", user.getPhone()).get();
-//            queryTask.addOnCompleteListener(task -> {
-//                if (task.isSuccessful()) {
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        assertEquals("Jane", document.getString("firstname"));
-//                        assertEquals("Smith", document.getString("lastname"));
-//                        assertEquals("jane.smith@example.com", document.getString("email"));
-//                        assertEquals("0987654321", document.getString("phone"));
-//                    }
-//                }
-//            });
-//        });
+//        // This test assumes Firestore is mocked or running in a test environment
+//        // Mock Firestore setup or use Firebase Test Lab for Firebase related tests
+//        // This is an example of how to test the Firestore update operation
+//        EditUserFragment fragment = new EditUserFragment();
+//        fragment.updateUserInFirestore("John", "Doe", "test@example.com", "1234567890");
+//        // Check if Firestore update was successful
+//        // Assert the expected behavior based on Firestore setup
 //    }
 //}
-//
 //

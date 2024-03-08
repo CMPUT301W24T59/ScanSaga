@@ -1,7 +1,6 @@
 package com.example.scansaga;
 
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -21,11 +20,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.junit.Assert.assertNotNull;
 
-import android.content.Intent;
-
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AttendeeHomepageUITest {
+public class AttendeeHomepageTest {
 
     @Rule
     public ActivityScenarioRule<AttendeeHomePage> activityRule = new ActivityScenarioRule<AttendeeHomePage>(AttendeeHomePage.class);

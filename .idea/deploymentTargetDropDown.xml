@@ -2,27 +2,20 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="AttendeeHomePageTest">
+      <entry key="AddEventFragmentTest">
         <State />
       </entry>
-      <entry key="AttendeeHomepageUITest">
+      <entry key="ShowAllImagesTest">
         <State />
       </entry>
-      <entry key="MainActivity">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\forco\.android\avd\Pixel_7_API_30.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-07T17:00:18.842939200Z" />
-        </State>
+      <entry key="ShowAllUsersTest">
+        <State />
+      </entry>
+      <entry key="testProgressBarVisibility()">
+        <State />
+      </entry>
+      <entry key="testSaveEventData()">
+        <State />
       </entry>
     </value>
   </component>

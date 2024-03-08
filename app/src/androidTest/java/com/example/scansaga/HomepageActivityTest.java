@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class HomepageActivityUITest {
+public class HomepageActivityTest {
     @Rule
     public ActivityScenarioRule<HomepageActivity> activityScenarioRule = new ActivityScenarioRule<>(HomepageActivity.class);
     private IdlingResource idlingResource;

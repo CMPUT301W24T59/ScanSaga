@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
-public class EventArrayAdapterUITest {
+public class EventArrayAdapterTest {
     private Context context;
     private EventArrayAdapter adapter;
     private ArrayList<Event> events;

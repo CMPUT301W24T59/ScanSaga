@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AddEventUITest {
+public class AddEventTest {
 
     @Rule
     public ActivityScenarioRule<AddEvent> activityRule =
@@ -68,47 +68,6 @@ public class AddEventUITest {
     }
 
 //    @Test
-//    public void testAddEventToFirestore() throws InterruptedException {
-//        final CountDownLatch latch = new CountDownLatch(1);
-//
-//        activityRule.getScenario().onActivity(activity -> {
-//            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-//
-//            // Mock event data
-//            Event eventToAdd = new Event("Test Event", "Test Venue", "2024-03-06", null);
-//
-//            // Add event to Firestore
-//            activity.addEventToFirestore(eventToAdd);
-//
-//            // Check Firestore for the added event
-//            firestore.collection("events").document(eventToAdd.getName()).get()
-//                    .addOnSuccessListener(documentSnapshot -> {
-//                        // Retrieve data from Firestore
-//                        String name = documentSnapshot.getString("Name");
-//                        String date = documentSnapshot.getString("Date");
-//                        String venue = documentSnapshot.getString("Venue");
-//
-//                        // Assertions to verify data correctness
-//                        assertEquals("Test Event", name);
-//                        assertEquals("2024-03-06", date);
-//                        assertEquals("Test Venue", venue);
-//
-//                        // Signal that the test is complete
-//                        latch.countDown();
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        // Log any failures
-//                        Log.e("FirestoreTest", "Error retrieving event from Firestore", e);
-//                        // Signal that the test is complete
-//                        latch.countDown();
-//                    });
-//        });
-//
-//        // Wait for the Firestore operation to complete
-//        latch.await();
-//    }
-
-//    @Test
 //    public void testEditEvent() {
 //        activityRule.getScenario().onActivity(activity -> {
 //            ArrayList<Event> eventDataList = activity.eventDataList;
@@ -126,33 +85,6 @@ public class AddEventUITest {
 //            assertTrue(eventDataList.contains(editedEvent));
 //            assertFalse(eventDataList.contains(existingEvent));
 //        });
-//    }
-
-//    @Test
-//    public void testAddEventToList() {
-//        // Click on the add event button
-//        onView(withId(R.id.add_event_button))
-//                .perform(click());
-//
-//        // Type text into event name field
-//        onView(withId(R.id.event_text))
-//                .perform(typeText("Test Event"));
-//
-//        // Type text into venue field
-//        onView(withId(R.id.venue_text))
-//                .perform(typeText("Test Venue"));
-//
-//        // Type text into time field
-//        onView(withId(R.id.time_text))
-//                .perform(typeText("2024-03-06"));
-//
-//        // Click on the add button
-//        onView(withText("Add"))
-//                .perform(click());
-//
-//        // Check if the event with the given name is displayed
-//        onView(withText("Test Event"))
-//                .check(matches(isDisplayed()));
 //    }
 }
 
