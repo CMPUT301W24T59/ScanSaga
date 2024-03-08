@@ -31,7 +31,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
     public void addNewEvent(Event event) {
         eventDataList.add(event);
         eventArrayAdapter.notifyDataSetChanged();
-        addEventToFirestore(event);
     }
 
     @Override
@@ -61,21 +60,6 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         FloatingActionButton fab = findViewById(R.id.add_event_button);
         fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));
 
-    }
-
-    // Method to add a new event to Firestore
-    private void addEventToFirestore(Event event) {
-        // Add the event to the database
-        HashMap<String, String> data = new HashMap<>();
-        data.put("Date", event.getDate());
-        data.put("Venue", event.getVenue());
-        data.put("Name", event.getName());
-        //data.put("QR", event.getQrCodeBitmap().toString());
-        // Add more fields as needed
-
-        eventsRef.document(event.getName()).set(data)
-                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Event added successfully!"))
-                .addOnFailureListener(e -> Log.e("Firestore", "Error adding event", e));
     }
 
 }
