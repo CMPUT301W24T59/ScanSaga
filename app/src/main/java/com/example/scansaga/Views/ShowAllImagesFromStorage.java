@@ -20,11 +20,11 @@ import java.util.ArrayList;
  * The ShowAllImagesFromStorage class displays all images stored in Firebase Storage.
  */
 public class ShowAllImagesFromStorage extends AppCompatActivity {
-    ArrayList<String> imagelist;
-    RecyclerView recyclerView;
+    public ArrayList<String> imagelist;
+    public RecyclerView recyclerView;
     StorageReference root;
-    ProgressBar progressBar;
-    ImageAdapter adapter;
+    public ProgressBar progressBar;
+    public ImageAdapter adapter;
 
     //Citation: Sanchhaya Education Private Limited, GeeksforGeeks,2024
     //URL : https://www.geeksforgeeks.org/how-to-retrieve-image-from-firebase-in-realtime-in-android/
