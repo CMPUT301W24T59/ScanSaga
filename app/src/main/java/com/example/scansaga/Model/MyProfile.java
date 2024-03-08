@@ -26,6 +26,14 @@ public class MyProfile extends AppCompatActivity {
     private User currentUser;
     private ListenerRegistration userDataListener;
 
+    /**
+     * Called when the activity is first created. Initializes UI elements,
+     * retrieves the device ID, and sets up listeners to fetch user data from Firestore.
+     *
+     * @param savedInstanceState  If the activity is being re-initialized after previously
+     *                            being shut down then this Bundle contains the data it most
+     *                            recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +107,10 @@ public class MyProfile extends AppCompatActivity {
                 });
     }
 
+    /**
+     *  Called when the activity is destroyed.  Removes the real-time Firestore listener
+     *  to prevent memory leaks.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
