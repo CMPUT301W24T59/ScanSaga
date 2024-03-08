@@ -18,7 +18,6 @@ public class AttendeeHomePage extends AppCompatActivity {
         setContentView(R.layout.attendee_homepage);
 
         // Initialize buttons
-        Button signUpEventButton = findViewById(R.id.sign_up_event_button);
         Button scanAndGoButton = findViewById(R.id.scan_and_attend_button);
         Button editProfileButton = findViewById(R.id.edit_profile_button);
         Button showAllEventsButton = findViewById(R.id.show_all_events_button);
