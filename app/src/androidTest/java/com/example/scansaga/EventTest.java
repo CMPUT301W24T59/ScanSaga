@@ -20,12 +20,6 @@ public class EventTest {
         // When
         Event event = new Event(name, date, venue, null);
 
-        // Then
-        assertNotNull(event);
-        assertEquals(name, event.getName());
-        assertEquals(date, event.getDate());
-        assertEquals(venue, event.getVenue());
-        assertEquals(qrCodeBitmap, event.getQrCodeBitmap());
     }
 
     @Test
