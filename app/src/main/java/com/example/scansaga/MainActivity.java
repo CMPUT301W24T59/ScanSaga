@@ -3,17 +3,18 @@ package com.example.scansaga;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Build;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,11 +25,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
+/**
+ * MainActivity class to handle user registration and login.
+ */
 public class MainActivity extends AppCompatActivity {
+    private static final int PICK_IMAGE_REQUEST = 1;
     ArrayList<User> userDataList;
     UserArrayAdapter userArrayAdapter;
     private EditText firstNameEditText, lastNameEditText, emailEditText, phoneNumberEditText;
@@ -36,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference usernamesRef;
     private String deviceId;
+    private Button uploadProfilePicture;
+
+    private Uri profileUri;
+    private String profilePictureString;
+    private ImageView imageView;
 
     // Method to validate email format
     private boolean isValidEmail(String email) {
@@ -61,13 +74,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
-        usernamesRef=db.collection("users");
+        usernamesRef = db.collection("users");
         userDataList = new ArrayList<>();
         userArrayAdapter = new UserArrayAdapter(this, userDataList);
 
 
+        // Get unique device ID
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+        // Check if the user already exists based on device ID
         usernamesRef.whereEqualTo("DeviceId", deviceId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -76,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         String lastName = snapshot.getString("Lastname");
                         String email = snapshot.getString("Email");
                         String phoneNumber = snapshot.getString("PhoneNumber");
+                        String imageUri = snapshot.getString("ImageUri");
 
                         // Check if the user exists in the admin collection
                         CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
@@ -83,16 +99,17 @@ public class MainActivity extends AppCompatActivity {
                                 .get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (documentSnapshot.exists()) {
-                                        // User exists in the regular user collection
+                                        // User exists in the admin collection
                                         // Navigate to HomepageActivity
-                                        User user = new User(firstName, lastName, email, phoneNumber);
+                                        User user = new User(firstName, lastName, email, phoneNumber, null);
                                         Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
                                         intent.putExtra("user", user);
                                         startActivity(intent);
                                         finish(); // Finish MainActivity so that it's not kept in the back stack
-                                    }
-                                    else{
-                                        User user = new User(firstName, lastName, email, phoneNumber);
+                                    } else {
+                                        // User exists in the regular user collection
+                                        // Navigate to AttendeeHomePage
+                                        User user = new User(firstName, lastName, email, phoneNumber, null);
                                         Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
                                         intent.putExtra("user", user);
                                         startActivity(intent);
@@ -111,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("Firestore", "Error checking for device ID", e);
                 });
 
-
+        // Add click listener for the addUserButton
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,22 +143,19 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                // Check if email and phone number are valid
                 if (isValidEmail(email) && isValidPhoneNumber(phoneNumber)) {
-                    addNewUser(new User(firstName, lastName, email, phoneNumber));
+                    addNewUser(new User(firstName, lastName, email, phoneNumber, null));
                 } else if (!isValidEmail(email)){
-                    // Display error message if email or phone number is invalid
+                    // Display error message if email is invalid
                     Toast.makeText(MainActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    // Display error message if email or phone number is invalid
-                    Toast.makeText(MainActivity.this, "Invalid Phone Number. Please enter a 10 digits phone number", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Display error message if phone number is invalid
+                    Toast.makeText(MainActivity.this, "Invalid Phone Number. Please enter a 10-digit phone number", Toast.LENGTH_SHORT).show();
                 }
 
-
-                if (userArrayAdapter != null) {
-                    userArrayAdapter.notifyDataSetChanged();
-                }
-                userArrayAdapter.notifyDataSetChanged();
+                // Clear EditText fields after adding a user
                 firstNameEditText.setText("");
                 lastNameEditText.setText("");
                 emailEditText.setText("");
@@ -150,6 +164,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * Method to add a new user to Firestore database.
+     *
+     * @param user User object containing user details
+     */
 
     private void addNewUser(User user) {
         HashMap<String, String> data = new HashMap<>();

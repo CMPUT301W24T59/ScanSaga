@@ -7,6 +7,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * Activity for the homepage of the attendee.
+ */
 public class AttendeeHomePage extends AppCompatActivity {
 
     @Override
@@ -25,16 +28,7 @@ public class AttendeeHomePage extends AppCompatActivity {
         User user = (User) getIntent().getSerializableExtra("user");
 
 
-        signUpEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start SignUpEventActivity
-                Intent intent = new Intent(AttendeeHomePage.this, EventSignUp.class);
-                startActivity(intent);
-            }
-        });
-
-        // Set click listeners for each button
+        // Set click listener for show all events button
         showAllEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,15 +38,8 @@ public class AttendeeHomePage extends AppCompatActivity {
             }
         });
 
-        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start ScanAndAttendActivity
-                Intent intent = new Intent(AttendeeHomePage.this, ScanAndGo.class);
-                startActivity(intent);
-            }
-        });
 
+        // Set click listener for edit profile button
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +50,7 @@ public class AttendeeHomePage extends AppCompatActivity {
             }
         });
 
+        // Set click listener for add event button
         addEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,7 +34,6 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
         eventList = new ArrayList<>();
-        delete = findViewById(R.id.button_delete);
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");

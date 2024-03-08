@@ -72,6 +72,10 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".ShowAllImagesFromStorage"
+            android:exported="true">
+        </activity>
 
     </application>
 

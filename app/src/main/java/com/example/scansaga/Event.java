@@ -16,7 +16,6 @@ public class Event implements Serializable {
      * @param name         The name of the event.
      * @param date         The date of the event.
      * @param venue        The venue of the event.
-//     * @param qrCodeBitmap The QR code bitmap associated with the event.
      * @param imageUrl     The URL of the image associated with the event.
      */
     public Event(String name, String date, String venue,  String imageUrl) {

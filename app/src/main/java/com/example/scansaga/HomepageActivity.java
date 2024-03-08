@@ -19,7 +19,7 @@ public class HomepageActivity extends AppCompatActivity {
 
         // Initialize buttons
         Button showAllEventsButton = findViewById(R.id.show_all_events_button);
-        Button signUpEventButton = findViewById(R.id.sign_up_event_button);
+        Button showAllImages = findViewById(R.id.show_all_images_button);
         Button scanAndGoButton = findViewById(R.id.scan_and_attend_button);
         Button editProfileButton = findViewById(R.id.edit_profile_button);
         Button addEventButton = findViewById(R.id.add_event_button);
@@ -38,23 +38,15 @@ public class HomepageActivity extends AppCompatActivity {
             }
         });
 
-        signUpEventButton.setOnClickListener(new View.OnClickListener() {
+        showAllImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start SignUpEventActivity
-                Intent intent = new Intent(HomepageActivity.this, EventSignUp.class);
+                Intent intent = new Intent(HomepageActivity.this, ShowAllImagesFromStorage.class);
                 startActivity(intent);
             }
         });
 
-        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start ScanAndAttendActivity
-                Intent intent = new Intent(HomepageActivity.this, ScanAndGo.class);
-                startActivity(intent);
-            }
-        });
 
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,5 +75,6 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 }

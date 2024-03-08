@@ -36,8 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:layout_margin="10dp" />
-
+        android:src="@drawable/event"
+        android:layout_margin="5dp" />
 
     <ImageView
         android:id="@+id/qr_code_image"
@@ -54,8 +54,5 @@
         android:background="@drawable/dotted_line"
         android:backgroundTint="#000000"
         android:padding="10sp"/>
-
-
-
 
 </LinearLayout>
