@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="15dp">
 
     <TextView
         android:id="@+id/textview_last_name"
@@ -40,8 +41,15 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="------------------------------------------------------"
         android:textColor="@color/black"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dotted_line"
+        android:backgroundTint="#000000"
+        android:padding="10sp"/>
+
 
 
 </LinearLayout>

@@ -17,6 +17,8 @@ import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.content.Intent;
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AttendeeHomepageUITest {
@@ -34,11 +36,11 @@ public class AttendeeHomepageUITest {
         Intents.release();
     }
 
-//    @Test
-//    public void signUpEventButton_click_shouldStartSignUpEventActivity() {
-//        onView(withId(R.id.sign_up_event_button)).perform(click());
-//        intended(hasComponent(EventSignUp.class.getName()));
-//    }
+    @Test
+    public void signUpEventButton_click_shouldStartSignUpEventActivity() {
+        onView(withId(R.id.sign_up_event_button)).perform(click());
+        intended(hasComponent(EventSignUp.class.getName()));
+    }
 
     @Test
     public void showAllEventsButton_click_shouldStartShowAllEventsActivity() {
@@ -46,22 +48,22 @@ public class AttendeeHomepageUITest {
         intended(hasComponent(ShowAllEventsAttendees.class.getName()));
     }
 
-//    @Test
-//    public void scanAndGoButton_click_shouldStartScanAndGoActivity() {
-//        onView(withId(R.id.scan_and_attend_button)).perform(click());
-//        intended(hasComponent(ScanAndGo.class.getName()));
-//    }
+    @Test
+    public void scanAndGoButton_click_shouldStartScanAndGoActivity() {
+        onView(withId(R.id.scan_and_attend_button)).perform(click());
+        intended(hasComponent(ScanAndGo.class.getName()));
+    }
 
-//    @Test
-//    public void editProfileButton_click_shouldStartEditProfileActivity() {
-//        User user = new User("Alice", "Wonderland", "testUser@gmail.com", null); // Create a test user
-//        Intent intent = new Intent();
-//        intent.putExtra("user", user);
-//        activityRule.launchActivity(intent);
-//
-//        onView(withId(R.id.edit_profile_button)).perform(click());
-//        intended(hasComponent(MyProfile.class.getName()));
-//    }
+    @Test
+    public void editProfileButton_click_shouldStartEditProfileActivity() {
+        User user = new User("Alice", "Wonderland", "testUser@gmail.com", null); // Create a test user
+        Intent intent = new Intent();
+        intent.putExtra("user", user);
+        activityRule.launchActivity(intent);
+
+        onView(withId(R.id.edit_profile_button)).perform(click());
+        intended(hasComponent(MyProfile.class.getName()));
+    }
 
     @Test
     public void addEventButton_click_shouldStartAddEventActivity() {

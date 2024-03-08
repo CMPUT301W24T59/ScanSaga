@@ -9,12 +9,16 @@
         android:id="@+id/title_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="#00BCD4"
-        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:paddingStart="20dp"
         android:text="Add an Event"
-        android:textSize="30dp"
-        android:textStyle="bold" />
+        android:textSize="40dp"
+        android:textColor="#2D2D2D"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="start"
+        android:padding="10sp" />
 
     <!-- Floating action button to add event -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,7 +28,8 @@
         android:layout_below="@id/title_textview"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#3F51B5"
+        android:backgroundTint="#2D2D2D"
+        android:textColorHint="#2D2D2D"
         android:src="@android:drawable/ic_input_add"
         tools:ignore="SpeakableTextPresentCheck" />
 
