@@ -1,6 +1,5 @@
 package com.example.scansaga;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
@@ -18,6 +17,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+
+import com.example.scansaga.Model.Event;
+import com.example.scansaga.Views.ShowAllEvents;
 
 @RunWith(AndroidJUnit4.class)
 public class ShowAllEventsTest {

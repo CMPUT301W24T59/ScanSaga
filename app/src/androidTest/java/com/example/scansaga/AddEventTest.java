@@ -1,6 +1,5 @@
 package com.example.scansaga;
 
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -12,16 +11,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
+
+import com.example.scansaga.Views.AttendeeHomePage;
 
 import java.util.Calendar;
 
@@ -29,8 +28,8 @@ import java.util.Calendar;
 public class AddEventTest {
 
     @Rule
-    public ActivityScenarioRule<AddEvent> activityScenarioRule =
-            new ActivityScenarioRule<>(AddEvent.class);
+    public ActivityScenarioRule<AttendeeHomePage.AddEvent> activityScenarioRule =
+            new ActivityScenarioRule<>(AttendeeHomePage.AddEvent.class);
 
     @Test
     public void testAddEventButtonOpensFragment() {
