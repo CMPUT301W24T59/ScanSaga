@@ -21,10 +21,10 @@ import java.util.ArrayList;
  */
 public class ShowAllImagesFromStorage extends AppCompatActivity {
     public ArrayList<String> imagelist;
-    public RecyclerView recyclerView;
+    RecyclerView recyclerView;
     StorageReference root;
-    public ProgressBar progressBar;
-    public ImageAdapter adapter;
+    ProgressBar progressBar;
+    ImageAdapter adapter;
 
     //Citation: Sanchhaya Education Private Limited, GeeksforGeeks,2024
     //URL : https://www.geeksforgeeks.org/how-to-retrieve-image-from-firebase-in-realtime-in-android/

@@ -19,13 +19,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ * Activity responsible for displaying a list of events and providing functionality
+ * to add new events.  Integrates with the AddEventFragment to handle event creation.
+ */
 public class AddEvent extends AppCompatActivity implements AddEventFragment.AddEventDialogListener {
     ListView eventList;
     ArrayList<Event> eventDataList;
     EventArrayAdapter eventArrayAdapter;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
+
+    /**
+     *  Callback method triggered when a new event is to be added from the AddEventFragment.
+     *  Adds the new event to the list and updates the UI.
+     *
+     * @param event The new Event object to be added to the list
+     */
 
     @Override
     public void addNewEvent(Event event) {
@@ -34,17 +44,38 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         addEventToFirestore(event);
     }
 
+    /**
+     *  Callback method triggered when an event is deleted from the AddEventFragment.
+     *  Removes the event from the list and updates the UI.
+     *
+     * @param event The Event object to be deleted from the list.
+     */
     @Override
     public void deleteEvent(Event event) {
         eventDataList.remove(event);
         eventArrayAdapter.notifyDataSetChanged();
     }
+    /**
+     * Callback method triggered when an event is edited from the AddEventFragment.
+     * Updates the UI to reflect changes to the edited event.
+     *
+     * @param event The edited Event object.
+     */
 
     @Override
     public void editEvent(Event event) {
         eventArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Called when the activity is created. Initializes UI elements, sets up Firestore
+     * references, creates the adapter for the event list, and sets an OnClickListener
+     * for the FloatingActionButton to trigger the AddEventFragment.
+     *
+     * @param savedInstanceState  If the activity is being re-initialized after previously
+     *                            being shut down then this Bundle contains the data it most
+     *                            recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -36,6 +36,15 @@ public class ShowAllEvents extends AppCompatActivity {
     private EventArrayAdapter eventAdapter;
     private ArrayList<Event> eventList;
 
+    /**
+     * Called when the activity is created. Initializes UI elements, sets up Firestore
+     * references, creates the adapter for the event list, and sets listeners for
+     * fetching data.
+     *
+     * @param savedInstanceState  If the activity is being re-initialized after previously
+     *                            being shut down then this Bundle contains the data it most
+     *                            recently supplied in onSaveInstanceState(Bundle).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,9 +78,13 @@ public class ShowAllEvents extends AppCompatActivity {
             }
         });
     }
+    /**
+     *  Fetches all events from Firestore and populates the ListView.
+     */
 
     // Method to fetch users from Firestore
-    void fetchEventsFromFirestore() {
+    @SuppressLint("RestrictedApi")
+    private void fetchEventsFromFirestore() {
         eventsRef.addSnapshotListener((querySnapshots, error) -> {
             if (error != null) {
                 Log.e(TAG, "Firestore error: ", error);
@@ -84,6 +97,7 @@ public class ShowAllEvents extends AppCompatActivity {
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
                     String qrCodeUrl = doc.getString("QRCodeUrl"); // Adjust the field name as in your Firestore
+                    //Bitmap qr = null;
                     String imageUrl = doc.getString("imageUrl"); // Adjust the field name as in your Firestore
                     Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                     if (imageUrl != null) {
@@ -99,9 +113,13 @@ public class ShowAllEvents extends AppCompatActivity {
         });
     }
 
-
-    void deleteEventFromFirestore(Event event) {
-        eventsRef.document(event.getName())
+    /**
+     * Deletes the selected event from Firestore.
+     *
+     * @param event The Event object to be deleted.
+     */
+    private void deleteEventFromFirestore(Event event) {
+        eventsRef.document(event.getName() + "_" + event.getDate())
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firestore", "Event deleted successfully!");
@@ -113,6 +131,12 @@ public class ShowAllEvents extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e("Firestore", "Error deleting event", e));
     }
 
+    /**
+     * Downloads an image from Firebase Storage and displays it in an ImageView.
+     * Please note: This function has potential issues, as it seems to be downloading
+     * a hardcoded image reference instead of being tied to the events displayed
+     * in the ListView.
+     */
 
     private void DownloadEventFromFirestore() {
 

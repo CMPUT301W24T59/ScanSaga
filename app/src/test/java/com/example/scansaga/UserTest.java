@@ -3,6 +3,7 @@ package com.example.scansaga;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import com.example.scansaga.Model.User;
 
 /**
  * Unit tests for the {@link User} class.
@@ -16,7 +17,7 @@ public class UserTest {
      */
     @Before
     public void setUp() {
-        user = new User("John", "Doe", "john.doe@example.com", "1234567890");
+        user = new User("John", "Doe", "john.doe@example.com", "1234567890",null);
     }
 
     /**
@@ -66,4 +67,3 @@ public class UserTest {
         assertEquals("0987654321", user.getPhone());
     }
 }
-

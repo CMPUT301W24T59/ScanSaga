@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import com.example.scansaga.Model.Upload;
+
 /**
  * Test class for {@link Upload}.
  * Verifies proper handling of the imageUrl property in the Upload class.
