@@ -1,25 +1,51 @@
-#ScanSaga
+### ScanSaga
 
-This is just the beginning stage of the project, more informantion will be qaqdded to readme as we discuss and progress.
+Welcome to the QR Code Event Check-In System! This Android application provides a solution for event organizers and attendees to manage event check-ins. 
 
-## Features
 
-- Feature 1
-- Feature 2
-- Feature 3
+### Description
+The QR Code Event Check-In System is designed to simplify event management for both organizers and attendees. Organizers can create events, generate unique QR codes for check-ins, track attendance, send notifications, and upload event posters. Attendees can quickly check into events by scanning QR codes, receive important updates, and view event details within the app.
 
-## Installation
+### Features
+QR Code Scanning: Attendees can scan event-specific QR codes for quick check-ins.
+Firebase Integration: Utilize Firebase for storing event details, attendee lists, and real-time check-in status updates.
+Multi-User Interaction: Distinguish between organizers and attendees with different roles and permissions.
+Geolocation Verification (Optional): Optionally use geolocation to verify attendees' physical presence at the event location during check-in.
+Image Upload: Organizers can upload event posters, and attendees can upload profile pictures for a personalized experience.
 
-Instructions on how to install and set up your project.
+### Actors
+Organizer: A person who organizes the event and manages it within the app.
+Attendee: A person who attends the event and checks in using the app.
+Administrator: Responsible for managing the app's infrastructure and data.
 
-## Usage
+### User Stories
 
-How to use your project, including examples.
+Organizer:
+Create and generate QR codes for events.
+View attendee lists and real-time attendance.
+Send notifications to attendees.
+Upload event posters.
+Track attendance milestones.
+Share QR code images.
+Optionally limit the number of attendees.
+View signed up attendees.
 
-## Contributing
+Attendee:
+Quickly check into events using QR codes.
+Upload and manage profile pictures.
+Receive push notifications.
+View event details and announcements.
+Automatically generate profile pictures.
+Sign up for events without logging in.
 
-List of all team members.
 
-## License
+Both:
+Enable or disable geolocation tracking.
 
-Information about the license of your project.
+Administrator:
+Remove events, profiles, and images.
+Browse events, profiles, and images.
+
+
+License
+This project is licensed under the Apache License.

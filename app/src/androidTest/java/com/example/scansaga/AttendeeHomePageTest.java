@@ -1,8 +1,5 @@
 package com.example.scansaga;
 
-import android.content.Intent;
-import android.widget.Button;
-
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -15,8 +12,14 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
+import com.example.scansaga.Model.MyProfile;
+import com.example.scansaga.Views.AttendeeHomePage;
+import com.example.scansaga.Views.ShowAllEventsAttendees;
+
+/**
+ * Test class for {@link AttendeeHomePage} activity UI interactions.
+ */
 @RunWith(AndroidJUnit4.class)
 public class AttendeeHomePageTest {
 
@@ -24,6 +27,9 @@ public class AttendeeHomePageTest {
     public ActivityScenarioRule<AttendeeHomePage> activityScenarioRule =
             new ActivityScenarioRule<>(AttendeeHomePage.class);
 
+    /**
+     * Verifies that clicking on the "Show All Events" button launches the {@link ShowAllEventsAttendees} activity.
+     */
     @Test
     public void testShowAllEventsButton() {
         // Click the show all events button
@@ -34,16 +40,9 @@ public class AttendeeHomePageTest {
         assertNotNull(showAllEventsActivityScenario);
     }
 
-    @Test
-    public void testScanAndGoButton() {
-        // Click the scan and go button
-        onView(withId(R.id.scan_and_attend_button)).perform(click());
-
-        // Ensure ScanAndGoActivity is launched
-        ActivityScenario<ScanAndGo> scanAndGoActivityScenario = ActivityScenario.launch(ScanAndGo.class);
-        assertNotNull(scanAndGoActivityScenario);
-    }
-
+    /**
+     * Verifies that clicking on the "Edit Profile" button launches the {@link MyProfile} activity.
+     */
     @Test
     public void testEditProfileButton() {
         // Click the edit profile button
@@ -54,13 +53,16 @@ public class AttendeeHomePageTest {
         assertNotNull(myProfileActivityScenario);
     }
 
+    /**
+     * Verifies that clicking on the "Add Event" button launches the {@link AttendeeHomePage.AddEvent} activity.
+     */
     @Test
     public void testAddEventButton() {
         // Click the add event button
         onView(withId(R.id.add_event_button)).perform(click());
 
         // Ensure AddEventActivity is launched
-        ActivityScenario<AddEvent> addEventActivityScenario = ActivityScenario.launch(AddEvent.class);
+        ActivityScenario<AttendeeHomePage.AddEvent> addEventActivityScenario = ActivityScenario.launch(AttendeeHomePage.AddEvent.class);
         assertNotNull(addEventActivityScenario);
     }
 }

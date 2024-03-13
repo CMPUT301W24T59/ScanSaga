@@ -6,70 +6,90 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- TextView for the welcome message -->
+    <!-- Welcome TextView -->
     <TextView
         android:id="@+id/welcome_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to the ScanSaga home page"
-        android:background="#0BC6B5"
+        android:layout_marginTop="10dp"
+        android:paddingStart="20dp"
+        android:text="Admin HomePage"
+        android:textSize="30sp"
+        android:textColor="#2D2D2D"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="start"
+        android:padding="15sp" />
+
+    <!-- Profile button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
-        android:textSize="24sp"
-        android:layout_marginBottom="16dp"/>
+        android:padding="20dp">
+
+        <ImageView
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/profile_icon_black" />
+
+        <Button
+            android:id="@+id/edit_profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Profile"/>
+    </LinearLayout>
+
 
     <!-- Button to show all events -->
-    <Button
-        android:id="@+id/show_all_events_button"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show All Events"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
 
-    <Button
-        android:id="@+id/show_all_users_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show all users"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"/>
+        <!-- Button for quick scan and check-in -->
+        <Button
+            android:id="@+id/scan_and_attend_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quick Scan and Check-in"
+            android:layout_marginBottom="16dp"/>
 
-    <Button
-        android:id="@+id/add_event_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add an Event"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"/>
+        <Button
+            android:id="@+id/add_event_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add an Event"
+            android:layout_marginBottom="16dp"/>
 
-    <!-- Button to sign up for an event -->
-    <Button
-        android:id="@+id/sign_up_event_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Up for an Event"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"/>
+        <Button
+            android:id="@+id/show_all_events_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show All Events"
+            android:textColorHighlight="#0B0A0A"
+            android:textColorLink="#040303"
+            android:layout_marginBottom="16dp"/>
 
-    <!-- Button for quick scan and check-in -->
-    <Button
-        android:id="@+id/scan_and_attend_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quick Scan and Check-in"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"/>
+        <Button
+            android:id="@+id/show_all_users_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show all users"
+            android:layout_marginBottom="16dp"/>
 
-    <!-- Button to edit profile -->
-    <Button
-        android:id="@+id/edit_profile_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Profile"
-        android:layout_gravity="center"/>
 
-    <!-- Rest of your layout content below -->
-    <!-- Add your EditTexts, Button, etc. here -->
+        <!-- Button to sign up for an event -->
+        <Button
+            android:id="@+id/show_all_images_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show All Images"
+            android:layout_marginBottom="16dp"/>
+
+
+    </LinearLayout>
 
 </LinearLayout>
