@@ -35,7 +35,7 @@ import java.util.UUID;
  */
 public class AddEventFragment extends DialogFragment {
 
-    static final int PICK_IMAGE_REQUEST = 1;
+    private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
 
@@ -50,7 +50,7 @@ public class AddEventFragment extends DialogFragment {
 
     private AddEventDialogListener listener;
     private EditText editEventName, editDate, editVenue;
-    private Button uploadPosterButton;
+    private Button  uploadPosterButton;
     private Event eventToEdit;
 
     /**
@@ -104,7 +104,6 @@ public class AddEventFragment extends DialogFragment {
         editDate.setOnClickListener(v -> showDatePickerDialog());
 
         uploadPosterButton.setOnClickListener(v -> openFileChooser());
-
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dismiss());
         builder.setPositiveButton("Add", null); // We'll handle the positive button click separately

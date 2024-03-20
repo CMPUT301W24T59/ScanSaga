@@ -45,7 +45,6 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
         eventList = new ArrayList<>();
-        delete = findViewById(R.id.button_delete);
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");

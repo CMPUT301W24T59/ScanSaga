@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -29,6 +28,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="Upload Poster"
+        android:src="@drawable/event"
         android:scaleType="fitCenter"
         app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,17 +90,7 @@
         app:layout_constraintTop_toBottomOf="@id/edit_date_text"
         app:layout_constraintVertical_bias="0.083" />
 
-    <!-- View Event Button -->
-    <Button
-        android:id="@+id/view_event_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Go to Event Page"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/upload_poster"
-        app:layout_constraintTop_toBottomOf="@id/edit_venue_text" />
 
-    <!-- Upload Poster Button -->
     <Button
         android:id="@+id/upload_poster"
         android:layout_width="wrap_content"
@@ -114,17 +104,15 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_date_text"
         app:layout_constraintVertical_bias="0.401" />
 
-    <!-- Delete Event Button -->
-    <Button
-        android:id="@+id/delete_event_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#F60404"
-        android:text="Delete Event"
-        android:textColor="#FFFFFF"
-        app:layout_constraintHorizontal_bias="0.469"
+    <!-- ImageView below Upload Poster Button -->
+    <ImageView
+        android:id="@+id/qr"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Below Upload Poster Image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_date_text"
-        app:layout_constraintVertical_bias="0.401" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/upload_poster" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ public class User implements Serializable {
     private String firstname;
     private String email;
     private String phone;
+    private String pictureUrl;
 
     /**
      * Constructor for creating a User object.
@@ -20,11 +21,12 @@ public class User implements Serializable {
      * @param phone The phone number of the user.
      */
 
-    public User(String firstname, String lastname,  String email, String phone) {
+    public User(String firstname, String lastname,  String email, String phone, String pictureUrl) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.email = email;
         this.phone = phone;
+        this.pictureUrl = pictureUrl;
     }
 
     // Getters
@@ -58,4 +60,14 @@ public class User implements Serializable {
     }
 
     public void setPhone(String phone) {this.phone = phone;}
+
+    // Getter for the image URL of the event's poster
+    public String getProfileImageUrl() {
+        return pictureUrl;
+    }
+
+    // Setter for the image URL of the event's poster
+    public void setProfileImageUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
 }

@@ -46,7 +46,8 @@ public class AttendeeHomePage extends AppCompatActivity {
         // Retrieve the user details passed from MainActivity
         User user = (User) getIntent().getSerializableExtra("user");
 
-        // Set click listeners for each button
+
+        // Set click listener for show all events button
         showAllEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,14 +57,6 @@ public class AttendeeHomePage extends AppCompatActivity {
             }
         });
 
-        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start ScanAndAttendActivity
-                Intent intent = new Intent(AttendeeHomePage.this, ScanAndGo.class);
-                startActivity(intent);
-            }
-        });
 
         // Set click listener for edit profile button
         editProfileButton.setOnClickListener(new View.OnClickListener() {
