@@ -71,6 +71,11 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".Views.MySignedUpEvents"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

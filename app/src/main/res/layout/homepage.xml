@@ -89,6 +89,14 @@
             android:text="Show All Images"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Button to sign up for an event -->
+        <Button
+            android:id="@+id/show_all_signed_up_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show My Signed Up Events"
+            android:layout_marginBottom="16dp"/>
+
 
     </LinearLayout>
 

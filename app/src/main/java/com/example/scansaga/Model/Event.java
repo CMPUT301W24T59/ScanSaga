@@ -2,6 +2,16 @@ package com.example.scansaga.Model;
 
 import android.graphics.Bitmap;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import android.graphics.Bitmap;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
 
 public class Event implements Serializable {
     private String name;
@@ -23,6 +33,14 @@ public class Event implements Serializable {
         this.date = date;
         this.venue = venue;
         this.imageUrl = imageUrl;
+        this.qrCodeBitmap = null;
+        try {
+            this.qrCodeBitmap = generateQrCodeBitmap();
+        } catch (WriterException e) {
+            e.printStackTrace();
+            // Handle the exception
+            this.qrCodeBitmap = null;
+        }
     }
 
     // Getter for the name of the event
@@ -58,6 +76,19 @@ public class Event implements Serializable {
     // Getter for the QR code bitmap of the event
     public Bitmap getQrCodeBitmap() {
         return qrCodeBitmap;
+    }
+    public Bitmap generateQrCodeBitmap() throws WriterException {
+        QRCodeWriter writer = new QRCodeWriter();
+        BitMatrix bitMatrix = writer.encode((this.name+this.venue).toString(), BarcodeFormat.QR_CODE, 512, 512);
+        int width = bitMatrix.getWidth();
+        int height = bitMatrix.getHeight();
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                bmp.setPixel(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+            }
+        }
+        return bmp;
     }
 
     // Setter for the QR code bitmap of the event

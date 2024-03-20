@@ -28,6 +28,7 @@ public class HomepageActivity extends AppCompatActivity {
         Button editProfileButton = findViewById(R.id.edit_profile_button);
         Button addEventButton = findViewById(R.id.add_event_button);
         Button showAllUsers = findViewById(R.id.show_all_users_button);
+        Button showAllSignedUpEvents = findViewById(R.id.show_all_signed_up_events);
 
         // Retrieve the user details passed from MainActivity
         User user = (User) getIntent().getSerializableExtra("user");
@@ -76,6 +77,15 @@ public class HomepageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start ShowAllUsersActivity
                 Intent intent = new Intent(HomepageActivity.this, ShowAllUsers.class);
+                startActivity(intent);
+            }
+        });
+
+        showAllSignedUpEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start ShowAllUsersActivity
+                Intent intent = new Intent(HomepageActivity.this, MySignedUpEvents.class);
                 startActivity(intent);
             }
         });

@@ -197,6 +197,7 @@ public class AddEventFragment extends DialogFragment {
             event.put("imageUrl", ""); // Use an empty string or a default value if no image is provided
         }
 
+
         // Save the event details to Firestore with the document name
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("events").document(documentName) // Use the concatenated string as the document name
