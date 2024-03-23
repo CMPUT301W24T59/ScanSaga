@@ -101,7 +101,7 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
 
                     Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                     if (imageUrl != null) {
-                        eventList.add(new Event(name, date, venue, imageUrl));
+                        eventList.add(new Event(name, date, venue, imageUrl,null));
                     } else {
                         Log.d("FirestoreData", "Missing imageUrl for event: " + name);
                     }
@@ -150,23 +150,51 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         // Check if the device ID already exists in the list of signed-up attendees
         eventRef.get().addOnSuccessListener(documentSnapshot -> {
             List<String> signedUpAttendees = (List<String>) documentSnapshot.get("signedUpAttendees");
-            if (signedUpAttendees != null && signedUpAttendees.contains(deviceId)) {
-                // Device ID already exists in the list, show dialog box
-                showDialog("Already Signed Up", "You are already signed up for this event!");
-            } else {
-                // Device ID doesn't exist, add it to the list and update Firestore
+            String limitStr = (String) documentSnapshot.get("Limit");
 
-                // Update the signedUpAttendees field by appending the new deviceId
-                eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
-                        .addOnSuccessListener(aVoid -> {
-                            // Show success message
-                            Toast.makeText(ShowAllEventsAttendees.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
-                            Log.d("Firestore", "Device signed up successfully for the event!");
-                        })
-                        .addOnFailureListener(e -> {
-                            // Handle failure to update Firestore
-                            Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
-                        });
+            if (limitStr != null && !limitStr.isEmpty()) {
+                int limit = Integer.parseInt(limitStr);
+                if (signedUpAttendees != null && signedUpAttendees.size() >= limit) {
+                    // Limit reached, show dialog box
+                    showDialog("Limit Reached", "Sorry, the sign-up limit for this event has been reached.");
+                } else if (signedUpAttendees != null && signedUpAttendees.contains(deviceId)) {
+                    // Device ID already exists in the list, show dialog box
+                    showDialog("Already Signed Up", "You are already signed up for this event!");
+                } else {
+                    // Device ID doesn't exist, add it to the list and update Firestore
+
+                    // Update the signedUpAttendees field by appending the new deviceId
+                    eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
+                            .addOnSuccessListener(aVoid -> {
+                                // Show success message
+                                Toast.makeText(ShowAllEventsAttendees.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
+                                Log.d("Firestore", "Device signed up successfully for the event!");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
+                            });
+                }
+            } else {
+                // No limit set, proceed with sign-up without checking limit
+                if (signedUpAttendees != null && signedUpAttendees.contains(deviceId)) {
+                    // Device ID already exists in the list, show dialog box
+                    showDialog("Already Signed Up", "You are already signed up for this event!");
+                } else {
+                    // Device ID doesn't exist, add it to the list and update Firestore
+
+                    // Update the signedUpAttendees field by appending the new deviceId
+                    eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
+                            .addOnSuccessListener(aVoid -> {
+                                // Show success message
+                                Toast.makeText(ShowAllEventsAttendees.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
+                                Log.d("Firestore", "Device signed up successfully for the event!");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
+                            });
+                }
             }
         }).addOnFailureListener(e -> {
             // Handle failure to retrieve Firestore document
