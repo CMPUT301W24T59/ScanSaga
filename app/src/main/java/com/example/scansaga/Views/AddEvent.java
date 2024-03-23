@@ -1,6 +1,7 @@
 package com.example.scansaga.Views;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
     EventArrayAdapter eventArrayAdapter;
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
+    public static String deviceId;
 
     @Override
     public void addNewEvent(Event event) {
@@ -53,6 +55,8 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         eventDataList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
+        // Get the device ID
+        deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         eventArrayAdapter = new EventArrayAdapter(this, eventDataList);
         eventList.setAdapter(eventArrayAdapter);

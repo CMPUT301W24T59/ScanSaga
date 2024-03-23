@@ -82,6 +82,15 @@
             android:text="Show My Signed Up Events"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Button to sign up attendees and my events -->
+        <Button
+            android:id="@+id/organizer_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Events and Signed Up Attendees"
+            android:layout_marginBottom="16dp"/>
+
+
 
     </LinearLayout>
 

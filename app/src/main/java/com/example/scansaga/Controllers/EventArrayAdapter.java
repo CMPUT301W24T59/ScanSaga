@@ -58,6 +58,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         TextView eventDate = convertView.findViewById(R.id.time_text);
         TextView eventVenue = convertView.findViewById(R.id.venue_text);
         ImageView eventImage = convertView.findViewById(R.id.poster_image); // Your ImageView in the layout
+        ImageView qrCode = convertView.findViewById(R.id.qr_code_image);
 
         // Get the data item for this position
         Event event = getItem(position);
@@ -71,6 +72,11 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         Glide.with(getContext())
                 .load(event.getImageUrl())
                 .into(eventImage);
+
+        // Use Glide to load the event image
+        Glide.with(getContext())
+                .load(event.getQrUrl())
+                .into(qrCode);
         Log.d("EventArrayAdapter", "Loading image from URL: " + event.getImageUrl());
 
         // Return the completed view to render on screen

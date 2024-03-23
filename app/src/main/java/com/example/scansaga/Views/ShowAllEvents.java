@@ -113,12 +113,12 @@ public class ShowAllEvents extends AppCompatActivity {
                     String name = doc.getString("Name"); // Assuming the document ID is the event name
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
-                    String qrCodeUrl = doc.getString("QRCodeUrl"); // Adjust the field name as in your Firestore
+                    String qrUrl = doc.getString("qrUrl"); // Adjust the field name as in your Firestore
                     //Bitmap qr = null;
                     String imageUrl = doc.getString("imageUrl"); // Adjust the field name as in your Firestore
                     Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                     if (imageUrl != null) {
-                        eventList.add(new Event(name, date, venue, imageUrl));
+                        eventList.add(new Event(name, date, venue, imageUrl,null, qrUrl));
                     } else {
                         Log.d("FirestoreData", "Missing imageUrl for event: " + name);
                     }
@@ -159,6 +159,7 @@ public class ShowAllEvents extends AppCompatActivity {
 
         Log.d("CALL", "TESTINGGG");
         ImageView imageView = findViewById(R.id.poster_image);
+        ImageView qrView = findViewById(R.id.qr_code_image);
 
         // Initialize Firebase Storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -182,6 +183,27 @@ public class ShowAllEvents extends AppCompatActivity {
                 // Handle any errors
             }
         });
+        // Reference to your image file in Firebase Storage
+        StorageReference qrRef = storage.getReference("qr_codes").child("https://firebasestorage.googleapis.com/v0/b/lab5-8b633.appspot.com/o/qr_codes%2F330de21f-b497-48c7-8a27-836850a31dcf.png?alt=media&token=44f00e04-5060-4b03-b80c-7df9645ce4cf");
+
+        // Use Glide to download and display the image
+        Log.d("Before Glide",  "Before Glide");
+        qrRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL, now use Glide to display the image
+                Glide.with(ShowAllEvents.this)
+                        .load(qrRef)
+                        .into(qrView);
+                Log.d("QR", "QR" +  qrRef);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
     }
     private void addSignupInfoToFirestore(Event event) {
         // Get the reference to the document for the selected event
@@ -192,29 +214,59 @@ public class ShowAllEvents extends AppCompatActivity {
         // Check if the device ID already exists in the list of signed-up attendees
         eventRef.get().addOnSuccessListener(documentSnapshot -> {
             List<String> signedUpAttendees = (List<String>) documentSnapshot.get("signedUpAttendees");
-            if (signedUpAttendees != null && signedUpAttendees.contains(deviceId)) {
-                // Device ID already exists in the list, show dialog box
-                showDialog("Already Signed Up", "You are already signed up for this event!");
-            } else {
-                // Device ID doesn't exist, add it to the list and update Firestore
+            String limitStr = (String) documentSnapshot.get("Limit");
 
-                // Update the signedUpAttendees field by appending the new deviceId
-                eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
-                        .addOnSuccessListener(aVoid -> {
-                            // Show success message
-                            Toast.makeText(ShowAllEvents.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
-                            Log.d("Firestore", "Device signed up successfully for the event!");
-                        })
-                        .addOnFailureListener(e -> {
-                            // Handle failure to update Firestore
-                            Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
-                        });
+            if (limitStr != null && !limitStr.isEmpty()) {
+                int limit = Integer.parseInt(limitStr);
+                if (signedUpAttendees != null && signedUpAttendees.size() >= limit) {
+                    // Limit reached, show dialog box
+                    showDialog("Limit Reached", "Sorry, the sign-up limit for this event has been reached.");
+                } else if (signedUpAttendees != null && signedUpAttendees.contains(deviceId)) {
+                    // Device ID already exists in the list, show dialog box
+                    showDialog("Already Signed Up", "You are already signed up for this event!");
+                } else {
+                    // Device ID doesn't exist, add it to the list and update Firestore
+
+                    // Update the signedUpAttendees field by appending the new deviceId
+                    eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
+                            .addOnSuccessListener(aVoid -> {
+                                // Show success message
+                                Toast.makeText(ShowAllEvents.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
+                                Log.d("Firestore", "Device signed up successfully for the event!");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
+                            });
+                }
+            } else {
+                // No limit set, proceed with sign-up without checking limit
+                if (signedUpAttendees != null && signedUpAttendees.contains(deviceId)) {
+                    // Device ID already exists in the list, show dialog box
+                    showDialog("Already Signed Up", "You are already signed up for this event!");
+                } else {
+                    // Device ID doesn't exist, add it to the list and update Firestore
+
+                    // Update the signedUpAttendees field by appending the new deviceId
+                    eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
+                            .addOnSuccessListener(aVoid -> {
+                                // Show success message
+                                Toast.makeText(ShowAllEvents.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
+                                Log.d("Firestore", "Device signed up successfully for the event!");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
+                            });
+                }
             }
         }).addOnFailureListener(e -> {
             // Handle failure to retrieve Firestore document
             Log.e("Firestore", "Error getting document", e);
         });
     }
+
+
 
 
     private void showDialog(String title, String message) {
