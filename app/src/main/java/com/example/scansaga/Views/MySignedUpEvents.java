@@ -85,12 +85,12 @@ public class MySignedUpEvents extends AppCompatActivity {
                             String name = doc.getString("Name"); // Assuming the document ID is the event name
                             String date = doc.getString("Date");
                             String venue = doc.getString("Venue");
-                            String qrCodeUrl = doc.getString("QRCodeUrl"); // Adjust the field name as in your Firestore
+                            String qrUrl = doc.getString("qrUrl"); // Adjust the field name as in your Firestore
                             //Bitmap qr = null;
                             String imageUrl = doc.getString("imageUrl"); // Adjust the field name as in your Firestore
                             Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                             if (imageUrl != null) {
-                                eventList.add(new Event(name, date, venue, imageUrl, null));
+                                eventList.add(new Event(name, date, venue, imageUrl, null,qrUrl));
                             } else {
                                 Log.d("FirestoreData", "Missing imageUrl for event: " + name);
                             }
