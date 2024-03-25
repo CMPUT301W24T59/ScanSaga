@@ -42,6 +42,8 @@ public class AttendeeHomePage extends AppCompatActivity {
         Button editProfileButton = findViewById(R.id.edit_profile_button);
         Button showAllEventsButton = findViewById(R.id.show_all_events_button);
         Button addEventButton = findViewById(R.id.add_event_button);
+        Button showAllSignedUpEvents = findViewById(R.id.show_all_signed_up_events);
+        Button organizerEvents = findViewById(R.id.organizer_events);
 
         // Retrieve the user details passed from MainActivity
         User user = (User) getIntent().getSerializableExtra("user");
@@ -78,7 +80,25 @@ public class AttendeeHomePage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        showAllSignedUpEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start ShowAllUsersActivity
+                Intent intent = new Intent(AttendeeHomePage.this, MySignedUpEvents.class);
+                startActivity(intent);
+            }
+        });
+
+        organizerEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start ShowAllUsersActivity
+                Intent intent = new Intent(AttendeeHomePage.this, OrganizerEvents.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     /**
      * Nested activity within AttendeeHomePage responsible for handling the display

@@ -71,6 +71,20 @@
             android:exported="true">
         </activity>
 
+        <activity
+            android:name=".Views.MySignedUpEvents"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".Views.OrganizerEvents"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".Views.ShowSignedUpAttendees"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

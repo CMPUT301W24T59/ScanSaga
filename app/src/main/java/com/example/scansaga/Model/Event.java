@@ -2,6 +2,10 @@ package com.example.scansaga.Model;
 
 import android.graphics.Bitmap;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import android.graphics.Bitmap;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -12,6 +16,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 public class Event implements Serializable {
     private String name;
     private String date;
+    private String limit;
     private String venue;
     private Bitmap qrCodeBitmap;
     private String imageUrl; // URL of the event's poster image
@@ -24,10 +29,11 @@ public class Event implements Serializable {
      * @param venue        The venue of the event.
      * @param imageUrl     The URL of the image associated with the event.
      */
-    public Event(String name, String date, String venue,  String imageUrl) {
+    public Event(String name, String date, String venue,  String imageUrl, String limit) {
         this.name = name;
         this.date = date;
         this.venue = venue;
+        this.limit = limit;
         this.imageUrl = imageUrl;
         this.qrCodeBitmap = null;
         try {
@@ -57,6 +63,16 @@ public class Event implements Serializable {
     // Setter for the date of the event
     public void setDate(String date) {
         this.date = date;
+    }
+
+    // Getter for the date of the event
+    public String getLimit() {
+        return limit;
+    }
+
+    // Setter for the date of the event
+    public void setLimit(String limit) {
+        this.limit = limit;
     }
 
     // Getter for the venue of the event

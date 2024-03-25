@@ -1,13 +1,15 @@
-package com.example.scansaga.Views;
 
+package com.example.scansaga.Views;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,10 +18,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
+import com.example.scansaga.Views.Utils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -28,6 +32,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import android.content.Context;
+import android.provider.Settings;
 
 
 /**
@@ -38,6 +45,7 @@ public class AddEventFragment extends DialogFragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
+    private String deviceId;
 
     /**
      * Interface for communicating with the activity.
@@ -49,7 +57,7 @@ public class AddEventFragment extends DialogFragment {
     }
 
     private AddEventDialogListener listener;
-    private EditText editEventName, editDate, editVenue;
+    private EditText editEventName, editDate, editVenue, editLimit;
     private Button  uploadPosterButton;
     private Event eventToEdit;
 
@@ -69,6 +77,8 @@ public class AddEventFragment extends DialogFragment {
         super.onAttach(context);
         try {
             listener = (AddEventDialogListener) context;
+            // Get the device ID here when the context is available
+            deviceId = Utils.getDeviceId(context);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement AddEventDialogListener");
         }
@@ -84,6 +94,7 @@ public class AddEventFragment extends DialogFragment {
         editDate = view.findViewById(R.id.edit_date_text);
         editVenue = view.findViewById(R.id.edit_venue_text);
         uploadPosterButton = view.findViewById(R.id.upload_poster);
+        editLimit = view.findViewById(R.id.select_sign_up_limit);
         imageView = view.findViewById(R.id.image_view_poster);
 
         Bundle args = getArguments();
@@ -94,6 +105,7 @@ public class AddEventFragment extends DialogFragment {
                 editEventName.setText(eventToEdit.getName());
                 editDate.setText(eventToEdit.getDate());
                 editVenue.setText(eventToEdit.getVenue());
+                editVenue.setText(eventToEdit.getLimit());
                 if (eventToEdit.getImageUrl() != null) {
                     imageUri = Uri.parse((String) eventToEdit.getImageUrl());
                     imageView.setImageURI(imageUri);
@@ -121,6 +133,7 @@ public class AddEventFragment extends DialogFragment {
 
         return alertDialog;
     }
+
 
     /**
      * Shows the date picker dialog.
@@ -173,9 +186,11 @@ public class AddEventFragment extends DialogFragment {
      * Saves event data to Firestore.
      */
     private void saveEventData(String imageUrl) {
+
         String eventName = editEventName.getText().toString();
         String date = editDate.getText().toString();
         String venue = editVenue.getText().toString();
+        String limit = editLimit.getText().toString();
 
         if (eventName.isEmpty() || date.isEmpty() || venue.isEmpty()) {
             Toast.makeText(getContext(), "Please fill in all details", Toast.LENGTH_SHORT).show();
@@ -190,12 +205,15 @@ public class AddEventFragment extends DialogFragment {
         event.put("Name", eventName);
         event.put("Date", date);
         event.put("Venue", venue);
+        event.put("Limit", limit);
+        event.put("OrganizerDeviceId", deviceId);
         // Include the image URL if available
         if (imageUrl != null && !imageUrl.isEmpty()) {
             event.put("imageUrl", imageUrl);
         } else {
             event.put("imageUrl", ""); // Use an empty string or a default value if no image is provided
         }
+
 
         // Save the event details to Firestore with the document name
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -207,5 +225,6 @@ public class AddEventFragment extends DialogFragment {
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding event.", Toast.LENGTH_SHORT).show());
     }
+
 
 }
