@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="15dp"
     android:orientation="vertical"
-    android:layout_margin="15dp">
-
-    <TextView
-        android:id="@+id/textview_last_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="Last Name"
-        android:textSize="20sp" />
+    tools:ignore="MissingDefaultResource">
 
     <TextView
         android:id="@+id/textview_first_name"
@@ -23,20 +16,12 @@
         android:text="First Name" />
 
     <TextView
-        android:id="@+id/textview_email"
+        android:id="@+id/textview_last_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:textSize="20sp"
-        android:text="Email" />
-
-    <TextView
-        android:id="@+id/textview_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="20sp"
-        android:text="Phone" />
+        android:text="Last Name"
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -49,7 +34,5 @@
         android:background="@drawable/dotted_line"
         android:backgroundTint="#000000"
         android:padding="10sp"/>
-
-
 
 </LinearLayout>

@@ -1,44 +1,40 @@
-package com.example.scansaga.Views;
 
-import android.annotation.SuppressLint;
+package com.example.scansaga.Views;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
+import com.example.scansaga.Views.Utils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 
-import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
+import android.content.Context;
+import android.provider.Settings;
 
 
 /**
@@ -49,23 +45,20 @@ public class AddEventFragment extends DialogFragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
-    private Uri qrUri;
-    private ImageView qrImageView;
+    private String deviceId;
 
     /**
      * Interface for communicating with the activity.
      */
     interface AddEventDialogListener {
         void addNewEvent(Event event);
-
         void editEvent(Event event);
-
         void deleteEvent(Event event);
     }
 
     private AddEventDialogListener listener;
-    private EditText editEventName, editDate, editVenue;
-    private Button uploadPosterButton;
+    private EditText editEventName, editDate, editVenue, editLimit;
+    private Button  uploadPosterButton;
     private Event eventToEdit;
 
     /**
@@ -84,6 +77,8 @@ public class AddEventFragment extends DialogFragment {
         super.onAttach(context);
         try {
             listener = (AddEventDialogListener) context;
+            // Get the device ID here when the context is available
+            deviceId = Utils.getDeviceId(context);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement AddEventDialogListener");
         }
@@ -99,6 +94,7 @@ public class AddEventFragment extends DialogFragment {
         editDate = view.findViewById(R.id.edit_date_text);
         editVenue = view.findViewById(R.id.edit_venue_text);
         uploadPosterButton = view.findViewById(R.id.upload_poster);
+        editLimit = view.findViewById(R.id.select_sign_up_limit);
         imageView = view.findViewById(R.id.image_view_poster);
 
         Bundle args = getArguments();
@@ -109,9 +105,7 @@ public class AddEventFragment extends DialogFragment {
                 editEventName.setText(eventToEdit.getName());
                 editDate.setText(eventToEdit.getDate());
                 editVenue.setText(eventToEdit.getVenue());
-                qrUri = Uri.parse((String) eventToEdit.getQrUrl());
-                qrImageView.setImageURI(qrUri);
-
+                editVenue.setText(eventToEdit.getLimit());
                 if (eventToEdit.getImageUrl() != null) {
                     imageUri = Uri.parse((String) eventToEdit.getImageUrl());
                     imageView.setImageURI(imageUri);
@@ -119,8 +113,7 @@ public class AddEventFragment extends DialogFragment {
             }
         }
 
-
-        editDate.setOnClickListener(v -> showDateTimePickerDialog());
+        editDate.setOnClickListener(v -> showDatePickerDialog());
 
         uploadPosterButton.setOnClickListener(v -> openFileChooser());
 
@@ -141,95 +134,18 @@ public class AddEventFragment extends DialogFragment {
         return alertDialog;
     }
 
+
     /**
      * Shows the date picker dialog.
      */
-    private void showDateTimePickerDialog() {
-        // Initialize Calendar instance
+    private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        // Initialize start time values
-        final int[] startHour = {calendar.get(Calendar.HOUR_OF_DAY)};
-        final int[] startMinute = {calendar.get(Calendar.MINUTE)};
-
-        // Initialize end time values
-        final int[] endHour = {calendar.get(Calendar.HOUR_OF_DAY)};
-        final int[] endMinute = {calendar.get(Calendar.MINUTE)};
-
-        // Create DatePickerDialog to select date
-        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), (view, year1, monthOfYear, dayOfMonth) -> {
-            // Set the selected date to the calendar
-            calendar.set(Calendar.YEAR, year1);
-            calendar.set(Calendar.MONTH, monthOfYear);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            // Create a layout inflater
-            LayoutInflater inflater = LayoutInflater.from(requireContext());
-            View timePickerView = inflater.inflate(R.layout.time_picker_dialog, null);
-
-            // Initialize NumberPickers for start time
-            NumberPicker startHourPicker = timePickerView.findViewById(R.id.start_hour_picker);
-            NumberPicker startMinutePicker = timePickerView.findViewById(R.id.start_minute_picker);
-
-            // Initialize NumberPickers for end time
-            NumberPicker endHourPicker = timePickerView.findViewById(R.id.end_hour_picker);
-            NumberPicker endMinutePicker = timePickerView.findViewById(R.id.end_minute_picker);
-
-            // Configure NumberPickers for start time
-            startHourPicker.setMinValue(0);
-            startHourPicker.setMaxValue(23);
-            startHourPicker.setValue(startHour[0]);
-
-            startMinutePicker.setMinValue(0);
-            startMinutePicker.setMaxValue(59);
-            startMinutePicker.setValue(startMinute[0]);
-
-            // Configure NumberPickers for end time
-            endHourPicker.setMinValue(0);
-            endHourPicker.setMaxValue(23);
-            endHourPicker.setValue(endHour[0]);
-
-            endMinutePicker.setMinValue(0);
-            endMinutePicker.setMaxValue(59);
-            endMinutePicker.setValue(endMinute[0]);
-
-            // Create AlertDialog with custom layout
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("Select Start and End Time");
-            builder.setView(timePickerView);
-
-            // Set positive button click listener
-            builder.setPositiveButton("OK", (dialog, which) -> {
-                // Get selected start time
-                startHour[0] = startHourPicker.getValue();
-                startMinute[0] = startMinutePicker.getValue();
-
-                // Get selected end time
-                endHour[0] = endHourPicker.getValue();
-                endMinute[0] = endMinutePicker.getValue();
-
-                // Format the selected start and end times
-                String startTime = String.format(Locale.getDefault(), "%02d:%02d", startHour[0], startMinute[0]);
-                String endTime = String.format(Locale.getDefault(), "%02d:%02d", endHour[0], endMinute[0]);
-
-                // Display the selected start and end times
-                editDate.setText(year + "-" + month + "-" + day + "-" + "," + startTime + " - " + endTime);
-            });
-
-            builder.setNegativeButton("Cancel", null);
-
-            // Show the dialog
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }, year, month, day);
-
-        // Show DatePickerDialog
-        datePickerDialog.show();
+        new DatePickerDialog(requireContext(), (view, year1, monthOfYear, dayOfMonth) ->
+                editDate.setText(String.format("%d-%d-%d", year1, monthOfYear + 1, dayOfMonth)), year, month, day).show();
     }
-
 
     /**
      * Opens the file chooser for image selection.
@@ -270,92 +186,45 @@ public class AddEventFragment extends DialogFragment {
      * Saves event data to Firestore.
      */
     private void saveEventData(String imageUrl) {
+
         String eventName = editEventName.getText().toString();
         String date = editDate.getText().toString();
         String venue = editVenue.getText().toString();
+        String limit = editLimit.getText().toString();
 
         if (eventName.isEmpty() || date.isEmpty() || venue.isEmpty()) {
             Toast.makeText(getContext(), "Please fill in all details", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Generate QR code
-        String qrContent = eventName + "\n" + date + "\n" + venue;
-        Bitmap qrBitmap = generateQRCode(qrContent);
+        // Concatenate eventName and date to form the document name
+        String documentName = eventName + "_" + date;
 
-        // Upload QR code image to Firebase Storage
-        uploadQRCodeAndSaveEventData(qrBitmap, imageUrl, eventName, date, venue);
-    }
-
-    /**
-     * Generates a QR code bitmap from the given content.
-     */
-    private Bitmap generateQRCode(String content) {
-        QRCodeWriter writer = new QRCodeWriter();
-        try {
-            BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
-            return toBitmap(bitMatrix);
-        } catch (WriterException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Converts a BitMatrix to a Bitmap.
-     */
-    private Bitmap toBitmap(BitMatrix matrix) {
-        int width = matrix.getWidth();
-        int height = matrix.getHeight();
-        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                bmp.setPixel(x, y, matrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
-            }
-        }
-        return bmp;
-    }
-
-    /**
-     * Uploads the QR code image to Firebase Storage and saves event data.
-     */
-    private void uploadQRCodeAndSaveEventData(Bitmap qrBitmap, String imageUrl, String eventName, String date, String venue) {
-        // Check if the QR bitmap is null
-        if (qrBitmap == null) {
-            Toast.makeText(getContext(), "Failed to generate QR code", Toast.LENGTH_SHORT).show();
-            return;
+        // Create a map to store the event details
+        Map<String, Object> event = new HashMap<>();
+        event.put("Name", eventName);
+        event.put("Date", date);
+        event.put("Venue", venue);
+        event.put("Limit", limit);
+        event.put("OrganizerDeviceId", deviceId);
+        // Include the image URL if available
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            event.put("imageUrl", imageUrl);
+        } else {
+            event.put("imageUrl", ""); // Use an empty string or a default value if no image is provided
         }
 
-        final StorageReference qrRef = FirebaseStorage.getInstance().getReference("qr_codes")
-                .child(UUID.randomUUID().toString() + ".png");
 
-        // Convert Bitmap to byte array
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] qrBytes = baos.toByteArray();
-
-        qrRef.putBytes(qrBytes).addOnSuccessListener(taskSnapshot -> qrRef.getDownloadUrl().addOnSuccessListener(qrUri -> {
-            // Save the event details along with QR code URL
-            String qrUrl = qrUri.toString();
-            Map<String, Object> event = new HashMap<>();
-            event.put("Name", eventName);
-            event.put("Date", date);
-            event.put("Venue", venue);
-            event.put("imageUrl", imageUrl != null ? imageUrl : ""); // Include the image URL if available
-            event.put("qrUrl", qrUrl);
-
-            // Concatenate eventName and date to form the document name
-            String documentName = eventName + "_" + date;
-
-            // Save the event details to Firestore with the document name
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("events").document(documentName) // Use the concatenated string as the document name
-                    .set(event)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getContext(), "Event added successfully.", Toast.LENGTH_SHORT).show();
-                        dismiss(); // Dismiss the fragment after adding the event
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding event.", Toast.LENGTH_SHORT).show());
-        })).addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to upload QR code", Toast.LENGTH_SHORT).show());
+        // Save the event details to Firestore with the document name
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events").document(documentName) // Use the concatenated string as the document name
+                .set(event)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Event added successfully.", Toast.LENGTH_SHORT).show();
+                    dismiss(); // Dismiss the fragment after adding the event
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding event.", Toast.LENGTH_SHORT).show());
     }
+
+
 }
