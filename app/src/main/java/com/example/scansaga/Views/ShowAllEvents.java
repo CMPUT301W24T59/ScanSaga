@@ -96,12 +96,12 @@ public class ShowAllEvents extends AppCompatActivity {
                     String name = doc.getString("Name"); // Assuming the document ID is the event name
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
-                    String qrCodeUrl = doc.getString("QRCodeUrl"); // Adjust the field name as in your Firestore
+                    String qrUrl = doc.getString("qrUrl"); // Adjust the field name as in your Firestore
                     //Bitmap qr = null;
                     String imageUrl = doc.getString("imageUrl"); // Adjust the field name as in your Firestore
                     Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                     if (imageUrl != null) {
-                        eventList.add(new Event(name, date, venue, imageUrl));
+                        eventList.add(new Event(name, date, venue, imageUrl, qrUrl));
                     } else {
                         Log.d("FirestoreData", "Missing imageUrl for event: " + name);
                     }
@@ -142,6 +142,7 @@ public class ShowAllEvents extends AppCompatActivity {
 
         Log.d("CALL", "TESTINGGG");
         ImageView imageView = findViewById(R.id.poster_image);
+        ImageView qrView = findViewById(R.id.qr_code_image);
 
         // Initialize Firebase Storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -158,6 +159,27 @@ public class ShowAllEvents extends AppCompatActivity {
                         .load(imageRef)
                         .into(imageView);
                 Log.d("IMAGESSSSSS", "IMAGESSSS" +  imageRef);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
+        // Reference to your image file in Firebase Storage
+        StorageReference qrRef = storage.getReference("qr_codes").child("https://firebasestorage.googleapis.com/v0/b/lab5-8b633.appspot.com/o/qr_codes%2F330de21f-b497-48c7-8a27-836850a31dcf.png?alt=media&token=44f00e04-5060-4b03-b80c-7df9645ce4cf");
+
+        // Use Glide to download and display the image
+        Log.d("Before Glide",  "Before Glide");
+        qrRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL, now use Glide to display the image
+                Glide.with(ShowAllEvents.this)
+                        .load(qrRef)
+                        .into(qrView);
+                Log.d("QR", "QR" +  qrRef);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

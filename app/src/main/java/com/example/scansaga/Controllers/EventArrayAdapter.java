@@ -67,12 +67,16 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
         eventVenue.setText(event.getVenue());
-        qrCode.setImageBitmap(event.getQrCodeBitmap());
 
         // Use Glide to load the event image
         Glide.with(getContext())
                 .load(event.getImageUrl())
                 .into(eventImage);
+
+        // Use Glide to load the event image
+        Glide.with(getContext())
+                .load(event.getQrUrl())
+                .into(qrCode);
         Log.d("EventArrayAdapter", "Loading image from URL: " + event.getImageUrl());
 
         // Return the completed view to render on screen
