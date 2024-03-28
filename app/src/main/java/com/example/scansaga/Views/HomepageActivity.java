@@ -71,6 +71,14 @@ public class HomepageActivity extends AppCompatActivity {
             }
         });
 
+        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomepageActivity.this, ScanAndGo.class);
+                startActivity(intent);
+            }
+        });
+
         showAllUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
