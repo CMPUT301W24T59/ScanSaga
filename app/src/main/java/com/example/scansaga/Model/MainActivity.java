@@ -1,10 +1,18 @@
 package com.example.scansaga.Model;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -32,6 +40,9 @@ import java.util.HashMap;
  */
 public class MainActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
+    public static final String CHANNEL_ID = "my_notification_channel";
+    public static int notificationID = 0;
+
     ArrayList<User> userDataList;
     UserArrayAdapter userArrayAdapter;
     private EditText firstNameEditText, lastNameEditText, emailEditText, phoneNumberEditText;
@@ -172,6 +183,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        createNotificationChannel();
+        // Check if the notification permission is granted
+        if (!isNotificationPermissionGranted()) {
+            // Request the notification permission
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                requestNotificationPermission();
+            }
+        }
+
     }
 
     /**
@@ -228,4 +248,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            // Register the channel with the system
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public boolean isNotificationPermissionGranted() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        return notificationManager.areNotificationsEnabled();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void requestNotificationPermission() {
+        if (!isNotificationPermissionGranted()) {
+            // Notification permission is not granted, navigate the user to the app's notification settings
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(intent);
+        }
+    }
 }

@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
 import com.example.scansaga.Views.HomepageActivity;
+import com.example.scansaga.Views.NotificationFragment;
 import com.example.scansaga.Views.ShowSignedUpAttendees;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
         TextView eventName = convertView.findViewById(R.id.event_text);
         TextView eventDate = convertView.findViewById(R.id.time_text);
         Button show_attendees = convertView.findViewById(R.id.see_signed_up_attendees);
+        Button send_notification = convertView.findViewById(R.id.send_notification);
 
 
         // Get the data item for this position

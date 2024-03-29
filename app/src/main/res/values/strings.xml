@@ -44,4 +44,6 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="upload_poster">Upload Poster</string>
+    <string name="channel_name">Notification channel</string>
+    <string name="channel_description">Channel for my organized events</string>
 </resources>
