@@ -2,6 +2,7 @@ package com.example.scansaga.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -160,17 +161,8 @@ public class AttendeeHomePage extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.add_event);
 
-            eventList = findViewById(R.id.event_list);
-            eventDataList = new ArrayList<>();
-            db = FirebaseFirestore.getInstance();
-            eventsRef = db.collection("events");
-
-            eventArrayAdapter = new EventArrayAdapter(this, eventDataList);
-            eventList.setAdapter(eventArrayAdapter);
-
             FloatingActionButton fab = findViewById(R.id.add_event_button);
             fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));
-
         }
 
 

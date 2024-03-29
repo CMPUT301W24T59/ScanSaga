@@ -65,7 +65,6 @@ public class AddEventTest {
                 .perform(ViewActions.click());
 
         // Check if the event is added to the ListView
-        Espresso.onView(ViewMatchers.withId(R.id.event_list)).check(matches(isDisplayed()));
         Espresso.onView(ViewMatchers.withId(R.id.event_text)).check(matches(isDisplayed()));
         Espresso.onView(ViewMatchers.withId(R.id.time_text)).check(matches(isDisplayed()));
         Espresso.onView(ViewMatchers.withId(R.id.venue_text)).check(matches(isDisplayed()));
