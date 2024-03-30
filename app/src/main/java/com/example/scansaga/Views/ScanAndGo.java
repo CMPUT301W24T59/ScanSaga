@@ -26,7 +26,7 @@ public class ScanAndGo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.homepage);
+        setContentView(R.layout.attendee_homepage);
         scan_btn = findViewById(R.id.scan_and_attend_button);
         scan_btn.setOnClickListener(new View.OnClickListener() {
             @Override
