@@ -20,6 +20,7 @@ public class Event implements Serializable {
     private String venue;
     private Bitmap qrCodeBitmap;
     private String imageUrl; // URL of the event's poster image
+    private String qrUrl;
 
     /**
      * Constructor for creating an Event object with QR code bitmap and image URL.
@@ -29,13 +30,15 @@ public class Event implements Serializable {
      * @param venue        The venue of the event.
      * @param imageUrl     The URL of the image associated with the event.
      */
-    public Event(String name, String date, String venue,  String imageUrl, String limit) {
+    public Event(String name, String date, String venue,  String imageUrl, String qrUrl) {
         this.name = name;
         this.date = date;
         this.venue = venue;
         this.limit = limit;
         this.imageUrl = imageUrl;
         this.qrCodeBitmap = null;
+        this.qrUrl = qrUrl;
+
         try {
             this.qrCodeBitmap = generateQrCodeBitmap();
         } catch (WriterException e) {
@@ -106,6 +109,16 @@ public class Event implements Serializable {
     // Setter for the QR code bitmap of the event
     public void setQrCodeBitmap(Bitmap qrCodeBitmap) {
         this.qrCodeBitmap = qrCodeBitmap;
+    }
+
+    // Getter for the QR code bitmap of the event
+    public String getQrUrl() {
+        return qrUrl;
+    }
+
+    // Setter for the QR code bitmap of the event
+    public void setQrCodeUrl(String qrUrl) {
+        this.qrUrl = qrUrl;
     }
 
     // Getter for the image URL of the event's poster

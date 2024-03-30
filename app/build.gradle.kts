@@ -42,6 +42,8 @@ android {
 
 dependencies {
     implementation ("com.google.zxing:core:3.4.1")
+    implementation ("com.journeyapps:zxing-android-embedded:4.2.0")
+    implementation ("com.google.zxing:core:3.4.1")
     implementation ("com.google.firebase:firebase-storage:20.0.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.firebase:firebase-analytics")
@@ -70,6 +72,4 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.4.0")
-
 }
