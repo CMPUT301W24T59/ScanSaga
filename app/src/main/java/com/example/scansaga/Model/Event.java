@@ -2,11 +2,6 @@ package com.example.scansaga.Model;
 
 import android.graphics.Bitmap;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import android.graphics.Bitmap;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
