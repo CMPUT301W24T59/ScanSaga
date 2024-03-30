@@ -1,15 +1,15 @@
 package com.example.scansaga.Model;
 
-import static androidx.core.content.ContextCompat.getSystemService;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Notification;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -41,6 +41,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     public static final String CHANNEL_ID = "my_notification_channel";
+    public static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 100;
     public static int notificationID = 0;
 
     ArrayList<User> userDataList;
@@ -183,13 +184,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        createNotificationChannel();
-        // Check if the notification permission is granted
+        // Check if the app has notification permission upon entry
         if (!isNotificationPermissionGranted()) {
-            // Request the notification permission
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                requestNotificationPermission();
-            }
+            // Prompt the user for notification permission
+            showNotificationPermissionDialog();
+        } else {
+            // Notification permission is already granted, create notification channel
+            createNotificationChannel();
         }
 
     }
@@ -278,4 +279,42 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    private void showNotificationPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Notification Permission");
+        builder.setMessage("Do you want to receive push notifications?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Request notification permission from the user
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requestNotificationPermission();
+                }
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+//            // Check if the user granted notification permission
+//            if (isNotificationPermissionGranted()) {
+//                // Notification permission is granted, create notification channel
+//                createNotificationChannel();
+//            } else {
+//                // Handle if the user declined notification permission
+//                // You can show a message or close the app
+//            }
+//        }
+//    }
 }
