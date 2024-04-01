@@ -1,7 +1,9 @@
 package com.example.scansaga.Model;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,7 +91,7 @@ public class MyProfile extends AppCompatActivity {
                                 Glide.with(this).load(profilePictureUrl).into(profileImageView);
                             } else {
                                 // Load default profile picture
-                                Glide.with(this).load(R.drawable.profile_icon_black).into(profileImageView);
+                                generateUniqueProfilePicture(retrievedFirstName,lastName);
                             }
 
                             // Initialize currentUser object with fetched data
@@ -98,6 +100,42 @@ public class MyProfile extends AppCompatActivity {
                     }
                 });
     }
+
+    private void generateUniqueProfilePicture(String firstName, String lastName){
+        ImageView profileImageView = (ImageView) findViewById(R.id.profile_image_view); // Initialize here to ensure it's not null
+
+        // Extract the first letter of the user's first name and convert it to lowercase
+        char firstLetter = Character.toLowerCase(firstName.charAt(0));
+
+        // drawable resource name
+        String resourceName = firstLetter + "";
+
+        // Get the Android resource ID by name, type, and package
+        Resources resources = this.getResources(); // 'this' refers to a Context object
+        int resourceId = resources.getIdentifier(resourceName, "drawable", this.getPackageName());
+
+        if (resourceId != 0) {
+            // If the resource was found, set it as the icon for the ImageView
+            profileImageView.setImageResource(resourceId);
+        } else {
+            // Handle the case where the resource was not found
+            // Use Glide to set a default image
+            Glide.with(this).load(R.drawable.profile_icon_black).into(profileImageView); // Fixed syntax
+            Log.e("ImageViewSetup", "Resource not found for letter: " + firstLetter);
+        }
+
+        // Combine user attributes into a single string and hash it
+        String combinedAttributes = firstName + lastName;
+        int hash = combinedAttributes.hashCode();
+
+        // Generate a color from the hash code ensuring the alpha channel is set to max
+        int color = 0xFF000000 | (hash & 0x00FFFFFF); // This ensures the alpha channel is set to max
+        System.out.println(color);
+        // Set the generated color as the background of the ImageView
+        profileImageView.setBackgroundColor(color);
+
+    }
+
 
     @Override
     protected void onDestroy() {
