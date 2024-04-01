@@ -2,16 +2,24 @@ package com.example.scansaga.Views;
 import static androidx.fragment.app.FragmentManager.TAG;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.scansaga.Controllers.EventArrayAdapter;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
@@ -23,6 +31,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class ShowAllEvents extends AppCompatActivity {
@@ -32,6 +41,7 @@ public class ShowAllEvents extends AppCompatActivity {
     private FirebaseStorage storage;
     private CollectionReference eventsRef;
     private Button delete;
+    private Button scan ;
     private ListView listView;
     private EventArrayAdapter eventAdapter;
     private ArrayList<Event> eventList;
@@ -53,6 +63,7 @@ public class ShowAllEvents extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         eventList = new ArrayList<>();
         delete = findViewById(R.id.button_delete);
+        scan = findViewById(R.id.share_button);
 
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
@@ -75,9 +86,46 @@ public class ShowAllEvents extends AppCompatActivity {
                     eventAdapter.notifyDataSetChanged();
 
                 });
+                scan.setOnClickListener(v->{
+                    shareEventImage(selectedEvent.getQrUrl());
+                });
             }
+
+
+
         });
     }
+
+    private void shareEventImage(String QrUrl){
+        Glide.with(this).asBitmap().load(QrUrl).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                shareImage(resource);
+            }
+        });
+
+    }
+
+    private void shareImage(Bitmap bitmap){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/jpeg");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        byte[] imageBytes = bytes.toByteArray();
+        Uri imageUri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Shared Image", null));
+        intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        if (intent.resolveActivity(getPackageManager()) != null)
+        {
+            // Start the sharing activity
+            startActivity(intent);
+        }
+        else
+        {
+            // No provider found, notify the user
+            Toast.makeText(this, "No compatible apps found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      *  Fetches all events from Firestore and populates the ListView.
      */
