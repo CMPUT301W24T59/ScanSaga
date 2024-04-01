@@ -133,6 +133,7 @@ public class AttendeeHomePage extends AppCompatActivity {
         public void deleteEvent(Event event) {
             eventDataList.remove(event);
             eventArrayAdapter.notifyDataSetChanged();
+
         }
 
         /**
