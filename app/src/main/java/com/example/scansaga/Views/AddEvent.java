@@ -51,9 +51,15 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_event);
 
-
+        eventList = findViewById(R.id.event_list);
+        eventDataList = new ArrayList<>();
+        db = FirebaseFirestore.getInstance();
+        eventsRef = db.collection("events");
         // Get the device ID
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        eventArrayAdapter = new EventArrayAdapter(this, eventDataList);
+        eventList.setAdapter(eventArrayAdapter);
 
         FloatingActionButton fab = findViewById(R.id.add_event_button);
         fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));

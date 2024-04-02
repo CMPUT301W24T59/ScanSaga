@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * The ShowAllImagesFromStorage class displays all images stored in Firebase Storage.
  */
 public class ShowAllImagesFromStorage extends AppCompatActivity {
-    ArrayList<String> imagelist;
+    public ArrayList<String> imagelist;
     RecyclerView recyclerView;
     StorageReference root;
     ProgressBar progressBar;

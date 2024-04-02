@@ -96,6 +96,15 @@ public class AttendeeHomePage extends AppCompatActivity {
             }
         });
 
+        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start ScanAndGo Activity
+                Intent intent = new Intent(AttendeeHomePage.this, ScanAndGo.class);
+                startActivity(intent);
+            }
+        });
+
         // Set click listener for add event button
         addEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,6 +325,7 @@ public class AttendeeHomePage extends AppCompatActivity {
 
             FloatingActionButton fab = findViewById(R.id.add_event_button);
             fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));
+
         }
 
 
