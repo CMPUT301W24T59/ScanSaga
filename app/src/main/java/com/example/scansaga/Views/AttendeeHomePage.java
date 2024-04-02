@@ -147,7 +147,8 @@ public class AttendeeHomePage extends AppCompatActivity {
             eventArrayAdapter.notifyDataSetChanged();
         }
         /**
-         * Called when the activity is created. Initializes UI elements, sets up Firestore
+         * Called when the activity is created. Initi
+         * alizes UI elements, sets up Firestore
          * references, creates the adapter for the event list, and sets an OnClickListener
          * for the FloatingActionButton to trigger the AddEventFragment.
          *

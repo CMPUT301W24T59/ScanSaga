@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.scansaga.Model.GeoLocationManager;
 import com.example.scansaga.Model.MyProfile;
 import com.example.scansaga.Model.User;
 import com.example.scansaga.R;
@@ -46,6 +47,7 @@ public class HomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage);
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Initialize buttons
         Button showAllEventsButton = findViewById(R.id.show_all_events_button);
@@ -128,15 +130,33 @@ public class HomepageActivity extends AppCompatActivity {
             }
         });
 
-        geoLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                getLastLocation();
+        geoLocation.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // User turned on the geolocation toggle
+                handleGeolocationToggle(true);
+            } else {
+                // User turned off the geolocation toggle
+                handleGeolocationToggle(false);
             }
         });
-
     }
+
+    private void handleGeolocationToggle(boolean isEnabled) {
+        if (isEnabled) {
+            // Check permissions and get location if enabled
+            if (checkPermissions()) {
+                GeoLocationManager.setPermissions(true);
+                getLastLocation();
+            } else {
+                // Request permissions if not granted
+                requestPermissions();
+            }
+        } else {
+            // Here you can disable geolocation features of your app when the toggle is off
+            GeoLocationManager.setPermissions(false);
+        }
+    }
+
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
         // check if permissions are given
@@ -156,8 +176,8 @@ public class HomepageActivity extends AppCompatActivity {
                         if (location == null) {
                             requestNewLocationData();
                         } else {
-                            latitudeTextView.setText(location.getLatitude() + "");
-                            longitTextView.setText(location.getLongitude() + "");
+                            GeoLocationManager.setLatitude(location.getLatitude());
+                            GeoLocationManager.setLongitude(location.getLongitude());
                         }
                     }
                 });
@@ -195,8 +215,8 @@ public class HomepageActivity extends AppCompatActivity {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
-            latitudeTextView.setText("Latitude: " + mLastLocation.getLatitude() + "");
-            longitTextView.setText("Longitude: " + mLastLocation.getLongitude() + "");
+            GeoLocationManager.setLatitude(mLastLocation.getLatitude());
+            GeoLocationManager.setLongitude(mLastLocation.getLongitude());
         }
     };
 
