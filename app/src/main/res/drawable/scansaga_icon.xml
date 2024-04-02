@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-android:width="60dp"
-android:height="60dp"
-android:viewportWidth="22.0"
-android:viewportHeight="22.0">
-<!-- Light blue square background with smooth edges -->
-<path
-    android:pathData="M2,2a1,1 0 0,1 1,-1h16a1,1 0 0,1 1,1v16a1,1 0 0,1 -1,1H3a1,1 0 0,1 -1,-1z"
-    android:fillColor="#5DC1EF"/>
-</vector>
+</selector>
