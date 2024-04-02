@@ -20,30 +20,21 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ScanAndGo extends AppCompatActivity {
-    Button scan_btn ;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.attendee_homepage);
-        scan_btn = findViewById(R.id.scan_and_attend_button);
-        scan_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentIntegrator intentIntegrator = new IntentIntegrator(ScanAndGo.this);
-                intentIntegrator.setOrientationLocked(false);
-                intentIntegrator.setPrompt("Scan a QR code");
-                intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-                intentIntegrator.initiateScan();
+        IntentIntegrator intentIntegrator = new IntentIntegrator(ScanAndGo.this);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setPrompt("Scan a QR code");
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        intentIntegrator.initiateScan();
 
-            }
-        });
     }
 
     @Override
     protected void onActivityResult(int requestCode , int resultCode , @Nullable Intent data){
-
 
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(intentResult != null){
@@ -87,8 +78,6 @@ public class ScanAndGo extends AppCompatActivity {
                     Toast.makeText(ScanAndGo.this, "Error checking URL", Toast.LENGTH_SHORT).show();
                 }
             };
-
-
 
         });
     };

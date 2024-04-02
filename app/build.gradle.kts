@@ -72,4 +72,5 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 }
