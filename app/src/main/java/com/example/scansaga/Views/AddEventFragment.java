@@ -289,7 +289,7 @@ public class AddEventFragment extends DialogFragment {
         }
 
         // Generate QR code
-        String qrContent = eventName + "\n" + date + "\n" + venue;
+        String qrContent = eventName + "_" + date;
         Bitmap qrBitmap = generateQRCode(qrContent);
 
         // Upload QR code image to Firebase Storage
