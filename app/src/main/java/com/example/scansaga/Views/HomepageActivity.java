@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,6 +34,7 @@ public class HomepageActivity extends AppCompatActivity {
         Button showAllUsers = findViewById(R.id.show_all_users_button);
         Button showAllSignedUpEvents = findViewById(R.id.show_all_signed_up_events);
         Button organizerEvents = findViewById(R.id.organizer_events);
+        Switch geoLocation = findViewById(R.id.geo_location_switch);
 
 
         // Retrieve the user details passed from MainActivity
@@ -103,6 +105,8 @@ public class HomepageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
     }
 }

@@ -102,7 +102,7 @@ public class MyProfile extends AppCompatActivity {
     }
 
     private void generateUniqueProfilePicture(String firstName, String lastName){
-        ImageView profileImageView = (ImageView) findViewById(R.id.profile_image_view); // Initialize here to ensure it's not null
+        ImageView profileImageView = (ImageView) findViewById(R.id.profile_image_view);
 
         // Extract the first letter of the user's first name and convert it to lowercase
         char firstLetter = Character.toLowerCase(firstName.charAt(0));
