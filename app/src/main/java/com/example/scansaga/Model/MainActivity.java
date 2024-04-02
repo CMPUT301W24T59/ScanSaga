@@ -302,19 +302,4 @@ public class MainActivity extends AppCompatActivity {
         builder.setCancelable(false);
         builder.show();
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
-//            // Check if the user granted notification permission
-//            if (isNotificationPermissionGranted()) {
-//                // Notification permission is granted, create notification channel
-//                createNotificationChannel();
-//            } else {
-//                // Handle if the user declined notification permission
-//                // You can show a message or close the app
-//            }
-//        }
-//    }
 }
