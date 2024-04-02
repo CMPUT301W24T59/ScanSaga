@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="15dp">
+    android:padding="10dp">
 
 
     <!-- Welcome TextView -->
@@ -13,13 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:paddingStart="20dp"
-        android:text="All Events..."
-        android:textSize="50dp"
+        android:text="List Of Signed-Up Attendees for this Event..."
+        android:textSize="30dp"
         android:textColor="#2D2D2D"
         android:textStyle="bold"
         android:fontFamily="sans-serif-condensed-medium"
         android:gravity="start"
-        android:padding="15sp" />
+        android:padding="20sp" />
 
     <!-- ListView to display events -->
     <ListView
@@ -30,16 +30,5 @@
         android:divider="@null"
         android:dividerHeight="0dp"/>
 
-    <!-- Delete button -->
-    <Button
-        android:id="@+id/signup_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="16dp"
-        android:background="#ff008577"
-        android:text="Sign-Up "
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
 
 </LinearLayout>

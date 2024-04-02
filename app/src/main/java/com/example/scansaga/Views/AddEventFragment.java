@@ -1,16 +1,16 @@
-package com.example.scansaga.Views;
 
-import android.annotation.SuppressLint;
+package com.example.scansaga.Views;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -20,10 +20,12 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
+import com.example.scansaga.Views.Utils;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -33,12 +35,14 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
+import android.content.Context;
+import android.provider.Settings;
 
 
 /**
@@ -49,6 +53,7 @@ public class AddEventFragment extends DialogFragment {
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private ImageView imageView;
+    private String deviceId;
     private Uri qrUri;
     private ImageView qrImageView;
 
@@ -57,15 +62,13 @@ public class AddEventFragment extends DialogFragment {
      */
     interface AddEventDialogListener {
         void addNewEvent(Event event);
-
         void editEvent(Event event);
-
         void deleteEvent(Event event);
     }
 
     private AddEventDialogListener listener;
-    private EditText editEventName, editDate, editVenue;
-    private Button uploadPosterButton;
+    private EditText editEventName, editDate, editVenue, editLimit;
+    private Button  uploadPosterButton;
     private Event eventToEdit;
 
     /**
@@ -84,6 +87,8 @@ public class AddEventFragment extends DialogFragment {
         super.onAttach(context);
         try {
             listener = (AddEventDialogListener) context;
+            // Get the device ID here when the context is available
+            deviceId = Utils.getDeviceId(context);
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement AddEventDialogListener");
         }
@@ -99,6 +104,7 @@ public class AddEventFragment extends DialogFragment {
         editDate = view.findViewById(R.id.edit_date_text);
         editVenue = view.findViewById(R.id.edit_venue_text);
         uploadPosterButton = view.findViewById(R.id.upload_poster);
+        editLimit = view.findViewById(R.id.select_sign_up_limit);
         imageView = view.findViewById(R.id.image_view_poster);
 
         Bundle args = getArguments();
@@ -109,6 +115,8 @@ public class AddEventFragment extends DialogFragment {
                 editEventName.setText(eventToEdit.getName());
                 editDate.setText(eventToEdit.getDate());
                 editVenue.setText(eventToEdit.getVenue());
+                editVenue.setText(eventToEdit.getLimit());
+
                 qrUri = Uri.parse((String) eventToEdit.getQrUrl());
                 qrImageView.setImageURI(qrUri);
 
@@ -118,7 +126,6 @@ public class AddEventFragment extends DialogFragment {
                 }
             }
         }
-
 
         editDate.setOnClickListener(v -> showDateTimePickerDialog());
 
@@ -140,6 +147,7 @@ public class AddEventFragment extends DialogFragment {
 
         return alertDialog;
     }
+
 
     /**
      * Shows the date picker dialog.
@@ -230,7 +238,6 @@ public class AddEventFragment extends DialogFragment {
         datePickerDialog.show();
     }
 
-
     /**
      * Opens the file chooser for image selection.
      */
@@ -270,9 +277,11 @@ public class AddEventFragment extends DialogFragment {
      * Saves event data to Firestore.
      */
     private void saveEventData(String imageUrl) {
+
         String eventName = editEventName.getText().toString();
         String date = editDate.getText().toString();
         String venue = editVenue.getText().toString();
+        String limit = editLimit.getText().toString();
 
         if (eventName.isEmpty() || date.isEmpty() || venue.isEmpty()) {
             Toast.makeText(getContext(), "Please fill in all details", Toast.LENGTH_SHORT).show();
@@ -284,9 +293,8 @@ public class AddEventFragment extends DialogFragment {
         Bitmap qrBitmap = generateQRCode(qrContent);
 
         // Upload QR code image to Firebase Storage
-        uploadQRCodeAndSaveEventData(qrBitmap, imageUrl, eventName, date, venue);
+        uploadQRCodeAndSaveEventData(qrBitmap, imageUrl, eventName, date, venue,limit);
     }
-
     /**
      * Generates a QR code bitmap from the given content.
      */
@@ -319,7 +327,7 @@ public class AddEventFragment extends DialogFragment {
     /**
      * Uploads the QR code image to Firebase Storage and saves event data.
      */
-    private void uploadQRCodeAndSaveEventData(Bitmap qrBitmap, String imageUrl, String eventName, String date, String venue) {
+    private void uploadQRCodeAndSaveEventData(Bitmap qrBitmap, String imageUrl, String eventName, String date, String venue, String limit) {
         // Check if the QR bitmap is null
         if (qrBitmap == null) {
             Toast.makeText(getContext(), "Failed to generate QR code", Toast.LENGTH_SHORT).show();
@@ -341,6 +349,8 @@ public class AddEventFragment extends DialogFragment {
             event.put("Name", eventName);
             event.put("Date", date);
             event.put("Venue", venue);
+            event.put("Limit", limit);
+            event.put("OrganizerDeviceId", deviceId);
             event.put("imageUrl", imageUrl != null ? imageUrl : ""); // Include the image URL if available
             event.put("qrUrl", qrUrl);
 
@@ -358,4 +368,6 @@ public class AddEventFragment extends DialogFragment {
                     .addOnFailureListener(e -> Toast.makeText(getContext(), "Error adding event.", Toast.LENGTH_SHORT).show());
         })).addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to upload QR code", Toast.LENGTH_SHORT).show());
     }
+
+
 }

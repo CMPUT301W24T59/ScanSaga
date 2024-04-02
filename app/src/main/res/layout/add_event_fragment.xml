@@ -89,7 +89,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_date_text"
         app:layout_constraintVertical_bias="0.083" />
+    <EditText
+        android:id="@+id/select_sign_up_limit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="26dp"
+        android:ems="10"
+        android:hint="Attendees Sign-Up Limit(Optional)"
+        android:inputType="number"
+        android:maxLength="4"
+        app:layout_constraintBottom_toTopOf="@+id/upload_poster"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_venue_text"
+        app:layout_constraintVertical_bias="0.083" />
 
+
+    <!-- ImageView below Upload Poster Button -->
 
     <Button
         android:id="@+id/upload_poster"
@@ -99,9 +119,10 @@
         android:text="Upload Poster"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.469"
+        app:layout_constraintHorizontal_bias="0.412"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_date_text"
-        app:layout_constraintVertical_bias="0.401" />
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintVertical_bias="0.765" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
