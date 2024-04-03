@@ -85,6 +85,12 @@
             android:name=".Views.ShowSignedUpAttendees"
             android:exported="true">
         </activity>
+
+        <activity
+            android:name=".Views.UseExistingQr"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>
