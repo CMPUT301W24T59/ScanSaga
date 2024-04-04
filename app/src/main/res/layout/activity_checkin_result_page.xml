@@ -31,7 +31,11 @@
         android:id="@+id/check_in_result_textview"
         android:layout_width="254dp"
         android:layout_height="75dp"
-        app:layout_constraintBottom_toTopOf="@+id/check_in_sucess_image"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/check_in_fail_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

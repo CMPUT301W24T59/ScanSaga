@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.scansaga.Model.GeoLocationManager;
 import com.example.scansaga.R;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -123,6 +124,16 @@ public class ScanAndGo extends AppCompatActivity {
         db.collection("events").document(url).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult().exists()) {
                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                // Check if the user is already checked in
+                DocumentSnapshot eventDoc = task.getResult();
+                if (eventDoc.contains("checkedInAttendees") && eventDoc.get("checkedInAttendees") instanceof List) {
+                    List<String> checkedInAttendees = (List<String>) eventDoc.get("checkedInAttendees");
+                    if (checkedInAttendees.contains(deviceId)) {
+                        // User is already checked in, redirect to result page
+                        redirectToCheckinResultPage("Already checked in", false);
+                        return; // Stop further execution
+                    }
+                }
                 boolean locationPermission = GeoLocationManager.checkPermissions();
 
                 if (locationPermission) {
@@ -137,6 +148,7 @@ public class ScanAndGo extends AppCompatActivity {
             }
         });
     }
+
 
     // Example method modification to include redirection instead of Toast
     private void uploadLocationAndCheckInAttendee(String url, String deviceId, double latitude, double longitude) {
