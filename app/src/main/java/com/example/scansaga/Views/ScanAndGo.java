@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.scansaga.Model.GeoLocationManager;
 import com.example.scansaga.R;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +27,9 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ScanAndGo extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -118,25 +121,16 @@ public class ScanAndGo extends AppCompatActivity {
 
     private void checkUserInEvent(String url) {
         db.collection("events").document(url).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().exists()) {
-                    String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            if (task.isSuccessful() && task.getResult().exists()) {
+                String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+                boolean locationPermission = GeoLocationManager.checkPermissions();
 
-                    // Check if the "checkedInAttendees" field exists and contains the deviceId
-                    if (task.getResult().contains("checkedInAttendees") && task.getResult().get("checkedInAttendees") instanceof List) {
-                        List<String> checkedInAttendees = (List<String>) task.getResult().get("checkedInAttendees");
-                        if (checkedInAttendees.contains(deviceId)) {
-                            Toast.makeText(ScanAndGo.this, "You're already checked in to this event", Toast.LENGTH_LONG).show();
-                        } else {
-                            // User is not checked in, add them to the list
-                            checkInAttendee(url, deviceId);
-                        }
-                    } else {
-                        // "checkedInAttendees" doesn't exist, start the array with the attendee
-                        createCheckedInAttendeesDocument(url, deviceId);
-                    }
+                if (locationPermission) {
+                    double latitude = GeoLocationManager.getLatitude();
+                    double longitude = GeoLocationManager.getLongitude();
+                    uploadLocationAndCheckInAttendee(url, deviceId, latitude, longitude);
                 } else {
-                    Toast.makeText(ScanAndGo.this, "Event does not exist", Toast.LENGTH_SHORT).show();
+                    checkInAttendeeWithoutLocation(url, deviceId);
                 }
             } else {
                 Toast.makeText(ScanAndGo.this, "Error checking event", Toast.LENGTH_SHORT).show();
@@ -144,17 +138,31 @@ public class ScanAndGo extends AppCompatActivity {
         });
     }
 
-    private void checkInAttendee(String url, String deviceId) {
-        db.collection("events").document(url).update("checkedInAttendees", FieldValue.arrayUnion(deviceId))
-                .addOnSuccessListener(s -> Toast.makeText(ScanAndGo.this, "You are now checked in. Thank you!", Toast.LENGTH_LONG).show())
-                .addOnFailureListener(f -> Toast.makeText(ScanAndGo.this, "Error checking in to event", Toast.LENGTH_LONG).show());
+    // Example method modification to include redirection instead of Toast
+    private void uploadLocationAndCheckInAttendee(String url, String deviceId, double latitude, double longitude) {
+        Map<String, Object> locationData = new HashMap<>();
+        locationData.put("deviceId", deviceId);
+        locationData.put("latitude", latitude);
+        locationData.put("longitude", longitude);
+
+        db.collection("events").document(url).collection("locationOfCheckedInUsers").document(deviceId)
+                .set(locationData)
+                .addOnSuccessListener(s -> redirectToCheckinResultPage("Location recorded & checked in successfully", true))
+                .addOnFailureListener(f -> redirectToCheckinResultPage("Error saving location data", false));
     }
 
-    private void createCheckedInAttendeesDocument(String url, String deviceId) {
-        List<String> initialAttendee = Arrays.asList(deviceId);
-        db.collection("events").document(url).update("checkedInAttendees", initialAttendee)
-                .addOnSuccessListener(s -> Toast.makeText(ScanAndGo.this, "You are now checked in. Thank you!", Toast.LENGTH_LONG).show())
-                .addOnFailureListener(f -> Toast.makeText(ScanAndGo.this, "Error creating check-in document", Toast.LENGTH_LONG).show());
+    private void redirectToCheckinResultPage(String message, boolean success) {
+        Intent intent = new Intent(ScanAndGo.this, CheckinResultPage.class);
+        intent.putExtra("checkInMessage", message);
+        intent.putExtra("checkInSuccess", success);
+        startActivity(intent);
+    }
+
+
+    private void checkInAttendeeWithoutLocation(String url, String deviceId) {
+        db.collection("events").document(url).update("checkedInAttendees", FieldValue.arrayUnion(deviceId))
+                .addOnSuccessListener(s -> redirectToCheckinResultPage("Checked in successfully", true))
+                .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in", false));
     }
 
 }
