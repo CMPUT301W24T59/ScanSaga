@@ -2,21 +2,14 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MainActivity (1)">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\forco\.android\avd\Pixel_7_API_30.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-02T05:43:50.686039500Z" />
-        </State>
+      <entry key="MySignedUpEventsTest">
+        <State />
+      </entry>
+      <entry key="ShowSignedUpAttendeesTest">
+        <State />
+      </entry>
+      <entry key="SignUpLimitTest">
+        <State />
       </entry>
       <entry key="app">
         <State>
@@ -33,6 +26,12 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-03-28T02:58:31.404130200Z" />
         </State>
+      </entry>
+      <entry key="testAdapterSetWithAttendees()">
+        <State />
+      </entry>
+      <entry key="testAnyMessageDisplayed()">
+        <State />
       </entry>
     </value>
   </component>
