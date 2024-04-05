@@ -64,6 +64,10 @@ public class HomepageActivity extends AppCompatActivity {
         // Retrieve the user details passed from MainActivity
         User user = (User) getIntent().getSerializableExtra("user");
 
+        // If coming back from previous activity, check to see if geolocation is already on and
+        // adjust the toggle for this
+        if (GeoLocationManager.checkPermissions()){geoLocation.setChecked(true);}
+
         // Set click listeners for each button
         showAllEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
