@@ -121,41 +121,50 @@ public class ScanAndGo extends AppCompatActivity {
 
 
     private void checkUserInEvent(String url) {
+        Log.d("ScanAndGo", "Checking events");
         db.collection("events").document(url).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult().exists()) {
+                Log.d("ScanAndGo", "Event info exists");
                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                 // Check if the user is already checked in
                 DocumentSnapshot eventDoc = task.getResult();
                 if (eventDoc.contains("checkedInAttendees") && eventDoc.get("checkedInAttendees") instanceof List) {
                     List<String> checkedInAttendees = (List<String>) eventDoc.get("checkedInAttendees");
+                    Log.d("ScanAndGo", "User checked into event?");
                     if (checkedInAttendees.contains(deviceId)) {
                         // User is already checked in, redirect to result page
+                        Log.d("ScanAndGo", "User is already checked into the event");
                         redirectToCheckinResultPage("Already checked in", false);
                         return; // Stop further execution
                     }
                 }
                 boolean locationPermission = GeoLocationManager.checkPermissions();
-
+                Log.d("ScanAndGo", "Checking user location");
                 if (locationPermission) {
+                    Log.d("ScanAndGo", "Location permitted");
                     double latitude = GeoLocationManager.getLatitude();
                     double longitude = GeoLocationManager.getLongitude();
                     uploadLocationAndCheckInAttendee(url, deviceId, latitude, longitude);
                 } else {
+                    Log.d("ScanAndGo", "Location not permitted, checking in without location");
                     checkInAttendeeWithoutLocation(url, deviceId);
                 }
             } else {
-                Toast.makeText(ScanAndGo.this, "Error checking event", Toast.LENGTH_SHORT).show();
+                Log.d("ScanAndGo", "Couldn't check into event");
+                redirectToCheckinResultPage("Error checking event", false);
             }
         });
     }
 
 
-    // Example method modification to include redirection instead of Toast
     private void uploadLocationAndCheckInAttendee(String url, String deviceId, double latitude, double longitude) {
         Map<String, Object> locationData = new HashMap<>();
+        // Upload user info with location and device ID
         locationData.put("deviceId", deviceId);
         locationData.put("latitude", latitude);
         locationData.put("longitude", longitude);
+        // Still need to add user to checked in list, so also execute the checkInWithoutLocation
+        checkInAttendeeWithoutLocation(url,deviceId);
 
         db.collection("events").document(url).collection("locationOfCheckedInUsers").document(deviceId)
                 .set(locationData)
@@ -163,6 +172,8 @@ public class ScanAndGo extends AppCompatActivity {
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error saving location data", false));
     }
 
+    // This redirects users to the CheckInResultPage. It displays either a checkin error or succes
+    // With text provided for each case
     private void redirectToCheckinResultPage(String message, boolean success) {
         Intent intent = new Intent(ScanAndGo.this, CheckinResultPage.class);
         intent.putExtra("checkInMessage", message);
@@ -170,7 +181,8 @@ public class ScanAndGo extends AppCompatActivity {
         startActivity(intent);
     }
 
-
+    // This adds the user to the "Checked in". Users who do not have location enabled will just be
+    // Added to this
     private void checkInAttendeeWithoutLocation(String url, String deviceId) {
         db.collection("events").document(url).update("checkedInAttendees", FieldValue.arrayUnion(deviceId))
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Checked in successfully", true))

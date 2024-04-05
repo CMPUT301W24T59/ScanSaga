@@ -29,8 +29,8 @@
 
     <TextView
         android:id="@+id/check_in_result_textview"
-        android:layout_width="254dp"
-        android:layout_height="75dp"
+        android:layout_width="259dp"
+        android:layout_height="172dp"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="24sp"

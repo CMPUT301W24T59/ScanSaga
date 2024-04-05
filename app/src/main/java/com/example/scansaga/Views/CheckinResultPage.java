@@ -51,7 +51,7 @@ public class CheckinResultPage extends AppCompatActivity {
             }
             startActivity(redirectIntent);
             finish();
-        }, 5000);
+        }, 3000);
     }
 
     private boolean checkIfUserAdmin() {
