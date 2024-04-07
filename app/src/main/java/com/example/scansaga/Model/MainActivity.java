@@ -1,10 +1,5 @@
 package com.example.scansaga.Model;
 
-
-import static androidx.fragment.app.FragmentManager.TAG;
-
-import static com.example.scansaga.Views.AddEvent.deviceId;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,9 +39,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * MainActivity class to handle user registration and login.
@@ -74,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String NOTIFICATION_PERMISSION = "NotificationPermissions";
 
 
-    // These isRunningTest is only used when trying to bypass the automatic sign in for andriodTest
+    // These isRunningTest is only used when trying to bypass the automatic sign in for androidTest
     private static boolean isRunningTest = false;
 
     public static boolean isRunningTest() {

@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.scansaga.R;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -87,7 +85,7 @@ public class ScanAndGo extends AppCompatActivity {
                 {
                     Toast.makeText(ScanAndGo.this, "Error checking URL", Toast.LENGTH_SHORT).show();
                 }
-            };
+            }
         });
-    };
-};
+    }
+}

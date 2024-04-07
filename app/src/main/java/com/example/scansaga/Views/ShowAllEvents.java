@@ -26,7 +26,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.scansaga.Controllers.EventArrayAdapter;
 import com.example.scansaga.Model.Event;
-import com.example.scansaga.Model.MainActivity;
 import com.example.scansaga.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
