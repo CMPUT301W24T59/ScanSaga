@@ -1,4 +1,4 @@
-package com.example.scansaga.Views;
+package com.example.scansaga.Controllers;
 import static com.example.scansaga.Model.MainActivity.CHANNEL_ID;
 import static com.example.scansaga.Model.MainActivity.notificationID;
 import static com.example.scansaga.Views.AddEvent.deviceId;

@@ -1,4 +1,4 @@
-package com.example.scansaga.Views;
+package com.example.scansaga.Controllers;
 import android.app.Activity;
 import android.content.Context;
 

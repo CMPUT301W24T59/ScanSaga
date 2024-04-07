@@ -113,7 +113,7 @@
         </activity>
 
         <service
-            android:name=".Views.FirebaseMessagingService"
+            android:name=".Controllers.FirebaseMessagingService"
             android:permission="TODO"
             tools:ignore="ExportedService"
             android:exported="false">
