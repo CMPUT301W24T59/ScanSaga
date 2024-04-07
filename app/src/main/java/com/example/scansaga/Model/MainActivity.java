@@ -188,11 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 phoneNumberEditText.setText("");
             }
         });
-    }
-
-    public interface AdminCheckCallback {
-        void onAdminCheckCompleted(boolean isAdmin);
-    }
 
         // Check if the app has notification permission upon entry
         if (!isNotificationPermissionGranted() && !isNotificationPermissionAskedBefore()) {
@@ -236,6 +231,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    public interface AdminCheckCallback {
+        void onAdminCheckCompleted(boolean isAdmin);
+    }
+
     public void checkIfUserAdmin(String deviceId, String firstName, String lastName, String phoneNumber, String email, AdminCheckCallback callback){
         CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
         adminRef.document(firstName + phoneNumber)
