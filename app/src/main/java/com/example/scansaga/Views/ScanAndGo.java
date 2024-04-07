@@ -68,7 +68,6 @@ public class ScanAndGo extends AppCompatActivity {
 
 
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data); // This should be called first
@@ -83,11 +82,11 @@ public class ScanAndGo extends AppCompatActivity {
                     // Process QR code content here
                     checkUserInEvent(qrCodeResult);
                 } else {
-                    Toast.makeText(this, "QR Code could not be decoded", Toast.LENGTH_SHORT).show();
+                    redirectToCheckinResultPage("Failed to decode QR Code", false);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Failed to decode QR Code", Toast.LENGTH_SHORT).show();
+                redirectToCheckinResultPage("Failed to decode QR Code", false);
             }
         } else {
             // Handle other onActivityResult scenarios, including the IntentIntegrator result

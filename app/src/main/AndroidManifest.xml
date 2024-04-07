@@ -22,6 +22,23 @@
         android:theme="@style/Theme.ScanSaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDrpg54Jvi_yuF5T0FXGysxrfS8jXr6_7k" />
+
+        <activity
+            android:name=".Model.ShowCheckedInAttendeesActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Controllers.ViewPagerAdapter"
+            android:exported="false" />
         <activity
             android:name=".Views.CheckinResultPage"
             android:exported="false" />
@@ -38,43 +55,43 @@
         </activity> <!-- Add Homepage declaration -->
         <activity
             android:name=".Views.HomepageActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.AttendeeHomePage"
-            android:exported="true"></activity> <!-- Add AddEvent declaration -->
+            android:exported="true" /> <!-- Add AddEvent declaration -->
         <activity
             android:name=".Views.AttendeeHomePage$AddEvent"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Model.MyProfile"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.ShowAllEvents"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.ShowAllUsers"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.ShowAllEventsAttendees"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.ShowAllImagesFromStorage"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.MySignedUpEvents"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.OrganizerEvents"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.ScanAndGo"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.ShowSignedUpAttendees"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Views.UseExistingQr"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
