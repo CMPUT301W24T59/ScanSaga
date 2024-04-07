@@ -50,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(this));
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         String eventNameDate = getIntent().getStringExtra(EXTRA_EVENT_NAME_DATE);
 
         if (eventNameDate != null) {
@@ -101,12 +102,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(location)
                         .title(name + " " + lastName)
-                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap))); // Set the icon here
+                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap))); // Set the icon
 
                 // Move the camera to the new marker
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
             } else {
-                // Handle failure...
+                // still need to implement on case of fail
             }
         });
     }
@@ -126,7 +127,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int resourceId = getResources().getIdentifier(String.valueOf(firstLetter), "drawable", getPackageName());
         Drawable letterDrawable = getResources().getDrawable(resourceId);
 
-        // Assuming you want a 100x100 px drawable
         Bitmap result = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
