@@ -1,8 +1,11 @@
 package com.example.scansaga.Views;
 
+import static com.example.scansaga.Model.MainActivity.token;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -65,14 +68,19 @@ public class ScanAndGo extends AppCompatActivity {
                 {
                     String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                     List<String> signedUpAttendees = Arrays.asList(deviceId);
+                    List<String> signedUpAttendeeTokens = Arrays.asList(token);
                     if(signedUpAttendees.contains(deviceId)){
                         Toast.makeText(ScanAndGo.this , "You've already joined this event",Toast.LENGTH_LONG).show();
                     }
-                    if (task.getResult().contains("signedUpAttendees"))
+                    else if (task.getResult().contains("signedUpAttendees"))
                     {
                         db.collection("events").document(url).update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
                                 .addOnSuccessListener(s -> Toast.makeText(ScanAndGo.this, "Thank you for joining this event", Toast.LENGTH_LONG).show())
                                 .addOnFailureListener(f -> Toast.makeText(ScanAndGo.this, "Error in joining Event", Toast.LENGTH_LONG).show());
+
+                        db.collection("events").document(url).update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                                .addOnSuccessListener(s -> Log.d("Firestore Token", "Token successfully added"))
+                                .addOnFailureListener(f -> Log.e("Firestore Token", "Token not added in ScanAndGo", f));
                     }
                     else
                     {
@@ -80,6 +88,10 @@ public class ScanAndGo extends AppCompatActivity {
                         db.collection("events").document(url).update("signedUpAttendees", signedUpAttendees) // Use update to create the field
                                     .addOnSuccessListener(s -> Toast.makeText(ScanAndGo.this, "Thank you for joining this event", Toast.LENGTH_LONG).show())
                                     .addOnFailureListener(f -> Toast.makeText(ScanAndGo.this, "Error in joining Event", Toast.LENGTH_LONG).show());
+
+                        db.collection("events").document(url).update("signedUpAttendeeTokens", signedUpAttendeeTokens) // Use update to create the field
+                                .addOnSuccessListener(s -> Log.d("Firestore Token", "Token successfully added"))
+                                .addOnFailureListener(f -> Log.e("Firestore Token", "Token not added in ScanAndGo", f));
                     }
                 }
                 else

@@ -3,6 +3,7 @@ package com.example.scansaga.Controllers;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,8 @@ import androidx.annotation.NonNull;
 
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
+import com.example.scansaga.Views.SendNotificationActivity;
 import com.example.scansaga.Views.ShowSignedUpAttendees;
-import com.example.scansaga.Views.sendNotificationActivity;
 
 import java.util.ArrayList;
 
@@ -82,8 +83,9 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
             @Override
             public void onClick(View v) {
                 Event event = events.get(position);
-                Intent intent = new Intent(context, sendNotificationActivity.class);
-                intent.putExtra("event", event);
+                Intent intent = new Intent(context, SendNotificationActivity.class);
+                intent.putExtra("Name", event.getName());
+                intent.putExtra("Date", event.getDate());
                 context.startActivity(intent);
             }
         });

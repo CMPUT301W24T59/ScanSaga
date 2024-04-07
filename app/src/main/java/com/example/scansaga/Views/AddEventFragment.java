@@ -128,6 +128,10 @@ public class AddEventFragment extends DialogFragment {
             positiveButton.setOnClickListener(v -> {
                 // Handle click on positive button
                 uploadImageAndSaveEventData();
+
+                Intent intent = new Intent(requireContext(), AttendeeHomePage.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             });
         });
 

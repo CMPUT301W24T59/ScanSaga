@@ -2,6 +2,8 @@ package com.example.scansaga.Views;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import static com.example.scansaga.Model.MainActivity.token;
+
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,13 +22,16 @@ import com.bumptech.glide.Glide;
 import com.example.scansaga.Controllers.EventArrayAdapter;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -174,6 +179,7 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         // Check if the device ID already exists in the list of signed-up attendees
         eventRef.get().addOnSuccessListener(documentSnapshot -> {
             List<String> signedUpAttendees = (List<String>) documentSnapshot.get("signedUpAttendees");
+            List<String> signedUpAttendeeTokens = (List<String>) documentSnapshot.get("signedUpAttendeeTokens");
             String limitStr = (String) documentSnapshot.get("Limit");
 
             if (limitStr != null && !limitStr.isEmpty()) {
@@ -190,6 +196,7 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                     // Update the signedUpAttendees field by appending the new deviceId
                     eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
                             .addOnSuccessListener(aVoid -> {
+//                                subscribeUser(event);
                                 // Show success message
                                 Toast.makeText(ShowAllEventsAttendees.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
                                 Log.d("Firestore", "Device signed up successfully for the event!");
@@ -197,6 +204,15 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                             .addOnFailureListener(e -> {
                                 // Handle failure to update Firestore
                                 Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
+                            });
+
+                    eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("Firestore Token", "Token successfully added");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore Token", "Token not added in ShowAllEventsAttendees", e);
                             });
                 }
             } else {
@@ -210,6 +226,7 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                     // Update the signedUpAttendees field by appending the new deviceId
                     eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
                             .addOnSuccessListener(aVoid -> {
+//                                subscribeUser(event);
                                 // Show success message
                                 Toast.makeText(ShowAllEventsAttendees.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
                                 Log.d("Firestore", "Device signed up successfully for the event!");
@@ -217,6 +234,15 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                             .addOnFailureListener(e -> {
                                 // Handle failure to update Firestore
                                 Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
+                            });
+
+                    eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("Firestore Token", "Token successfully added");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore Token", "Token not added in ShowAllEventsAttendees", e);
                             });
                 }
             }
@@ -237,5 +263,20 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+//    private void subscribeUser(Event event) {
+//        FirebaseMessaging.getInstance().subscribeToTopic(event.getName() + "_" + event.getDate())
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        String msg = "Subscribed";
+//                        if (!task.isSuccessful()) {
+//                            msg = "Subscribe failed";
+//                        }
+//                        Log.d("Subscription", msg);
+//                        Toast.makeText(ShowAllEventsAttendees.this, msg, Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 }
 

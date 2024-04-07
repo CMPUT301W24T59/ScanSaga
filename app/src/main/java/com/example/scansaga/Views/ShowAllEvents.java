@@ -1,6 +1,8 @@
 package com.example.scansaga.Views;
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import static com.example.scansaga.Model.MainActivity.token;
+
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -215,6 +217,7 @@ public class ShowAllEvents extends AppCompatActivity {
         // Check if the device ID already exists in the list of signed-up attendees
         eventRef.get().addOnSuccessListener(documentSnapshot -> {
             List<String> signedUpAttendees = (List<String>) documentSnapshot.get("signedUpAttendees");
+            List<String> signedUpAttendeeTokens = (List<String>) documentSnapshot.get("signedUpAttendeeTokens");
             String limitStr = (String) documentSnapshot.get("Limit");
 
             if (limitStr != null && !limitStr.isEmpty()) {
@@ -239,6 +242,15 @@ public class ShowAllEvents extends AppCompatActivity {
                                 // Handle failure to update Firestore
                                 Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
                             });
+
+                    eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("Firestore Token", "Token successfully added");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore Token", "Token not added in ShowAllEvents", e);
+                            });
                 }
             } else {
                 // No limit set, proceed with sign-up without checking limit
@@ -258,6 +270,15 @@ public class ShowAllEvents extends AppCompatActivity {
                             .addOnFailureListener(e -> {
                                 // Handle failure to update Firestore
                                 Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
+                            });
+
+                    eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("Firestore Token", "Token successfully added");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update Firestore
+                                Log.e("Firestore Token", "Token not added in ShowAllEvents", e);
                             });
                 }
             }

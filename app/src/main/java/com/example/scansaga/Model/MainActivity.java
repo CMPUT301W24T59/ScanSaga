@@ -1,6 +1,10 @@
 package com.example.scansaga.Model;
 
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
+import static com.example.scansaga.Views.AddEvent.deviceId;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +15,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,14 +31,21 @@ import com.example.scansaga.R;
 import com.example.scansaga.Controllers.UserArrayAdapter;
 import com.example.scansaga.Views.AttendeeHomePage;
 import com.example.scansaga.Views.HomepageActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * MainActivity class to handle user registration and login.
@@ -42,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     public static final String CHANNEL_ID = "my_notification_channel";
     public static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 100;
-    public static int notificationID = 0;
+    public static int notificationID = 1;
 
     ArrayList<User> userDataList;
     UserArrayAdapter userArrayAdapter;
@@ -56,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
     private Uri profileUri;
     private String profilePictureString;
     private ImageView imageView;
+    public static String token;
+    private static final String PREF_NAME = "NotificationPref";
+    private static final String NOTIFICATION_PERMISSION = "NotificationPermissions";
+
 
     // These isRunningTest is only used when trying to bypass the automatic sign in for andriodTest
     private static boolean isRunningTest = false;
@@ -185,14 +201,47 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Check if the app has notification permission upon entry
-        if (!isNotificationPermissionGranted()) {
+        if (!isNotificationPermissionGranted() && !isNotificationPermissionAskedBefore()) {
             // Prompt the user for notification permission
             showNotificationPermissionDialog();
         } else {
-            // Notification permission is already granted, create notification channel
+            // Notification permission is already granted or asked before, create notification channel
             createNotificationChannel();
         }
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d("TOKEN","Fetching FCM registration token failed");
+                            return;
+                        }
+                        // Get new FCM registration token
+                        token = task.getResult();
+                        // Log and toast
+                        Log.d("TOKEN", token);
+                    }
+                });
+
+        db.collection("events").whereArrayContains("signedUpAttendees", deviceId)
+                .addSnapshotListener((querySnapshots, error) -> {
+                    if (error != null) {
+                        Log.e("TOKEN", "Firestore error in FirebaseMessagingService: ", error);
+                        return;
+                    }
+                    if (querySnapshots != null) {
+                        for (QueryDocumentSnapshot doc : querySnapshots) {
+                            DocumentReference eventRef = db
+                                    .collection("events")
+                                    .document(String.valueOf(doc));
+                            eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("TOKEN", "Token successfully added in FirebaseMessagingService");
+                                    });
+                        }
+                    }
+                });
     }
 
     /**
@@ -246,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Firebase", e.getMessage());
                     }
                 });
-
     }
 
     private void createNotificationChannel() {
@@ -267,6 +315,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean isNotificationPermissionGranted() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         return notificationManager.areNotificationsEnabled();
+    }
+
+    private boolean isNotificationPermissionAskedBefore() {
+        SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        return preferences.getBoolean(NOTIFICATION_PERMISSION, false);
+    }
+
+    private void setNotificationPermissionAsked() {
+        SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        preferences.edit().putBoolean(NOTIFICATION_PERMISSION, true).apply();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -296,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                return;
+                setNotificationPermissionAsked(); // Mark permission as asked
             }
         });
         builder.setCancelable(false);
