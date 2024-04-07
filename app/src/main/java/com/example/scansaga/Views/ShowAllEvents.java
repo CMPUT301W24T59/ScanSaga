@@ -4,8 +4,11 @@ import static androidx.fragment.app.FragmentManager.TAG;
 import static com.example.scansaga.Model.MainActivity.token;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
@@ -14,10 +17,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.scansaga.Controllers.EventArrayAdapter;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.Model.MainActivity;
@@ -32,6 +38,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +50,7 @@ public class ShowAllEvents extends AppCompatActivity {
     private FirebaseStorage storage;
     private CollectionReference eventsRef;
     private Button delete;
+    private Button scan;
     private Button signup;
     private ListView listView;
     private EventArrayAdapter eventAdapter;
@@ -65,6 +73,7 @@ public class ShowAllEvents extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         eventList = new ArrayList<>();
         delete = findViewById(R.id.button_delete);
+        scan = findViewById(R.id.share_button);
         signup = findViewById(R.id.signup_button);
 
         db = FirebaseFirestore.getInstance();
@@ -92,10 +101,41 @@ public class ShowAllEvents extends AppCompatActivity {
                     addSignupInfoToFirestore(selectedEvent);
                     eventAdapter.notifyDataSetChanged();
                 });
+                scan.setOnClickListener(v -> {
+                    shareEventImage(selectedEvent.getQrUrl());
+                });
             }
+
 
         });
     }
+
+    private void shareEventImage(String QrUrl) {
+        Glide.with(this).asBitmap().load(QrUrl).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                shareImage(resource);
+            }
+        });
+    }
+
+    private void shareImage(Bitmap bitmap) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/jpeg");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        byte[] imageBytes = bytes.toByteArray();
+        Uri imageUri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Shared Image", null));
+        intent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Start the sharing activity
+            startActivity(intent);
+        } else {
+            // No provider found, notify the user
+            Toast.makeText(this, "No compatible apps found", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     /**
      * Fetches all events from Firestore and populates the ListView.
@@ -121,7 +161,6 @@ public class ShowAllEvents extends AppCompatActivity {
                     Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                     if (imageUrl != null) {
                         eventList.add(new Event(name, date, venue, imageUrl, qrUrl));
-                        eventList.add(new Event(name, date, venue, imageUrl,null));
                     } else {
                         Log.d("FirestoreData", "Missing imageUrl for event: " + name);
                     }
@@ -191,7 +230,7 @@ public class ShowAllEvents extends AppCompatActivity {
         StorageReference qrRef = storage.getReference("qr_codes").child("https://firebasestorage.googleapis.com/v0/b/lab5-8b633.appspot.com/o/qr_codes%2F330de21f-b497-48c7-8a27-836850a31dcf.png?alt=media&token=44f00e04-5060-4b03-b80c-7df9645ce4cf");
 
         // Use Glide to download and display the image
-        Log.d("Before Glide",  "Before Glide");
+        Log.d("Before Glide", "Before Glide");
         qrRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -199,7 +238,7 @@ public class ShowAllEvents extends AppCompatActivity {
                 Glide.with(ShowAllEvents.this)
                         .load(qrRef)
                         .into(qrView);
-                Log.d("QR", "QR" +  qrRef);
+                Log.d("QR", "QR" + qrRef);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -208,6 +247,7 @@ public class ShowAllEvents extends AppCompatActivity {
             }
         });
     }
+
     private void addSignupInfoToFirestore(Event event) {
         // Get the reference to the document for the selected event
         DocumentReference eventRef = FirebaseFirestore.getInstance()
@@ -289,8 +329,6 @@ public class ShowAllEvents extends AppCompatActivity {
     }
 
 
-
-
     private void showDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
@@ -301,5 +339,4 @@ public class ShowAllEvents extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 }

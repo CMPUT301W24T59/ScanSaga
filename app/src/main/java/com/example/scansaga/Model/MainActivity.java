@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * MainActivity class to handle user registration and login.
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
         if((!MainActivity.isRunningTest())) {
             // Check if the user already exists based on device ID
+            // Assuming you're in a context where this is possible (e.g., an Activity)
             usernamesRef.whereEqualTo("DeviceId", deviceId)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -126,34 +128,21 @@ public class MainActivity extends AppCompatActivity {
                             String phoneNumber = snapshot.getString("PhoneNumber");
                             String imageUri = snapshot.getString("ImageUri");
 
-                            // Check if the user exists in the admin collection
-                            CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
-                            adminRef.document(firstName + phoneNumber)
-                                    .get()
-                                    .addOnSuccessListener(documentSnapshot -> {
-                                        if (documentSnapshot.exists()) {
-                                            // User exists in the admin collection
-                                            // Navigate to HomepageActivity
-                                            User user = new User(firstName, lastName, email, phoneNumber, null);
-                                            Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
-                                            intent.putExtra("user", user);
-                                            startActivity(intent);
-                                            finish(); // Finish MainActivity so that it's not kept in the back stack
-                                        } else {
-                                            // User exists in the regular user collection
-                                            // Navigate to AttendeeHomePage
-                                            User user = new User(firstName, lastName, email, phoneNumber, null);
-                                            Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
-                                            intent.putExtra("user", user);
-                                            startActivity(intent);
-                                            finish(); // Finish MainActivity so that it's not kept in the back stack
-                                        }
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("Firestore", "Error checking for admin document", e);
-                                    });
-
-                            // Break the loop as we only need to navigate once
+                            checkIfUserAdmin(deviceId, firstName, lastName, phoneNumber, email, isAdmin -> {
+                                if (isAdmin) {
+                                    User user = new User(firstName, lastName, email, phoneNumber, imageUri);
+                                    Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                                    intent.putExtra("user", user);
+                                    startActivity(intent);
+                                    finish(); // Finish MainActivity so that it's not kept in the back stack
+                                } else {
+                                    User user = new User(firstName, lastName, email, phoneNumber, imageUri);
+                                    Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
+                                    intent.putExtra("user", user);
+                                    startActivity(intent);
+                                    finish(); // Finish MainActivity so that it's not kept in the back stack
+                                }
+                            });
                             break;
                         }
                     })
@@ -199,6 +188,11 @@ public class MainActivity extends AppCompatActivity {
                 phoneNumberEditText.setText("");
             }
         });
+    }
+
+    public interface AdminCheckCallback {
+        void onAdminCheckCompleted(boolean isAdmin);
+    }
 
         // Check if the app has notification permission upon entry
         if (!isNotificationPermissionGranted() && !isNotificationPermissionAskedBefore()) {
@@ -242,7 +236,19 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    public void checkIfUserAdmin(String deviceId, String firstName, String lastName, String phoneNumber, String email, AdminCheckCallback callback){
+        CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
+        adminRef.document(firstName + phoneNumber)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    callback.onAdminCheckCompleted(documentSnapshot.exists());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error checking for admin document", e);
+                    callback.onAdminCheckCompleted(false);
+                });
     }
+
 
     /**
      * Method to add a new user to Firestore database.
