@@ -56,6 +56,7 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         FloatingActionButton fab = findViewById(R.id.add_event_button);
+        new AddEventFragment().show(getSupportFragmentManager(), "Add Event");
         fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));
 
     }

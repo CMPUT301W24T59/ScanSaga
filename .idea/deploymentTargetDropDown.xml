@@ -2,35 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MySignedUpEventsTest">
-        <State />
-      </entry>
-      <entry key="ShowSignedUpAttendeesTest">
-        <State />
-      </entry>
-      <entry key="SignUpLimitTest">
-        <State />
-      </entry>
       <entry key="app">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\rosyb\.android\avd\Pixel_3a_API_33_x86_64.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-28T02:58:31.404130200Z" />
-        </State>
-      </entry>
-      <entry key="testAdapterSetWithAttendees()">
-        <State />
-      </entry>
-      <entry key="testAnyMessageDisplayed()">
         <State />
       </entry>
     </value>

@@ -108,6 +108,7 @@ public class AddEventFragment extends DialogFragment {
         uploadPosterButton = view.findViewById(R.id.upload_poster);
         editLimit = view.findViewById(R.id.select_sign_up_limit);
         imageView = view.findViewById(R.id.image_view_poster);
+        use_existing_qr_button = view.findViewById(R.id.use_existing_qr_button);
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("event")) {
@@ -130,6 +131,13 @@ public class AddEventFragment extends DialogFragment {
 
         editDate.setOnClickListener(v -> showDateTimePickerDialog());
         uploadPosterButton.setOnClickListener(v -> openFileChooser());
+        use_existing_qr_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UseExistingQr.class);
+                startActivity(intent);
+            }
+        });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dismiss());
         builder.setPositiveButton("Add", null); // We'll handle the positive button click separately
