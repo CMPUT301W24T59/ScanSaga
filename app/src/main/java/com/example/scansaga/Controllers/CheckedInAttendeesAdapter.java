@@ -41,7 +41,7 @@ public class CheckedInAttendeesAdapter extends RecyclerView.Adapter<CheckedInAtt
             super(itemView);
             firstnameTextView = itemView.findViewById(R.id.textview_firstname);
             lastnameTextView = itemView.findViewById(R.id.textview_lastname);
-            profileDisplay = itemView.findViewById(R.id.profile_image_view);
+            profileDisplay = itemView.findViewById(R.id.checked_in_profile_image);
         }
     }
 
@@ -58,14 +58,8 @@ public class CheckedInAttendeesAdapter extends RecyclerView.Adapter<CheckedInAtt
         holder.firstnameTextView.setText(attendee.getFirstname());
         holder.lastnameTextView.setText(attendee.getLastname());
 
-        if (attendee.getProfileImageUrl() != null && !attendee.getProfileImageUrl().isEmpty()) {
-            Glide.with(holder.profileDisplay.getContext())
-                    .load(attendee.getProfileImageUrl())
-                    .into(holder.profileDisplay);
-        } else {
-            // Load default profile picture based on the first letter of the first name
-            generateUniqueProfilePicture(attendee.getFirstname(), attendee.getLastname(), holder.profileDisplay);
-        }
+        // Always generate a unique profile picture
+        generateUniqueProfilePicture(attendee.getFirstname(), attendee.getLastname(), holder.profileDisplay);
     }
 
     @Override

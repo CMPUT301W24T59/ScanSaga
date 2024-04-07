@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"> <!-- Customize this background as needed -->
+
+    <!-- Replace with your default drawable -->
+
+    <TextView
+        android:id="@+id/custom_first_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Firstname"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/custom_last_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lastname"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- You can add more TextViews if you want to show more information -->
+</LinearLayout>

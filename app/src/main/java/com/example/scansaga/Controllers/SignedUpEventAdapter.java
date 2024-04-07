@@ -3,6 +3,7 @@ package com.example.scansaga.Controllers;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,8 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
                 Intent intent = new Intent(context, ShowCheckedInAttendeesActivity.class);
 
                 // Pass the event details as extras
-                intent.putExtra("extra_event_name_date", event.getName()+event.getDate());
+                intent.putExtra("extra_event_name_date", event.getName()+"_"+event.getDate());
+                Log.d("mapCheck", "event name passed through:"+event.getName() +"_"+event.getDate());
 
                 // Start the activity
                 context.startActivity(intent);
