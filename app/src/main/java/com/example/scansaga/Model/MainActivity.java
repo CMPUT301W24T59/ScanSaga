@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * MainActivity class to handle user registration and login.
@@ -40,12 +41,22 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference usernamesRef;
     private String deviceId;
     private Button uploadProfilePicture;
+    public static Boolean isUserAdmin;
 
     private Uri profileUri;
     private String profilePictureString;
     private ImageView imageView;
 
-    // Method to validate email format
+    // These isRunningTest is only used when trying to bypass the automatic sign in for andriodTest
+    private static boolean isRunningTest = false;
+
+    public static boolean isRunningTest() {
+        return isRunningTest;
+    }
+    public static void setRunningTest(boolean runningTest) {
+        isRunningTest = runningTest;
+    }
+        // Method to validate email format
     private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
@@ -72,56 +83,50 @@ public class MainActivity extends AppCompatActivity {
         usernamesRef = db.collection("users");
         userDataList = new ArrayList<>();
         userArrayAdapter = new UserArrayAdapter(this, userDataList);
+        isUserAdmin = false;
 
 
         // Get unique device ID
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // Check if the user already exists based on device ID
-        usernamesRef.whereEqualTo("DeviceId", deviceId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                        String firstName = snapshot.getString("Firstname");
-                        String lastName = snapshot.getString("Lastname");
-                        String email = snapshot.getString("Email");
-                        String phoneNumber = snapshot.getString("PhoneNumber");
-                        String imageUri = snapshot.getString("ImageUri");
+        if((!MainActivity.isRunningTest())) {
+            // Check if the user already exists based on device ID
+            // Assuming you're in a context where this is possible (e.g., an Activity)
+            usernamesRef.whereEqualTo("DeviceId", deviceId)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                            String firstName = snapshot.getString("Firstname");
+                            String lastName = snapshot.getString("Lastname");
+                            String email = snapshot.getString("Email");
+                            String phoneNumber = snapshot.getString("PhoneNumber");
+                            String imageUri = snapshot.getString("ImageUri");
 
-                        // Check if the user exists in the admin collection
-                        CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
-                        adminRef.document(firstName + phoneNumber)
-                                .get()
-                                .addOnSuccessListener(documentSnapshot -> {
-                                    if (documentSnapshot.exists()) {
-                                        // User exists in the admin collection
-                                        // Navigate to HomepageActivity
-                                        User user = new User(firstName, lastName, email, phoneNumber, null);
-                                        Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
-                                        intent.putExtra("user", user);
-                                        startActivity(intent);
-                                        finish(); // Finish MainActivity so that it's not kept in the back stack
-                                    } else {
-                                        // User exists in the regular user collection
-                                        // Navigate to AttendeeHomePage
-                                        User user = new User(firstName, lastName, email, phoneNumber, null);
-                                        Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
-                                        intent.putExtra("user", user);
-                                        startActivity(intent);
-                                        finish(); // Finish MainActivity so that it's not kept in the back stack
-                                    }
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("Firestore", "Error checking for admin document", e);
-                                });
-
-                        // Break the loop as we only need to navigate once
-                        break;
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error checking for device ID", e);
-                });
+                            checkIfUserAdmin(deviceId, firstName, lastName, phoneNumber, email, isAdmin -> {
+                                if (isAdmin) {
+                                    isUserAdmin = true;
+                                    User user = new User(firstName, lastName, email, phoneNumber, imageUri);
+                                    Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                                    intent.putExtra("user", user);
+                                    startActivity(intent);
+                                    finish(); // Finish MainActivity so that it's not kept in the back stack
+                                } else {
+                                    User user = new User(firstName, lastName, email, phoneNumber, imageUri);
+                                    Intent intent = new Intent(MainActivity.this, AttendeeHomePage.class);
+                                    intent.putExtra("user", user);
+                                    startActivity(intent);
+                                    finish(); // Finish MainActivity so that it's not kept in the back stack
+                                }
+                            });
+                            break;
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "Error checking for device ID", e);
+                    });
+        } else {
+            deviceId=null;
+        }
 
         // Add click listener for the addUserButton
         addUserButton.setOnClickListener(new View.OnClickListener() {
@@ -158,8 +163,25 @@ public class MainActivity extends AppCompatActivity {
                 phoneNumberEditText.setText("");
             }
         });
-
     }
+
+    public interface AdminCheckCallback {
+        void onAdminCheckCompleted(boolean isAdmin);
+    }
+
+    public void checkIfUserAdmin(String deviceId, String firstName, String lastName, String phoneNumber, String email, AdminCheckCallback callback){
+        CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
+        adminRef.document(firstName + phoneNumber)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    callback.onAdminCheckCompleted(documentSnapshot.exists());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error checking for admin document", e);
+                    callback.onAdminCheckCompleted(false);
+                });
+    }
+
 
     /**
      * Method to add a new user to Firestore database.
@@ -175,6 +197,9 @@ public class MainActivity extends AppCompatActivity {
         data.put("PhoneNumber", user.getPhone());
         data.put("DeviceId", deviceId);
 
+        if(MainActivity.isRunningTest()){
+            deviceId = Long.toString((long) (Math.random() * 1_000_000_0000L) + 1_000_000_000L);
+        }
 
         usernamesRef
                 .document(deviceId)

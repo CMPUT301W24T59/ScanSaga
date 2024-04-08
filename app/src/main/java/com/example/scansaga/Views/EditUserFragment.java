@@ -158,6 +158,15 @@ public class EditUserFragment extends DialogFragment {
         }
     }
 
+    /**
+     *  Handles uploading a new profile picture to Firebase Storage. Called when a
+     *  profile picture is selected
+     *
+     * @param firstName Updated first name.
+     * @param lastName Updated last name.
+     * @param email Updated email address.
+     * @param phone Updated phone number.
+     */
     private void uploadProfilePicture(String firstName, String lastName, String email, String phone) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -181,6 +190,17 @@ public class EditUserFragment extends DialogFragment {
                 });
     }
 
+    /**
+     * Updates user information in Firestore without changing the profile picture.  Provides options to
+     * update the profile picture separately, if the user has selected a new image.
+     *
+     * @param firstName Updated first name.
+     * @param lastName Updated last name.
+     * @param email Updated email address.
+     * @param phone Updated phone number.
+     * @param profilePictureUrl  The URL of the profile picture in Firebase Storage
+     *                           (if selected). Can be null if the picture is not being changed.
+     */
     private void updateUserInfoWithoutProfilePicture(String firstName, String lastName, String email, String phone, String profilePictureUrl) {
         // Update user information in Firestore
         CollectionReference usersRef = FirebaseFirestore.getInstance().collection("users");
@@ -204,11 +224,22 @@ public class EditUserFragment extends DialogFragment {
         });
     }
 
+    /**
+     *  Launches the image picker intent to allow the user to select a profile picture.
+     */
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    /**
+     * Handles the result of the image picker activity. Updates the ImageView if a new
+     * profile picture is selected.
+     *
+     * @param requestCode The request code originally supplied to startActivityForResult().
+     * @param resultCode  The result code returned by the image picker activity.
+     * @param data  An intent containing the selected image data (if any).
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -223,6 +254,16 @@ public class EditUserFragment extends DialogFragment {
             }
         }
     }
+
+    /**
+     * Deletes the existing profile picture from Firebase Storage and updates the
+     * Firestore document to reflect the change.
+     *
+     * @param firstName Updated first name.
+     * @param lastName Updated last name.
+     * @param email Updated email address.
+     * @param phone Updated phone number.
+     */
     private void deleteProfilePicture(String firstName, String lastName, String email, String phone) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference profilePicRef = storage.getReference().child("profile_pictures/" + deviceId);

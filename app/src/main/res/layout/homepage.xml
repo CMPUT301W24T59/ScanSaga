@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <!-- Welcome TextView -->
     <TextView
         android:id="@+id/welcome_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingStart="20dp"
-        android:text="Admin HomePage"
-        android:textSize="30sp"
-        android:textColor="#2D2D2D"
-        android:textStyle="bold"
+        android:layout_marginBottom="8sp"
         android:fontFamily="sans-serif-condensed-medium"
-        android:gravity="start"
-        android:padding="15sp" />
+        android:gravity="center"
+        android:text="Admin HomePage"
+        android:textColor="#2D2D2D"
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <!-- Profile button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="20dp">
+        android:layout_marginBottom="8sp">
 
         <ImageView
             android:layout_width="43dp"
             android:layout_height="43dp"
             android:layout_marginEnd="15dp"
+            android:layout_marginBottom="8sp"
             android:src="@drawable/profile_icon_black" />
 
         <Button
             android:id="@+id/edit_profile_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My Profile"/>
+            android:layout_marginBottom="8sp"
+            android:text="My Profile" />
     </LinearLayout>
 
 
@@ -46,39 +47,39 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
 
         <!-- Button for quick scan and check-in -->
         <Button
             android:id="@+id/scan_and_attend_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Quick Scan and Check-in"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="8sp"
+            android:text="Check-in" />
 
         <Button
             android:id="@+id/add_event_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add an Event"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="2sp"
+            android:text="Add Event" />
 
         <Button
             android:id="@+id/show_all_events_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show All Events"
+            android:layout_marginBottom="2sp"
+            android:text="Find Events"
             android:textColorHighlight="#0B0A0A"
-            android:textColorLink="#040303"
-            android:layout_marginBottom="16dp"/>
+            android:textColorLink="#040303" />
 
         <Button
             android:id="@+id/show_all_users_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show all users"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="2sp"
+            android:text="All Users" />
 
 
         <!-- Button to sign up for an event -->
@@ -86,10 +87,39 @@
             android:id="@+id/show_all_images_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show All Images"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="2sp"
+            android:text="All Images" />
 
+        <!-- Button to sign up for an event -->
+        <Button
+            android:id="@+id/show_all_signed_up_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2sp"
+            android:text="Signed Up Events" />
+
+        <!-- Button to show old qr for old events -->
+
+        <!-- Button to sign up attendees and my events -->
+        <Button
+            android:id="@+id/organizer_events"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="2sp"
+            android:text="My Events" />
+
+        <Switch
+            android:id="@+id/geo_location_switch"
+            android:layout_width="289dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:forceHasOverlappingRendering="true"
+            android:foregroundGravity="center"
+            android:gravity="center|right"
+            android:switchTextAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:text="@string/geo_location_label" />
 
     </LinearLayout>
+
 
 </LinearLayout>

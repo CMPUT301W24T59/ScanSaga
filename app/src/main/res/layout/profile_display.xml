@@ -20,8 +20,8 @@
         android:layout_height="115dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:background="@drawable/round_imageview"
-        android:backgroundTint="#D1D1D1"
+        android:backgroundTint="#11D1D1D1"
+        android:backgroundTintMode="add"
         android:clickable="true"
         android:src="@drawable/profile_icon_black" />
 

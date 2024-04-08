@@ -2,20 +2,21 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="AddEventTest">
-        <State />
-      </entry>
-      <entry key="EventTest">
-        <State />
-      </entry>
-      <entry key="HomePageActivityTest">
-        <State />
-      </entry>
-      <entry key="MyProfileTest">
-        <State />
-      </entry>
-      <entry key="ShowAllEventsTest">
-        <State />
+      <entry key="MainActivity (1)">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\forco\.android\avd\Medium_Phone_API_30.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-04-07T04:30:41.934919900Z" />
+        </State>
       </entry>
       <entry key="app">
         <State>
@@ -25,12 +26,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\rosyb\.android\avd\Pixel_3a_API_33_x86_64.avd" />
+                  <value value="C:\Users\rosyb\.android\avd\Pixel_XL_API_33.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-07T16:56:05.742908500Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-03-20T23:07:04.202489300Z" />
         </State>
       </entry>
     </value>
