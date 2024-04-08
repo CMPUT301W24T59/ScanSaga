@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/AndroidStudioProjects/FoodOn" />
+    <option name="OUTPUT_DIRECTORY" value="$APPLICATION_HOME_DIR$/Docs" />
     <option name="OPTION_SCOPE" value="public" />
     <option name="OPTION_INCLUDE_LIBS" value="true" />
   </component>

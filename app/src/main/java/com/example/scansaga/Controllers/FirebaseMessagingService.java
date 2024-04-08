@@ -29,9 +29,21 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Objects;
 
+/**
+ * Custom FirebaseMessagingService for handling Firebase Cloud Messaging.
+ * This service extends {@link com.google.firebase.messaging.FirebaseMessagingService}.
+ */
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
+    /** The instance of FirebaseFirestore used for database operations. */
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    /**
+     * Called when a new token for the device is generated or refreshed.
+     * Updates the token in Firestore for all events where the device is signed up.
+     *
+     * @param token The new token generated for the device.
+     */
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
@@ -57,6 +69,12 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 });
     }
 
+    /**
+     * Called when a new FCM message is received.
+     * Handles displaying the notification.
+     *
+     * @param remoteMessage The message received from Firebase Cloud Messaging.
+     */
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -64,6 +82,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         handleNotification(remoteMessage);
     }
 
+    /**
+     * Handles displaying the notification when a new FCM message is received.
+     *
+     * @param remoteMessage The message received from Firebase Cloud Messaging.
+     */
     private void handleNotification(RemoteMessage remoteMessage) {
         // Play audio and vibration
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

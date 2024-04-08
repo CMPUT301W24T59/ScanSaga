@@ -16,19 +16,36 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class for sending notifications using Firebase Cloud Messaging (FCM).
+ */
 public class NotificationSender  {
 
+    /** The FCM token of the user to whom the notification will be sent. */
     String userToken;
     String title;
     String body;
     Context mContext;
     Activity act;
 
-
+    /** The Volley request queue for sending the notification. */
     private RequestQueue requestQueue;
+
+    /** The URL for sending POST requests to FCM server. */
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";
+
+    /** The server key required for authorization to send notifications via FCM. */
     private final String ServerKey ="AAAAsko8abA:APA91bGX6aboEQs28ccSp1dY9mkV15t00psLjkchR_0so33hYjsjUpQAsKvll54iTn3CE2gC13Xlqx0OnW-2VMZoORVGsesfOQ5sqBlqvZwsOzoPkOy2XaEm5tnt_cuIU9--uz40lPSa";
 
+    /**
+     * Constructs a new NotificationSender object with the provided parameters.
+     *
+     * @param userToken The FCM token of the user to whom the notification will be sent.
+     * @param title The title of the notification.
+     * @param body The body/content of the notification.
+     * @param mContext The context of the application.
+     * @param act The activity context.
+     */
     public NotificationSender(String userToken, String title, String body, Context mContext, Activity act) {
         this.userToken = userToken;
         this.title = title;
@@ -37,6 +54,9 @@ public class NotificationSender  {
         this.act = act;
     }
 
+    /**
+     * Sends the notification to the user with the specified FCM token.
+     */
     public void SendNotifications() {
 
         requestQueue = Volley.newRequestQueue(act);

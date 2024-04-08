@@ -21,12 +21,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import static com.example.scansaga.Model.MainActivity.notificationID;
 
 import java.util.ArrayList;
+
+/**
+ * Activity for sending notifications to attendees of a specific event.
+ */
 public class SendNotificationActivity extends AppCompatActivity {
     private EditText notificationTitle, notificationMessage;
     private Button notificationSendButton;
     String eventName, eventDate, eventDocument;
+
+    /** Instance of FirebaseFirestore for database operations. */
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
+    /**
+     * Called when the activity is starting.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState.
+     */
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
