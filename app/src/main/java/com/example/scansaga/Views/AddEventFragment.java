@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.scansaga.Controllers.QRImageAdapter;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
 import com.example.scansaga.Views.Utils;
@@ -54,11 +55,12 @@ public class AddEventFragment extends DialogFragment {
     private Uri imageUri;
     private ImageView imageView;
     private String deviceId;
+    private boolean useExistingQRCodeClicked = false;
     private Uri qrUri;
     private ImageView qrImageView;
 
     /**
-     * Interface for communicating with the activity.
+     * Interface for communicating with the activity.\
      */
     interface AddEventDialogListener {
         void addNewEvent(Event event);
@@ -68,7 +70,7 @@ public class AddEventFragment extends DialogFragment {
 
     private AddEventDialogListener listener;
     private EditText editEventName, editDate, editVenue, editLimit;
-    private Button  uploadPosterButton;
+    private Button  uploadPosterButton,use_existing_qr_button;
     private Event eventToEdit;
 
     /**
@@ -106,6 +108,7 @@ public class AddEventFragment extends DialogFragment {
         uploadPosterButton = view.findViewById(R.id.upload_poster);
         editLimit = view.findViewById(R.id.select_sign_up_limit);
         imageView = view.findViewById(R.id.image_view_poster);
+        use_existing_qr_button = view.findViewById(R.id.use_existing_qr_button);
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("event")) {
@@ -116,7 +119,6 @@ public class AddEventFragment extends DialogFragment {
                 editDate.setText(eventToEdit.getDate());
                 editVenue.setText(eventToEdit.getVenue());
                 editVenue.setText(eventToEdit.getLimit());
-
                 qrUri = Uri.parse((String) eventToEdit.getQrUrl());
                 qrImageView.setImageURI(qrUri);
 
@@ -128,8 +130,14 @@ public class AddEventFragment extends DialogFragment {
         }
 
         editDate.setOnClickListener(v -> showDateTimePickerDialog());
-
         uploadPosterButton.setOnClickListener(v -> openFileChooser());
+        use_existing_qr_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UseExistingQr.class);
+                startActivity(intent);
+            }
+        });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dismiss());
         builder.setPositiveButton("Add", null); // We'll handle the positive button click separately
@@ -288,13 +296,14 @@ public class AddEventFragment extends DialogFragment {
             return;
         }
 
-        // Generate QR code
-        String qrContent = eventName + "_" + date;
+        String qrContent = eventName + "\n" + date + "\n" + venue;
         Bitmap qrBitmap = generateQRCode(qrContent);
 
-        // Upload QR code image to Firebase Storage
-        uploadQRCodeAndSaveEventData(qrBitmap, imageUrl, eventName, date, venue,limit);
+            // Upload QR code image to Firebase Storage
+        uploadQRCodeAndSaveEventData(qrBitmap, imageUrl, eventName, date, venue, limit);
+
     }
+
     /**
      * Generates a QR code bitmap from the given content.
      */

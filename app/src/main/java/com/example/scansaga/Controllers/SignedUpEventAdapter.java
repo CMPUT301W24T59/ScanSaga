@@ -3,20 +3,19 @@ package com.example.scansaga.Controllers;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.bumptech.glide.Glide;
 import com.example.scansaga.Model.Event;
+import com.example.scansaga.Model.ShowCheckedInAttendeesActivity;
 import com.example.scansaga.R;
-import com.example.scansaga.Views.HomepageActivity;
 import com.example.scansaga.Views.ShowSignedUpAttendees;
 
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
         TextView eventName = convertView.findViewById(R.id.event_text);
         TextView eventDate = convertView.findViewById(R.id.time_text);
         Button show_attendees = convertView.findViewById(R.id.see_signed_up_attendees);
+        Button show_check_ins = convertView.findViewById(R.id.see_checked_in_attendees);
 
 
         // Get the data item for this position
@@ -57,6 +57,24 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
         // Populate the data into the template view using the data object
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
+
+        show_check_ins.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the event at the clicked position
+                Event event = events.get(position);
+
+                // Create an intent to start ShowSignedUpAttendees activity
+                Intent intent = new Intent(context, ShowCheckedInAttendeesActivity.class);
+
+                // Pass the event details as extras
+                intent.putExtra("extra_event_name_date", event.getName()+"_"+event.getDate());
+                Log.d("mapCheck", "event name passed through:"+event.getName() +"_"+event.getDate());
+
+                // Start the activity
+                context.startActivity(intent);
+            }
+        });
 
         // Set OnClickListener for the "Show Attendees" button
         show_attendees.setOnClickListener(new View.OnClickListener() {

@@ -68,7 +68,6 @@ public class ScanAndGo extends AppCompatActivity {
 
 
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data); // This should be called first
@@ -83,11 +82,11 @@ public class ScanAndGo extends AppCompatActivity {
                     // Process QR code content here
                     checkUserInEvent(qrCodeResult);
                 } else {
-                    Toast.makeText(this, "QR Code could not be decoded", Toast.LENGTH_SHORT).show();
+                    redirectToCheckinResultPage("Failed to decode QR Code", false);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Failed to decode QR Code", Toast.LENGTH_SHORT).show();
+                redirectToCheckinResultPage("Failed to decode QR Code", false);
             }
         } else {
             // Handle other onActivityResult scenarios, including the IntentIntegrator result
@@ -121,16 +120,18 @@ public class ScanAndGo extends AppCompatActivity {
 
 
     private void checkUserInEvent(String url) {
-        Log.d("ScanAndGo", "Checking events");
+        Log.d("ScanAndGo", "Passed content:" + url);
         db.collection("events").document(url).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult().exists()) {
-                Log.d("ScanAndGo", "Event info exists");
+                Log.d("ScanAndGo", url+ " info exists");
                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                 // Check if the user is already checked in
                 DocumentSnapshot eventDoc = task.getResult();
+                Log.d("ScanAndGo", "EventDoc: " + eventDoc);
                 if (eventDoc.contains("checkedInAttendees") && eventDoc.get("checkedInAttendees") instanceof List) {
                     List<String> checkedInAttendees = (List<String>) eventDoc.get("checkedInAttendees");
                     Log.d("ScanAndGo", "User checked into event?");
+                    Log.d("ScanAndGo", "Checked in attendees we found:" + checkedInAttendees);
                     if (checkedInAttendees.contains(deviceId)) {
                         // User is already checked in, redirect to result page
                         Log.d("ScanAndGo", "User is already checked into the event");

@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference usernamesRef;
     private String deviceId;
     private Button uploadProfilePicture;
+    public static Boolean isUserAdmin;
 
     private Uri profileUri;
     private String profilePictureString;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         usernamesRef = db.collection("users");
         userDataList = new ArrayList<>();
         userArrayAdapter = new UserArrayAdapter(this, userDataList);
+        isUserAdmin = false;
 
 
         // Get unique device ID
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
                             checkIfUserAdmin(deviceId, firstName, lastName, phoneNumber, email, isAdmin -> {
                                 if (isAdmin) {
+                                    isUserAdmin = true;
                                     User user = new User(firstName, lastName, email, phoneNumber, imageUri);
                                     Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
                                     intent.putExtra("user", user);

@@ -246,7 +246,7 @@ public class ShowAllEvents extends AppCompatActivity {
         });
     }
 
-    private void addSignupInfoToFirestore(Event event) {
+    public void addSignupInfoToFirestore(Event event) {
         // Get the reference to the document for the selected event
         DocumentReference eventRef = FirebaseFirestore.getInstance()
                 .collection("events")
@@ -308,7 +308,7 @@ public class ShowAllEvents extends AppCompatActivity {
     }
 
 
-    private void showDialog(String title, String message) {
+    public void showDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
                 .setMessage(message)

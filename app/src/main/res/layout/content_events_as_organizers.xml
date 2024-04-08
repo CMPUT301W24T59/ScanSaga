@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:padding="10dp"
-        android:textSize="20sp"
-        android:text="Event Name" />
+        android:text="Event Name"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/time_text"
@@ -20,18 +20,30 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:padding="10dp"
-        android:textSize="20sp"
-        android:text="Date" />
+        android:text="Date"
+        android:textSize="20sp" />
 
 
-    <Button
-        android:id="@+id/see_signed_up_attendees"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:padding="10dp"
-        android:text="Show Signed-Up Attendees"
-        android:textSize="15sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/see_checked_in_attendees"
+            android:layout_width="199dp"
+            android:layout_height="match_parent"
+            android:text="CHECKED IN" />
+
+        <Button
+            android:id="@+id/see_signed_up_attendees"
+            android:layout_width="199dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end"
+            android:padding="10dp"
+            android:text="SIGNED UP" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="fill_parent"

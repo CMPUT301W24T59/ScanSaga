@@ -1,5 +1,7 @@
 package com.example.scansaga.Views;
 
+import static com.example.scansaga.Model.MainActivity.isUserAdmin;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,18 +46,14 @@ public class CheckinResultPage extends AppCompatActivity {
         // Redirect after 5 seconds
         new Handler().postDelayed(() -> {
             Intent redirectIntent;
-            if (checkIfUserAdmin()) {
-                redirectIntent = new Intent(CheckinResultPage.this, HomepageActivity.class); // Assuming "Homepage" is the admin activity
+            if (isUserAdmin) {
+                redirectIntent = new Intent(CheckinResultPage.this, HomepageActivity.class);
             } else {
-                redirectIntent = new Intent(CheckinResultPage.this, AttendeeHomePage.class); // Assuming "AttendeeHomepage" is the attendee activity
+                redirectIntent = new Intent(CheckinResultPage.this, AttendeeHomePage.class);
             }
             startActivity(redirectIntent);
             finish();
         }, 3000);
     }
 
-    private boolean checkIfUserAdmin() {
-        // Placeholder for the actual checkIfUserAdmin logic
-        return true; // Or the actual check logic
-    }
 }

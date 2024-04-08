@@ -49,7 +49,6 @@ public class ShowAllEventsTest {
         // in the list. Depending on the actual layout, this might require targeting the button within a specific item.
         Espresso.onView(withId(R.id.button_delete)).perform(ViewActions.click());
 
-        // Additional assertions can be made here to verify the event has been deleted,
-        // for example, by checking the list size or content updates.
+
     }
 }
