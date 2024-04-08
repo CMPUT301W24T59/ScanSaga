@@ -29,7 +29,7 @@ public class NotificationSender  {
     Activity act;
 
     /** The Volley request queue for sending the notification. */
-    private RequestQueue requestQueue;
+    public RequestQueue requestQueue;
 
     /** The URL for sending POST requests to FCM server. */
     private final String postUrl = "https://fcm.googleapis.com/fcm/send";

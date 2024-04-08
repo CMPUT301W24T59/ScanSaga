@@ -2,7 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="AddEventTest">
+      <entry key="FirebaseMessagingServiceTest">
         <State />
       </entry>
       <entry key="MainActivity">
@@ -18,8 +18,14 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-08T20:36:36.892640500Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-04-08T21:19:44.233840Z" />
         </State>
+      </entry>
+      <entry key="NotificationSenderTest">
+        <State />
+      </entry>
+      <entry key="SendNotificationActivityTest">
+        <State />
       </entry>
       <entry key="Tests in 'com.example.scansaga'">
         <State />

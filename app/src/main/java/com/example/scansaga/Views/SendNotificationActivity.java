@@ -26,8 +26,9 @@ import java.util.ArrayList;
  * Activity for sending notifications to attendees of a specific event.
  */
 public class SendNotificationActivity extends AppCompatActivity {
-    private EditText notificationTitle, notificationMessage;
-    private Button notificationSendButton;
+    public EditText notificationTitle;
+    public EditText notificationMessage;
+    public Button notificationSendButton;
     String eventName, eventDate, eventDocument;
 
     /** Instance of FirebaseFirestore for database operations. */
@@ -41,7 +42,7 @@ public class SendNotificationActivity extends AppCompatActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_notification);
 
