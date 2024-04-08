@@ -61,6 +61,14 @@ public class AttendeeHomePage extends AppCompatActivity {
             }
         });
 
+        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AttendeeHomePage.this, ScanAndGo.class);
+                startActivity(intent);
+            }
+        });
+
 
         // Set click listener for edit profile button
         editProfileButton.setOnClickListener(new View.OnClickListener() {

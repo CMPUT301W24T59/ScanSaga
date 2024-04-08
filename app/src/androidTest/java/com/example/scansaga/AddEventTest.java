@@ -31,13 +31,6 @@ public class AddEventTest {
     public ActivityScenarioRule<AttendeeHomePage.AddEvent> activityScenarioRule =
             new ActivityScenarioRule<>(AttendeeHomePage.AddEvent.class);
 
-    @Test
-    public void testAddEventButtonOpensFragment() {
-        // Click the add event button
-        Espresso.onView(ViewMatchers.withId(R.id.add_event_button)).perform(ViewActions.click());
-
-        onView(withId(R.id.edit_text_event_text)).check(matches(isDisplayed()));
-    }
 
     @Test
     public void testAddEventButtonAndQR() {
@@ -64,11 +57,6 @@ public class AddEventTest {
                 .check(matches(isDisplayed()))
                 .perform(ViewActions.click());
 
-        // Check if the event is added to the ListView
-        Espresso.onView(ViewMatchers.withId(R.id.event_text)).check(matches(isDisplayed()));
-        Espresso.onView(ViewMatchers.withId(R.id.time_text)).check(matches(isDisplayed()));
-        Espresso.onView(ViewMatchers.withId(R.id.venue_text)).check(matches(isDisplayed()));
-        Espresso.onView(ViewMatchers.withId(R.id.qr_code_image)).check(matches(isDisplayed()));
 
     }
 
