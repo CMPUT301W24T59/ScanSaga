@@ -1,8 +1,11 @@
 package com.example.scansaga.Views;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,11 +54,22 @@ public class AddEvent extends AppCompatActivity implements AddEventFragment.AddE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_event);
 
+        Button useQR = findViewById(R.id.existing_qr_button);
+        useQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddEvent.this , UseExistingQr.class);
+                startActivity(intent);
+            }
+        });
+
 
         // Get the device ID
         deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         FloatingActionButton fab = findViewById(R.id.add_event_button);
+
+
         new AddEventFragment().show(getSupportFragmentManager(), "Add Event");
         fab.setOnClickListener(v -> new AddEventFragment().show(getSupportFragmentManager(), "Add Event"));
 

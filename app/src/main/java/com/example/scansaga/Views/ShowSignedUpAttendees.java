@@ -48,7 +48,7 @@ public class ShowSignedUpAttendees extends AppCompatActivity {
                             if (documentSnapshot.exists()) {
                                 ArrayList<String> attendeeIDs = (ArrayList<String>) documentSnapshot.get("signedUpAttendees");
                                 if (attendeeIDs != null && !attendeeIDs.isEmpty()) {
-                                    fetchAttendeeDetails(attendeeIDs);
+                                    fetchAttendeeDetails(attendeeIDs,eventName);
                                 } else {
                                     // Handle the case when there are no signed-up attendees
                                     Log.d(TAG, "No signed-up attendees for this event");
@@ -67,7 +67,7 @@ public class ShowSignedUpAttendees extends AppCompatActivity {
         }
     }
 
-    private void fetchAttendeeDetails(ArrayList<String> attendeeIDs) {
+    private void fetchAttendeeDetails(ArrayList<String> attendeeIDs, String eventName) {
         // Retrieve attendee details from Firestore based on their IDs
         ArrayList<User> users = new ArrayList<>();
         for (String userID : attendeeIDs) {
@@ -83,7 +83,7 @@ public class ShowSignedUpAttendees extends AppCompatActivity {
                                 users.add(user);
                                 // Notify the adapter when all user details are fetched
                                 if (users.size() == attendeeIDs.size()) {
-                                    displayAttendeeNames(users);
+                                    displayAttendeeNames(users,eventName);
                                 }
                             } else {
                                 Log.d(TAG, "No such document");
@@ -99,10 +99,10 @@ public class ShowSignedUpAttendees extends AppCompatActivity {
         }
     }
 
-    private void displayAttendeeNames(ArrayList<User> attendees) {
+    private void displayAttendeeNames(ArrayList<User> attendees , String eventName ) {
         // Populate ListView with attendee names using SignedUpAttendeesAdapter
         ListView listView = findViewById(R.id.listView);
-        adapter = new SignedUpAttendeesAdapter(this, attendees);
+        adapter = new SignedUpAttendeesAdapter(this, attendees , eventName);
         listView.setAdapter(adapter);
     }
 }

@@ -24,6 +24,18 @@
         android:textSize="20sp" />
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:text="No of Sign ins to this event:" />
+
+    <TextView
+        android:id="@+id/singin_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"/>
