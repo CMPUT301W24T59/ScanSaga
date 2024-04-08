@@ -109,6 +109,15 @@ public class MyProfile extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Generates a unique profile picture for a user based on their first and last name and sets it to an ImageView.
+     * This method first attempts to find a drawable resource that matches the first letter of the user's first name.
+     * If such a resource is found, it is used as the profile image. Otherwise, a default profile image is set.
+     * Additionally, it generates a unique background color for the ImageView based on the hash code of the user's full name.
+     *
+     * @param firstName The first name of the user, used to determine the initial for the profile picture and part of the hash for the background color.
+     * @param lastName The last name of the user, used in generating the hash for the background color.
+     */
     private void generateUniqueProfilePicture(String firstName, String lastName){
         ImageView profileImageView = (ImageView) findViewById(R.id.profile_image_view);
 

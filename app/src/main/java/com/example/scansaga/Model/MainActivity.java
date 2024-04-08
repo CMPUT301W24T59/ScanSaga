@@ -29,7 +29,10 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * MainActivity class to handle user registration and login.
+ * The MainActivity class is responsible for handling user registration and login activities
+ * within the application. It allows new users to register by entering their personal information,
+ * checks for existing users based on device ID, and navigates to different homepages based on
+ * the user's role (admin or attendee).
  */
 public class MainActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -47,7 +50,14 @@ public class MainActivity extends AppCompatActivity {
     private String profilePictureString;
     private ImageView imageView;
 
+
     // These isRunningTest is only used when trying to bypass the automatic sign in for andriodTest
+
+    /**
+     * Checks if the application is running in test mode.
+     *
+     * @return True if running in test mode, false otherwise.
+     */
     private static boolean isRunningTest = false;
 
     public static boolean isRunningTest() {
@@ -165,10 +175,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Callback interface for checking if a user is an admin.
+     */
     public interface AdminCheckCallback {
         void onAdminCheckCompleted(boolean isAdmin);
     }
 
+    /**
+     * Checks if the current user, identified by device ID and personal information,
+     * is an admin and performs actions based on the admin status.
+     *
+     * @param deviceId The unique device identifier.
+     * @param firstName The user's first name.
+     * @param lastName The user's last name.
+     * @param phoneNumber The user's phone number.
+     * @param email The user's email address.
+     * @param callback The callback to execute after admin check completion.
+     */
     public void checkIfUserAdmin(String deviceId, String firstName, String lastName, String phoneNumber, String email, AdminCheckCallback callback){
         CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
         adminRef.document(firstName + phoneNumber)
@@ -184,9 +208,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Method to add a new user to Firestore database.
+     * Adds a new user to the Firestore database with the provided user details.
      *
-     * @param user User object containing user details
+     * @param user The user object containing user details to add to the database.
      */
 
     private void addNewUser(User user) {

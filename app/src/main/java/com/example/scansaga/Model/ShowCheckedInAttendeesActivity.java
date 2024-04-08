@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An activity class that displays a list of attendees who have checked in to an event.
+ * It fetches attendee information from a Firestore database based on the event name and date,
+ * displays the list in a RecyclerView, and provides an option to view the location of checked-in attendees on a map.
+ */
 public class ShowCheckedInAttendeesActivity extends AppCompatActivity {
     private static final String EXTRA_EVENT_NAME_DATE = "extra_event_name_date"; // use a consistent key
     private Button seeMap;
@@ -61,6 +66,14 @@ public class ShowCheckedInAttendeesActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches the list of attendees who have checked into an event from Firebase Firestore
+     * and updates the RecyclerView adapter with this data.
+     * The attendees' check-in counts are also retrieved and displayed.
+     *
+     * @param eventNameDate The name and date of the event, used as the document ID in Firestore
+     *                      to identify the event and fetch attendee data.
+     */
     private void fetchAttendeesFromFirebase(String eventNameDate) {
         // Get the event's ID from the intent or however you pass it to this activity
         String eventId = eventNameDate; // Replace with actual event ID
