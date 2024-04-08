@@ -31,27 +31,17 @@
 
         <Button
             android:id="@+id/see_checked_in_attendees"
-            android:layout_width="120dp"
+            android:layout_width="199dp"
             android:layout_height="match_parent"
             android:text="CHECKED IN" />
 
         <Button
             android:id="@+id/see_signed_up_attendees"
-            android:layout_width="120dp"
+            android:layout_width="199dp"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|end"
             android:padding="10dp"
             android:text="SIGNED UP" />
-
-        <Button
-            android:id="@+id/button_send_notification"
-            android:layout_width="120dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"
-            android:padding="10dp"
-            android:text="Send Event Alerts"
-            android:textSize="15sp"
-            android:onClick="sendNotification"/>
 
     </LinearLayout>
 
