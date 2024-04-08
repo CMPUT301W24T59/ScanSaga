@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2sp"
-            android:text="Show My Signed Up Events" />
+            android:text="Signed Up Events" />
 
         <!-- Button to show old qr for old events -->
 
