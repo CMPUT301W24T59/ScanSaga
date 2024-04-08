@@ -15,8 +15,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.scansaga.R;
 
+/**
+ * An activity that displays the result of a check-in attempt to the user.
+ * It shows a success or failure message along with an image indicating the result,
+ * and then redirects the user to the appropriate home page based on their role
+ * (admin or attendee) after a short delay.
+ */
 public class CheckinResultPage extends AppCompatActivity {
 
+    /**
+     * Initializes the activity's UI, sets up the result message and image based on the check-in attempt,
+     * and schedules a redirection to the next appropriate activity based on the user's role.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     *                           Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

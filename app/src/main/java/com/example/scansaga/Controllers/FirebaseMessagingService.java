@@ -36,22 +36,23 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
 
-        db.collection("events").whereArrayContains("signedUpAttendees", deviceId)
-                .addSnapshotListener((querySnapshots, error) -> {
-                    if (error != null) {
-                        Log.e("TOKEN", "Firestore error in FirebaseMessagingService: ", error);
-                        return;
-                    }
-                    if (querySnapshots != null) {
-                        for (QueryDocumentSnapshot doc : querySnapshots) {
+        // Update the token in Firestore
+        db.collection("events")
+                .whereArrayContains("signedUpAttendees", deviceId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
                             DocumentReference eventRef = db
                                     .collection("events")
-                                    .document(String.valueOf(doc));
+                                    .document(doc.getId());
                             eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
                                     .addOnSuccessListener(aVoid -> {
                                         Log.d("TOKEN", "Token successfully added in FirebaseMessagingService");
                                     });
                         }
+                    } else {
+                        Log.e("TOKEN", "Firestore error in FirebaseMessagingService: ", task.getException());
                     }
                 });
     }

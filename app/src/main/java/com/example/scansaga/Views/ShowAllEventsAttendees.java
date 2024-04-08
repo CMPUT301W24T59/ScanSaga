@@ -35,6 +35,12 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * An activity that displays all events and allows users to sign up as attendees.
+ * It fetches event data from Firestore, displays each event with its details,
+ * and manages attendee sign-ups, including constraints like sign-up limits.
+ */
 public class ShowAllEventsAttendees extends AppCompatActivity {
     private FirebaseFirestore db;
 
@@ -84,7 +90,10 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
     //Citation: Sanchhaya Education Private Limited, GeeksforGeeks,2024
     //URL : https://www.geeksforgeeks.org/how-to-retrieve-image-from-firebase-in-realtime-in-android/
 
-    // Method to fetch users from Firestore
+    /**
+     * Fetches event data from Firestore and updates the ListView with the retrieved events.
+     * It listens for real-time updates to the events collection to ensure the UI reflects the current state of the database.
+     */
     @SuppressLint("RestrictedApi")
     private void fetchEventsFromFirestore() {
         eventsRef.addSnapshotListener((querySnapshots, error) -> {
@@ -115,6 +124,10 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         });
     }
 
+    /**
+     * Downloads and displays event images and QR codes from Firebase Storage.
+     * It utilizes Glide for efficient image handling and display within ImageView elements.
+     */
     private void DownloadEventFromFirestore() {
 
         Log.d("CALL", "TESTINGGG");
@@ -166,6 +179,13 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * Adds the user's device ID to the list of signed-up attendees for a selected event in Firestore.
+     * It checks for sign-up limits and existing sign-ups to prevent duplicates and enforce constraints.
+     *
+     * @param event The event object to which the user wants to sign up.
+     */
     private void addSignupInfoToFirestore(Event event) {
         // Get the reference to the document for the selected event
         DocumentReference eventRef = FirebaseFirestore.getInstance()
@@ -248,6 +268,13 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
     }
 
 
+    /**
+     * Shows a dialog with a custom title and message.
+     * This method is used to inform the user of sign-up limits, existing sign-ups, or other relevant information.
+     *
+     * @param title   The title of the dialog.
+     * @param message The message to be displayed in the dialog.
+     */
     private void showDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
