@@ -5,12 +5,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <uses-feature android:name="android.hardware.camera" />
-
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,7 +24,6 @@
         android:theme="@style/Theme.ScanSaga"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
 
         <activity
             android:name=".Model.MainActivity"
@@ -37,6 +38,10 @@
         </activity>
 
         <activity
+            android:name=".Views.CheckinResultPage"
+            android:exported="false" />
+        <!-- Add Homepage declaration -->
+        <activity
             android:name=".Model.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
@@ -50,10 +55,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".Views.CheckinResultPage"
-            android:exported="false" />
- <!-- Add Homepage declaration -->
+        <!-- Add Homepage declaration -->
         <activity
             android:name=".Views.HomepageActivity"
             android:exported="true" />
@@ -70,37 +72,73 @@
 
         <activity
             android:name=".Model.MyProfile"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
         <activity
             android:name=".Views.ShowAllEvents"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
         <activity
             android:name=".Views.ShowAllUsers"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
         <activity
             android:name=".Views.ShowAllEventsAttendees"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".Views.SendNotificationActivity"
+            android:exported="true">
+        </activity>
+
+
         <activity
             android:name=".Views.ShowAllImagesFromStorage"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
         <activity
             android:name=".Views.MySignedUpEvents"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
         <activity
             android:name=".Views.OrganizerEvents"
-            android:exported="true" />
-        <activity
-            android:name=".Views.ScanAndGo"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
         <activity
             android:name=".Views.ShowSignedUpAttendees"
-            android:exported="true" />
+            android:exported="true">
+        </activity>
+
+
+        <activity
+            android:name=".Views.ScanAndGo"
+            android:exported="true">
+        </activity>
+
+        <service
+            android:name=".Controllers.FirebaseMessagingService"
+            android:permission="TODO"
+            tools:ignore="ExportedService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".Views.UseExistingQr"
-            android:exported="true" />
+            android:exported="true"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDrpg54Jvi_yuF5T0FXGysxrfS8jXr6_7k" />
+
     </application>
 
 </manifest>

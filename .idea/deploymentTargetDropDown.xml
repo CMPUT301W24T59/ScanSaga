@@ -2,24 +2,33 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="MainActivity (1)">
+      <entry key="FirebaseMessagingServiceTest">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="MainActivity">
         <State>
-          <runningDeviceTargetSelectedWithDropDown>
+          <targetSelectedWithDropDown>
             <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
+              <type value="QUICK_BOOT_TARGET" />
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\forco\.android\avd\Medium_Phone_API_30.avd" />
+                  <value value="C:\Users\User\.android\avd\Pixel_6_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-08T15:39:28.683217100Z" />
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-04-08T21:19:44.233840Z" />
         </State>
+      </entry>
+      <entry key="NotificationSenderTest">
+        <State />
+      </entry>
+      <entry key="SendNotificationActivityTest">
+        <State />
+      </entry>
+      <entry key="Tests in 'com.example.scansaga'">
+        <State />
       </entry>
     </value>
   </component>

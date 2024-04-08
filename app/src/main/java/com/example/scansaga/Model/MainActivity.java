@@ -1,10 +1,18 @@
 package com.example.scansaga.Model;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -18,15 +26,19 @@ import com.example.scansaga.R;
 import com.example.scansaga.Controllers.UserArrayAdapter;
 import com.example.scansaga.Views.AttendeeHomePage;
 import com.example.scansaga.Views.HomepageActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The MainActivity class is responsible for handling user registration and login activities
@@ -45,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
     private String deviceId;
     private Button uploadProfilePicture;
     public static Boolean isUserAdmin;
+    public static final String CHANNEL_ID = "my_notification_channel";
+    public static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 100;
+    public static int notificationID = 1;
+    public static String token;
+    private static final String PREFS_NAME = "NotificationPref";
+    private static final String NOTIFICATIONS_PERMISSION = "NotificationPermissions";
 
     private Uri profileUri;
     private String profilePictureString;
@@ -173,6 +191,49 @@ public class MainActivity extends AppCompatActivity {
                 phoneNumberEditText.setText("");
             }
         });
+
+        // Check if the app has notification permission upon entry
+        if (!isNotificationPermissionGranted() && !isNotificationPermissionAskedBefore()) {
+            // Prompt the user for notification permission
+            showNotificationPermissionDialog();
+        } else {
+            // Notification permission is already granted or asked before, create notification channel
+            createNotificationChannel();
+        }
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d("TOKEN","Fetching FCM registration token failed");
+                            return;
+                        }
+                        // Get new FCM registration token
+                        token = task.getResult();
+                        // Log and toast
+                        Log.d("TOKEN", token);
+                    }
+                });
+
+        db.collection("events").whereArrayContains("signedUpAttendees", deviceId)
+                .addSnapshotListener((querySnapshots, error) -> {
+                    if (error != null) {
+                        Log.e("TOKEN", "Firestore error in FirebaseMessagingService: ", error);
+                        return;
+                    }
+                    if (querySnapshots != null) {
+                        for (QueryDocumentSnapshot doc : querySnapshots) {
+                            DocumentReference eventRef = db
+                                    .collection("events")
+                                    .document(String.valueOf(doc));
+                            eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("TOKEN", "Token successfully added in FirebaseMessagingService");
+                                    });
+                        }
+                    }
+                });
     }
 
     /**
@@ -259,6 +320,70 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            // Register the channel with the system
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public boolean isNotificationPermissionGranted() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        return notificationManager.areNotificationsEnabled();
+    }
+
+    private boolean isNotificationPermissionAskedBefore() {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        return preferences.getBoolean(NOTIFICATIONS_PERMISSION, false);
+    }
+
+    private void setNotificationPermissionAsked() {
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        preferences.edit().putBoolean(NOTIFICATIONS_PERMISSION, true).apply();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void requestNotificationPermission() {
+        if (!isNotificationPermissionGranted()) {
+            // Notification permission is not granted, navigate the user to the app's notification settings
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(intent);
+        }
+    }
+
+    private void showNotificationPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Notification Permission");
+        builder.setMessage("Do you want to receive push notifications?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Request notification permission from the user
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requestNotificationPermission();
+                }
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setNotificationPermissionAsked(); // Mark permission as asked
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
     }
 
 }

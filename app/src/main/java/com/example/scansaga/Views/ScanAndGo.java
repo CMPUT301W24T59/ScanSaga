@@ -1,4 +1,7 @@
+
 package com.example.scansaga.Views;
+
+import static com.example.scansaga.Model.MainActivity.token;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -41,6 +44,7 @@ import java.util.Map;
 public class ScanAndGo extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final int REQUEST_CODE_GALLERY = 1; // Add this line
+    List<String> signedUpAttendeeTokens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +161,8 @@ public class ScanAndGo extends AppCompatActivity {
                 DocumentSnapshot eventDoc = task.getResult();
                 if (eventDoc.contains("attendeeCheckInCounts") && eventDoc.get("attendeeCheckInCounts") instanceof Map) {
                     Map<String, Long> attendeeCheckInCounts = (Map<String, Long>) eventDoc.get("attendeeCheckInCounts");
+                    signedUpAttendeeTokens = (List<String>) eventDoc.get("checkedInAttendeeTokens");
+
                     Long currentCount = attendeeCheckInCounts.getOrDefault(deviceId, 0L);
                     // Increment the count or add the user with a count of 1 if they're not in the map
                     attendeeCheckInCounts.put(deviceId, currentCount + 1);
@@ -166,6 +172,12 @@ public class ScanAndGo extends AppCompatActivity {
                         // Redirect based on if it's a first check-in or a repeat
                         redirectToCheckinResultPage(currentCount > 0 ? "Checked In Again" : "First Check-In", true);
                     });
+
+                    if ((signedUpAttendeeTokens != null) && (!signedUpAttendeeTokens.contains(token))) {
+                        db.collection("events").document(url).update("checkedInAttendeeTokens", FieldValue.arrayUnion(token))
+                                .addOnSuccessListener(s -> redirectToCheckinResultPage("TOKEN Checked in successfully", true))
+                                .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in TOKEN", false));
+                    }
                 } else {
                     // No attendees have checked in yet, so add this user as the first
                     Map<String, Long> firstCheckIn = new HashMap<>();
@@ -203,6 +215,12 @@ public class ScanAndGo extends AppCompatActivity {
                 .set(locationData)
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Location recorded & checked in successfully", true))
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error saving location data", false));
+
+        if (!signedUpAttendeeTokens.contains(token)) {
+            db.collection("events").document(url).update("checkedInAttendeeTokens", FieldValue.arrayUnion(token))
+                    .addOnSuccessListener(s -> redirectToCheckinResultPage("TOKEN Checked in successfully", true))
+                    .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in TOKEN", false));
+        }
     }
 
     /**
@@ -231,7 +249,12 @@ public class ScanAndGo extends AppCompatActivity {
         db.collection("events").document(url).update("checkedInAttendees", FieldValue.arrayUnion(deviceId))
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Checked in successfully", true))
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in", false));
+
+        if (!signedUpAttendeeTokens.contains(token)) {
+            db.collection("events").document(url).update("checkedInAttendeeTokens", FieldValue.arrayUnion(token))
+                    .addOnSuccessListener(s -> redirectToCheckinResultPage("TOKEN Checked in successfully", true))
+                    .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in TOKEN", false));
+        }
     }
 
 }
-
