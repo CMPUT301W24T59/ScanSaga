@@ -46,7 +46,6 @@ public class AttendeeHomePage extends AppCompatActivity {
         Button showAllEventsButton = findViewById(R.id.show_all_events_button);
         Button addEventButton = findViewById(R.id.add_event_button);
         Button showAllSignedUpEvents = findViewById(R.id.show_all_signed_up_events);
-        Button useExistingQr = findViewById(R.id.show_old_qr);
         Button organizerEvents = findViewById(R.id.organizer_events);
 
         // Retrieve the user details passed from MainActivity
@@ -58,15 +57,6 @@ public class AttendeeHomePage extends AppCompatActivity {
             public void onClick(View v) {
                 // Start ShowAllEventsActivity
                 Intent intent = new Intent(AttendeeHomePage.this, ShowAllEventsAttendees.class);
-                startActivity(intent);
-            }
-        });
-
-        useExistingQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start ShowAllEventsActivity
-                Intent intent = new Intent(AttendeeHomePage.this, UseExistingQr.class);
                 startActivity(intent);
             }
         });

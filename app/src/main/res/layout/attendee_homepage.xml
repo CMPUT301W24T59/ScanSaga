@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="center"
+        android:padding="15sp"
         android:paddingStart="20dp"
         android:text="Your HomePage"
-        android:textSize="30sp"
         android:textColor="#2D2D2D"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:gravity="start"
-        android:padding="15sp" />
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <!-- Profile button -->
     <LinearLayout
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Quick Scan and Check-in" />
+            android:text="Check-in" />
 
         <Button
             android:id="@+id/add_event_button"
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Show All Events"
+            android:text="Find Events"
             android:textColorHighlight="#0B0A0A"
             android:textColorLink="#040303" />
 
@@ -80,15 +80,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Show My Signed Up Events" />
+            android:text="Signed Up Events" />
 
         <!-- Button to show old qr for old events -->
-        <Button
-            android:id="@+id/show_old_qr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2sp"
-            android:text="Show Existing QRs" />
 
         <!-- Button to sign up attendees and my events -->
         <Button
@@ -96,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="My Events and Signed Up Attendees" />
+            android:text="My Events" />
 
         <Switch
             android:id="@+id/geo_location_switch"
