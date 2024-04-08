@@ -44,7 +44,6 @@
         <activity
             android:name=".Views.CheckinResultPage"
             android:exported="false" />
-
         <activity
             android:name=".Model.MainActivity"
             android:exported="true"
@@ -55,9 +54,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Add Homepage declaration -->
+        </activity> <!-- Add Homepage declaration -->
         <activity
             android:name=".Views.HomepageActivity"
             android:exported="true" />
