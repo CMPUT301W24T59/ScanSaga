@@ -30,7 +30,7 @@ public class SignUpLimitTest {
         // Click on an event before signing up
         onView(ViewMatchers.withId(R.id.listView)).perform(click());
         // Create a dummy Event object for an event with sign-up limit reached
-        Event eventWithLimitReached = new Event("Event Name", "Event Date", "Event Venue", "Image URL", "Some Other Data", null);
+        Event eventWithLimitReached = new Event("Event Name", "Event Date", "Event Venue", "Image URL", "Some Other Data");
 
         // Perform signup action
         activityScenarioRule.getScenario().onActivity(activity -> {

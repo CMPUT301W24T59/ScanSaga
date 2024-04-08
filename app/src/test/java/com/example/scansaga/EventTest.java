@@ -15,6 +15,8 @@ public class EventTest {
     private static final String INITIAL_DATE = "2021-01-01";
     private static final String INITIAL_VENUE = "Event Venue";
     private static final String INITIAL_IMAGE_URL = "https://example.com/image.jpg";
+    private static final String INITIAL_LIMIT = "22";
+    private static final String INITIAL_QR_URL = "ASDFGHJKL";
 
     private Event event;
 
@@ -23,7 +25,7 @@ public class EventTest {
      */
     @Before
     public void setUp() {
-        event = new Event(INITIAL_NAME, INITIAL_DATE, INITIAL_VENUE, INITIAL_IMAGE_URL, null, null);
+        event = new Event(INITIAL_NAME, INITIAL_DATE, INITIAL_VENUE, INITIAL_IMAGE_URL, INITIAL_QR_URL);
     }
 
     /**
@@ -96,5 +98,17 @@ public class EventTest {
         String newImageUrl = "https://example.com/newimage.jpg";
         event.setImageUrl(newImageUrl);
         assertEquals("Image URL should be updated correctly", newImageUrl, event.getImageUrl());
+    }
+    @Test
+    public void testSetterLimit() {
+        String newName = "20";
+        event.setLimit(newName);
+        assertEquals("Event name should be updated correctly", newName, event.getLimit());
+    }
+    @Test
+    public void testNameQrUrl() {
+        String newName = "qwerty";
+        event.setQrCodeUrl(newName);
+        assertEquals("Event name should be updated correctly", newName, event.getQrUrl());
     }
 }

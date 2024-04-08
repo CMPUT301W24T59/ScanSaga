@@ -10,10 +10,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.CoreMatchers.not;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.anything;
 
 import com.example.scansaga.Views.ShowAllEvents;
 
@@ -49,6 +51,18 @@ public class ShowAllEventsTest {
         // in the list. Depending on the actual layout, this might require targeting the button within a specific item.
         Espresso.onView(withId(R.id.button_delete)).perform(ViewActions.click());
 
+
+    }
+    @Test
+    public void clickSignupButton_ShowsAlertDialog() {
+
+        Espresso.onData(anything()).inAdapterView(withId(R.id.listView)).atPosition(0).perform(click());
+
+        // Now click the signup button
+        Espresso.onView(withId(R.id.signup_button)).perform(click());
+
+        // This checks for the presence of the OK button as a simple verification
+        Espresso.onView(withText("OK")).check(matches(isDisplayed()));
 
     }
 }

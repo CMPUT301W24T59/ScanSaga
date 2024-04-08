@@ -60,7 +60,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Add Homepage declaration -->
+ <!-- Add Homepage declaration -->
         <activity
             android:name=".Views.HomepageActivity"
             android:exported="true">

@@ -119,6 +119,7 @@ public class AddEventFragment extends DialogFragment {
                 editDate.setText(eventToEdit.getDate());
                 editVenue.setText(eventToEdit.getVenue());
                 editVenue.setText(eventToEdit.getLimit());
+
                 qrUri = Uri.parse((String) eventToEdit.getQrUrl());
                 qrImageView.setImageURI(qrUri);
 
@@ -300,7 +301,7 @@ public class AddEventFragment extends DialogFragment {
             return;
         }
 
-        String qrContent = eventName + "\n" + date + "\n" + venue;
+        String qrContent = eventName + "_" + date;
         Bitmap qrBitmap = generateQRCode(qrContent);
 
             // Upload QR code image to Firebase Storage

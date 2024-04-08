@@ -82,7 +82,9 @@ public class ScanAndGo extends AppCompatActivity {
                 String qrCodeResult = decodeQRCode(bitmap);
                 if (qrCodeResult != null) {
                     // Process QR code content here
+                    Log.d("ScanAndGo", "QR result:"+qrCodeResult);
                     checkUserInEvent(qrCodeResult);
+
                 } else {
                     redirectToCheckinResultPage("Failed to decode QR Code", false);
                 }

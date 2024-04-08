@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,6 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -75,13 +75,20 @@ public class AttendeeHomePage extends AppCompatActivity {
         // Retrieve the user details passed from MainActivity
         User user = (User) getIntent().getSerializableExtra("user");
 
-
         // Set click listener for show all events button
         showAllEventsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start ShowAllEventsActivity
                 Intent intent = new Intent(AttendeeHomePage.this, ShowAllEventsAttendees.class);
+                startActivity(intent);
+            }
+        });
+
+        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AttendeeHomePage.this, ScanAndGo.class);
                 startActivity(intent);
             }
         });
@@ -94,15 +101,6 @@ public class AttendeeHomePage extends AppCompatActivity {
                 // Start EditProfileActivity
                 Intent intent = new Intent(AttendeeHomePage.this, MyProfile.class);
                 intent.putExtra("user", user);
-                startActivity(intent);
-            }
-        });
-
-        scanAndGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start ScanAndGo Activity
-                Intent intent = new Intent(AttendeeHomePage.this, ScanAndGo.class);
                 startActivity(intent);
             }
         });
