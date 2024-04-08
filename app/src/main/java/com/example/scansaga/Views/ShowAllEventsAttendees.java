@@ -2,8 +2,6 @@ package com.example.scansaga.Views;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
-import static com.example.scansaga.Model.MainActivity.token;
-
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,22 +20,25 @@ import com.bumptech.glide.Glide;
 import com.example.scansaga.Controllers.EventArrayAdapter;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.R;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * An activity that displays all events and allows users to sign up as attendees.
+ * It fetches event data from Firestore, displays each event with its details,
+ * and manages attendee sign-ups, including constraints like sign-up limits.
+ */
 public class ShowAllEventsAttendees extends AppCompatActivity {
     private FirebaseFirestore db;
 
@@ -87,7 +88,10 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
     //Citation: Sanchhaya Education Private Limited, GeeksforGeeks,2024
     //URL : https://www.geeksforgeeks.org/how-to-retrieve-image-from-firebase-in-realtime-in-android/
 
-    // Method to fetch users from Firestore
+    /**
+     * Fetches event data from Firestore and updates the ListView with the retrieved events.
+     * It listens for real-time updates to the events collection to ensure the UI reflects the current state of the database.
+     */
     @SuppressLint("RestrictedApi")
     private void fetchEventsFromFirestore() {
         eventsRef.addSnapshotListener((querySnapshots, error) -> {
@@ -101,14 +105,12 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                     String name = doc.getString("Name"); // Assuming the document ID is the event name
                     String date = doc.getString("Date");
                     String venue = doc.getString("Venue");
-                    String qrCodeUrl = doc.getString("QRCodeUrl"); // Adjust the field name as in your Firestore
                     String qrUrl = doc.getString("qrUrl"); // Adjust the field name as in your Firestore
                     String imageUrl = doc.getString("imageUrl"); // Adjust the field name as in your Firestore
 
                     Log.d("FirestoreData", "ImageUrl: " + imageUrl);
                     if (imageUrl != null) {
-                        eventList.add(new Event(name, date, venue, imageUrl,null));
-                        eventList.add(new Event(name, date, venue, imageUrl, qrUrl));
+                        eventList.add(new Event(name, date, venue, imageUrl,null,qrUrl));
                     } else {
                         Log.d("FirestoreData", "Missing imageUrl for event: " + name);
                     }
@@ -120,6 +122,10 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         });
     }
 
+    /**
+     * Downloads and displays event images and QR codes from Firebase Storage.
+     * It utilizes Glide for efficient image handling and display within ImageView elements.
+     */
     private void DownloadEventFromFirestore() {
 
         Log.d("CALL", "TESTINGGG");
@@ -169,7 +175,15 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                 // Handle any errors
             }
         });
+
     }
+
+    /**
+     * Adds the user's device ID to the list of signed-up attendees for a selected event in Firestore.
+     * It checks for sign-up limits and existing sign-ups to prevent duplicates and enforce constraints.
+     *
+     * @param event The event object to which the user wants to sign up.
+     */
     private void addSignupInfoToFirestore(Event event) {
         // Get the reference to the document for the selected event
         DocumentReference eventRef = FirebaseFirestore.getInstance()
@@ -179,7 +193,6 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         // Check if the device ID already exists in the list of signed-up attendees
         eventRef.get().addOnSuccessListener(documentSnapshot -> {
             List<String> signedUpAttendees = (List<String>) documentSnapshot.get("signedUpAttendees");
-            List<String> signedUpAttendeeTokens = (List<String>) documentSnapshot.get("signedUpAttendeeTokens");
             String limitStr = (String) documentSnapshot.get("Limit");
 
             if (limitStr != null && !limitStr.isEmpty()) {
@@ -196,7 +209,6 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                     // Update the signedUpAttendees field by appending the new deviceId
                     eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
                             .addOnSuccessListener(aVoid -> {
-//                                subscribeUser(event);
                                 // Show success message
                                 Toast.makeText(ShowAllEventsAttendees.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
                                 Log.d("Firestore", "Device signed up successfully for the event!");
@@ -204,15 +216,6 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                             .addOnFailureListener(e -> {
                                 // Handle failure to update Firestore
                                 Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
-                            });
-
-                    eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d("Firestore Token", "Token successfully added");
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle failure to update Firestore
-                                Log.e("Firestore Token", "Token not added in ShowAllEventsAttendees", e);
                             });
                 }
             } else {
@@ -226,7 +229,6 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                     // Update the signedUpAttendees field by appending the new deviceId
                     eventRef.update("signedUpAttendees", FieldValue.arrayUnion(deviceId))
                             .addOnSuccessListener(aVoid -> {
-//                                subscribeUser(event);
                                 // Show success message
                                 Toast.makeText(ShowAllEventsAttendees.this, "You have signed up successfully for the event!", Toast.LENGTH_SHORT).show();
                                 Log.d("Firestore", "Device signed up successfully for the event!");
@@ -234,15 +236,6 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
                             .addOnFailureListener(e -> {
                                 // Handle failure to update Firestore
                                 Log.e("Firestore", "Error adding device ID to the list of signed-up attendees", e);
-                            });
-
-                    eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d("Firestore Token", "Token successfully added");
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle failure to update Firestore
-                                Log.e("Firestore Token", "Token not added in ShowAllEventsAttendees", e);
                             });
                 }
             }
@@ -253,6 +246,13 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
     }
 
 
+    /**
+     * Shows a dialog with a custom title and message.
+     * This method is used to inform the user of sign-up limits, existing sign-ups, or other relevant information.
+     *
+     * @param title   The title of the dialog.
+     * @param message The message to be displayed in the dialog.
+     */
     private void showDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
@@ -263,20 +263,4 @@ public class ShowAllEventsAttendees extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-//    private void subscribeUser(Event event) {
-//        FirebaseMessaging.getInstance().subscribeToTopic(event.getName() + "_" + event.getDate())
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        String msg = "Subscribed";
-//                        if (!task.isSuccessful()) {
-//                            msg = "Subscribe failed";
-//                        }
-//                        Log.d("Subscription", msg);
-//                        Toast.makeText(ShowAllEventsAttendees.this, msg, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 }
-

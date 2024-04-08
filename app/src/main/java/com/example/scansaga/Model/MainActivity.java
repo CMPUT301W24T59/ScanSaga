@@ -1,18 +1,10 @@
 package com.example.scansaga.Model;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -26,29 +18,24 @@ import com.example.scansaga.R;
 import com.example.scansaga.Controllers.UserArrayAdapter;
 import com.example.scansaga.Views.AttendeeHomePage;
 import com.example.scansaga.Views.HomepageActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * MainActivity class to handle user registration and login.
+ * The MainActivity class is responsible for handling user registration and login activities
+ * within the application. It allows new users to register by entering their personal information,
+ * checks for existing users based on device ID, and navigates to different homepages based on
+ * the user's role (admin or attendee).
  */
 public class MainActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    public static final String CHANNEL_ID = "my_notification_channel";
-    public static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 100;
-    public static int notificationID = 1;
-
     ArrayList<User> userDataList;
     UserArrayAdapter userArrayAdapter;
     private EditText firstNameEditText, lastNameEditText, emailEditText, phoneNumberEditText;
@@ -62,12 +49,15 @@ public class MainActivity extends AppCompatActivity {
     private Uri profileUri;
     private String profilePictureString;
     private ImageView imageView;
-    public static String token;
-    private static final String PREF_NAME = "NotificationPref";
-    private static final String NOTIFICATION_PERMISSION = "NotificationPermissions";
 
 
-    // These isRunningTest is only used when trying to bypass the automatic sign in for androidTest
+    // These isRunningTest is only used when trying to bypass the automatic sign in for andriodTest
+
+    /**
+     * Checks if the application is running in test mode.
+     *
+     * @return True if running in test mode, false otherwise.
+     */
     private static boolean isRunningTest = false;
 
     public static boolean isRunningTest() {
@@ -183,55 +173,26 @@ public class MainActivity extends AppCompatActivity {
                 phoneNumberEditText.setText("");
             }
         });
-
-        // Check if the app has notification permission upon entry
-        if (!isNotificationPermissionGranted() && !isNotificationPermissionAskedBefore()) {
-            // Prompt the user for notification permission
-            showNotificationPermissionDialog();
-        } else {
-            // Notification permission is already granted or asked before, create notification channel
-            createNotificationChannel();
-        }
-
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.d("TOKEN","Fetching FCM registration token failed");
-                            return;
-                        }
-                        // Get new FCM registration token
-                        token = task.getResult();
-                        // Log and toast
-                        Log.d("TOKEN", token);
-                    }
-                });
-
-        db.collection("events").whereArrayContains("signedUpAttendees", deviceId)
-                .addSnapshotListener((querySnapshots, error) -> {
-                    if (error != null) {
-                        Log.e("TOKEN", "Firestore error in FirebaseMessagingService: ", error);
-                        return;
-                    }
-                    if (querySnapshots != null) {
-                        for (QueryDocumentSnapshot doc : querySnapshots) {
-                            DocumentReference eventRef = db
-                                    .collection("events")
-                                    .document(String.valueOf(doc));
-                            eventRef.update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
-                                    .addOnSuccessListener(aVoid -> {
-                                        Log.d("TOKEN", "Token successfully added in FirebaseMessagingService");
-                                    });
-                        }
-                    }
-                });
     }
 
+    /**
+     * Callback interface for checking if a user is an admin.
+     */
     public interface AdminCheckCallback {
         void onAdminCheckCompleted(boolean isAdmin);
     }
 
+    /**
+     * Checks if the current user, identified by device ID and personal information,
+     * is an admin and performs actions based on the admin status.
+     *
+     * @param deviceId The unique device identifier.
+     * @param firstName The user's first name.
+     * @param lastName The user's last name.
+     * @param phoneNumber The user's phone number.
+     * @param email The user's email address.
+     * @param callback The callback to execute after admin check completion.
+     */
     public void checkIfUserAdmin(String deviceId, String firstName, String lastName, String phoneNumber, String email, AdminCheckCallback callback){
         CollectionReference adminRef = FirebaseFirestore.getInstance().collection("admin");
         adminRef.document(firstName + phoneNumber)
@@ -247,9 +208,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Method to add a new user to Firestore database.
+     * Adds a new user to the Firestore database with the provided user details.
      *
-     * @param user User object containing user details
+     * @param user The user object containing user details to add to the database.
      */
 
     private void addNewUser(User user) {
@@ -297,69 +258,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Firebase", e.getMessage());
                     }
                 });
+
     }
 
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            // Register the channel with the system
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    public boolean isNotificationPermissionGranted() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        return notificationManager.areNotificationsEnabled();
-    }
-
-    private boolean isNotificationPermissionAskedBefore() {
-        SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        return preferences.getBoolean(NOTIFICATION_PERMISSION, false);
-    }
-
-    private void setNotificationPermissionAsked() {
-        SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        preferences.edit().putBoolean(NOTIFICATION_PERMISSION, true).apply();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void requestNotificationPermission() {
-        if (!isNotificationPermissionGranted()) {
-            // Notification permission is not granted, navigate the user to the app's notification settings
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivity(intent);
-        }
-    }
-
-    private void showNotificationPermissionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Notification Permission");
-        builder.setMessage("Do you want to receive push notifications?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Request notification permission from the user
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    requestNotificationPermission();
-                }
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                setNotificationPermissionAsked(); // Mark permission as asked
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
-    }
 }

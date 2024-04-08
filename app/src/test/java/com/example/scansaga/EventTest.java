@@ -25,7 +25,7 @@ public class EventTest {
      */
     @Before
     public void setUp() {
-        event = new Event(INITIAL_NAME, INITIAL_DATE, INITIAL_VENUE, INITIAL_IMAGE_URL, INITIAL_QR_URL);
+        event = new Event(INITIAL_NAME, INITIAL_DATE, INITIAL_VENUE, INITIAL_IMAGE_URL, INITIAL_LIMIT, INITIAL_QR_URL);
     }
 
     /**

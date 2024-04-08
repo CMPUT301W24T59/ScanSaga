@@ -2,10 +2,10 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="AddEventTest">
+      <entry key="MainActivity (1)">
         <State />
       </entry>
-      <entry key="MainActivity">
+      <entry key="app">
         <State>
           <runningDeviceTargetSelectedWithDropDown>
             <Target>
@@ -13,16 +13,13 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\User\.android\avd\Pixel_6_API_34.avd" />
+                  <value value="C:\Users\forco\.android\avd\Medium_Phone_API_30.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-08T17:31:49.602327200Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-04-08T15:39:28.683217100Z" />
         </State>
-      </entry>
-      <entry key="Tests in 'com.example.scansaga'">
-        <State />
       </entry>
     </value>
   </component>

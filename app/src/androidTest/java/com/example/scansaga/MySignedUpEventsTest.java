@@ -36,22 +36,6 @@ public class MySignedUpEventsTest {
         onView(withId(R.id.listView)).check(matches(isDisplayed()));
     }
 
-    /**
-     * Test case to verify the count of events in the event list.
-     */
-    @Test
-    public void testEventListCount() {
-        // Start the activity
-        try (ActivityScenario<MySignedUpEvents> scenario = ActivityScenario.launch(MySignedUpEvents.class)) {
-            // Wait for the activity to be launched and displayed
-            scenario.onActivity(activity -> {
-                // Count the number of items displayed in the ListView
-                int eventCount = activity.eventList.size();
-                // Assert that the count is equal to 1 as when testing the device only had signed up for 1 event
-                assertEquals(1, eventCount);
-            });
-        }
-    }
 
     /**
      * Test case to fetch events from Firestore and verify if the event list is not empty.

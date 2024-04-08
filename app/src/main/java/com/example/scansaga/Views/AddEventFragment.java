@@ -119,7 +119,6 @@ public class AddEventFragment extends DialogFragment {
                 editDate.setText(eventToEdit.getDate());
                 editVenue.setText(eventToEdit.getVenue());
                 editVenue.setText(eventToEdit.getLimit());
-
                 qrUri = Uri.parse((String) eventToEdit.getQrUrl());
                 qrImageView.setImageURI(qrUri);
 
@@ -151,10 +150,6 @@ public class AddEventFragment extends DialogFragment {
             positiveButton.setOnClickListener(v -> {
                 // Handle click on positive button
                 uploadImageAndSaveEventData();
-
-                Intent intent = new Intent(requireContext(), AttendeeHomePage.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
             });
         });
 

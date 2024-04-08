@@ -63,6 +63,5 @@ public class ShowAllEventsTest {
 
         // This checks for the presence of the OK button as a simple verification
         Espresso.onView(withText("OK")).check(matches(isDisplayed()));
-
     }
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.scansaga.Controllers.ImageAdapter;
 import com.example.scansaga.Controllers.QRImageAdapter;
 import com.example.scansaga.R;
 import com.google.firebase.storage.FirebaseStorage;
@@ -23,6 +24,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+/**
+ * An activity dedicated to fetching and displaying a collection of existing QR code images stored in Firebase Storage.
+ * It uses Glide to asynchronously download QR code images as Bitmaps, which are then displayed in a RecyclerView.
+ */
 public class UseExistingQr extends AppCompatActivity {
     ArrayList<Bitmap> imageList;
     RecyclerView recyclerView;
