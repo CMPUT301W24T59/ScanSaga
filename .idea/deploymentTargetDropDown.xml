@@ -6,15 +6,6 @@
         <State />
       </entry>
       <entry key="MainActivity">
-        <State />
-      </entry>
-      <entry key="Tests in 'com.example.scansaga'">
-        <State />
-      </entry>
-      <entry key="UseExistingQrTest">
-        <State />
-      </entry>
-      <entry key="app">
         <State>
           <runningDeviceTargetSelectedWithDropDown>
             <Target>
@@ -22,13 +13,16 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\forco\.android\avd\Medium_Phone_API_30.avd" />
+                  <value value="C:\Users\User\.android\avd\Pixel_6_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-04-08T15:39:28.683217100Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-04-08T19:18:22.019663200Z" />
         </State>
+      </entry>
+      <entry key="Tests in 'com.example.scansaga'">
+        <State />
       </entry>
     </value>
   </component>

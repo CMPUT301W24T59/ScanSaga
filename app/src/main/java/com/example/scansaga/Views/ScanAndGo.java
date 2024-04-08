@@ -1,5 +1,7 @@
 package com.example.scansaga.Views;
 
+import static com.example.scansaga.Model.MainActivity.token;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -35,6 +37,7 @@ import java.util.Map;
 public class ScanAndGo extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final int REQUEST_CODE_GALLERY = 1; // Add this line
+    List<String> signedUpAttendeeTokens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,8 +135,15 @@ public class ScanAndGo extends AppCompatActivity {
                 Log.d("ScanAndGo", "EventDoc: " + eventDoc);
                 if (eventDoc.contains("checkedInAttendees") && eventDoc.get("checkedInAttendees") instanceof List) {
                     List<String> checkedInAttendees = (List<String>) eventDoc.get("checkedInAttendees");
+                    signedUpAttendeeTokens = (List<String>) eventDoc.get("checkedInAttendeeTokens");
                     Log.d("ScanAndGo", "User checked into event?");
                     Log.d("ScanAndGo", "Checked in attendees we found:" + checkedInAttendees);
+
+                    if ((signedUpAttendeeTokens != null) && (!signedUpAttendeeTokens.contains(token))) {
+                        db.collection("events").document(url).update("checkedInAttendeeTokens", FieldValue.arrayUnion(token))
+                                .addOnSuccessListener(s -> redirectToCheckinResultPage("TOKEN Checked in successfully", true))
+                                .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in TOKEN", false));
+                    }
                     if (checkedInAttendees.contains(deviceId)) {
                         // User is already checked in, redirect to result page
                         Log.d("ScanAndGo", "User is already checked into the event");
@@ -173,6 +183,12 @@ public class ScanAndGo extends AppCompatActivity {
                 .set(locationData)
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Location recorded & checked in successfully", true))
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error saving location data", false));
+
+        if (!signedUpAttendeeTokens.contains(token)) {
+            db.collection("events").document(url).update("checkedInAttendeeTokens", FieldValue.arrayUnion(token))
+                    .addOnSuccessListener(s -> redirectToCheckinResultPage("TOKEN Checked in successfully", true))
+                    .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in TOKEN", false));
+        }
     }
 
     // This redirects users to the CheckInResultPage. It displays either a checkin error or succes
@@ -190,6 +206,12 @@ public class ScanAndGo extends AppCompatActivity {
         db.collection("events").document(url).update("checkedInAttendees", FieldValue.arrayUnion(deviceId))
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Checked in successfully", true))
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in", false));
+
+        if (!signedUpAttendeeTokens.contains(token)) {
+            db.collection("events").document(url).update("checkedInAttendeeTokens", FieldValue.arrayUnion(token))
+                    .addOnSuccessListener(s -> redirectToCheckinResultPage("TOKEN Checked in successfully", true))
+                    .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in TOKEN", false));
+        }
     }
 
 }
