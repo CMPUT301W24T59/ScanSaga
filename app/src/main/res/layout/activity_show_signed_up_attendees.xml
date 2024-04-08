@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <!-- Welcome TextView -->
+    <TextView
+        android:id="@+id/title_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="20dp"
+        android:text="List Of Signed-Up Attendees for this Event..."
+        android:textSize="30dp"
+        android:textColor="#2D2D2D"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:gravity="start"
+        android:padding="20sp" />
+
+    <!-- ListView to display events -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
+
+
+</LinearLayout>
