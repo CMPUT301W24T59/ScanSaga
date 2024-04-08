@@ -137,7 +137,7 @@ public class ScanAndGo extends AppCompatActivity {
                     if (checkedInAttendees.contains(deviceId)) {
                         // User is already checked in, redirect to result page
                         Log.d("ScanAndGo", "User is already checked into the event");
-                        redirectToCheckinResultPage("Already checked in", false);
+                        redirectToCheckinResultPage("Checked In Again", true);
                         return; // Stop further execution
                     }
                 }
