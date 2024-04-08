@@ -1,5 +1,11 @@
 package com.example.scansaga.Model;
 
+/**
+ * A utility class for managing the geolocation data of the application.
+ * It provides static methods to set and get the latitude, longitude, and permissions
+ * status associated with geolocation. This class uses a private constructor to prevent
+ * instantiation, functioning solely through static members and methods.
+ */
 public class GeoLocationManager {
 
     private static boolean permissions = false;

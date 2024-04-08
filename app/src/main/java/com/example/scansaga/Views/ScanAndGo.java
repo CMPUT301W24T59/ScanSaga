@@ -32,6 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * An activity designed to handle the scanning of QR codes for event check-ins.
+ * It supports scanning directly using the camera or choosing an image from the gallery.
+ * Upon successful scanning, it updates the attendee's check-in status in a Firestore database
+ * and optionally uploads their current location if permission is granted and data is available.
+ */
 public class ScanAndGo extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final int REQUEST_CODE_GALLERY = 1; // Add this line
@@ -68,6 +74,15 @@ public class ScanAndGo extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Handles the result from both the QR code scanning intent and the gallery image selection.
+     *
+     * @param requestCode The integer request code originally supplied to startActivityForResult(),
+     *                    allowing to identify who this result came from.
+     * @param resultCode  The integer result code returned by the child activity through its setResult().
+     * @param data        An Intent, which can return result data to the caller.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data); // This should be called first
@@ -102,6 +117,12 @@ public class ScanAndGo extends AppCompatActivity {
         }
     }
 
+    /**
+     * Decodes a QR code from a Bitmap and returns the text content encoded in the QR code.
+     *
+     * @param bitmap The bitmap image of the QR code to decode.
+     * @return The decoded text from the QR code, or null if decoding fails.
+     */
     private String decodeQRCode(Bitmap bitmap) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -121,6 +142,12 @@ public class ScanAndGo extends AppCompatActivity {
     }
 
 
+    /**
+     * Checks the user into the event identified by the URL encoded in the QR code.
+     * It updates the Firestore database with the new check-in count or adds the user to the event's attendee list.
+     *
+     * @param url The URL encoded in the QR code, used to identify the event document in Firestore.
+     */
     private void checkUserInEvent(String url) {
         Log.d("ScanAndGo", "Passed content:" + url);
         db.collection("events").document(url).get().addOnCompleteListener(task -> {
@@ -154,6 +181,15 @@ public class ScanAndGo extends AppCompatActivity {
     }
 
 
+    /**
+     * Optionally uploads the user's current location to Firestore under the event document and marks them as checked in.
+     * This method is used when location data is available and permissions are granted.
+     *
+     * @param url       The URL identifying the event document in Firestore.
+     * @param deviceId  The device ID of the user's device, used as a unique identifier.
+     * @param latitude  The latitude component of the user's current location.
+     * @param longitude The longitude component of the user's current location.
+     */
     private void uploadLocationAndCheckInAttendee(String url, String deviceId, double latitude, double longitude) {
         Map<String, Object> locationData = new HashMap<>();
         // Upload user info with location and device ID
@@ -169,8 +205,13 @@ public class ScanAndGo extends AppCompatActivity {
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error saving location data", false));
     }
 
-    // This redirects users to the CheckInResultPage. It displays either a checkin error or succes
-    // With text provided for each case
+    /**
+     * Redirects the user to the CheckinResultPage activity, displaying a success or failure message
+     * based on the result of the check-in attempt or QR code decoding process.
+     *
+     * @param message The message to display on the CheckinResultPage.
+     * @param success A boolean indicating if the check-in was successful or not.
+     */
     private void redirectToCheckinResultPage(String message, boolean success) {
         Intent intent = new Intent(ScanAndGo.this, CheckinResultPage.class);
         intent.putExtra("checkInMessage", message);
@@ -178,8 +219,14 @@ public class ScanAndGo extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // This adds the user to the "Checked in". Users who do not have location enabled will just be
-    // Added to this
+
+    /**
+     * Adds the user to the list of checked-in attendees without location data.
+     * This method is a fallback for when location permissions are not granted or location data is not available.
+     *
+     * @param url      The URL identifying the event document in Firestore.
+     * @param deviceId The device ID of the user's device, used as a unique identifier.
+     */
     private void checkInAttendeeWithoutLocation(String url, String deviceId) {
         db.collection("events").document(url).update("checkedInAttendees", FieldValue.arrayUnion(deviceId))
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Checked in successfully", true))
