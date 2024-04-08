@@ -12,6 +12,7 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String pictureUrl;
+    private String checkedInCount;
 
     /**
      * Constructor for creating a User object.
@@ -27,9 +28,15 @@ public class User implements Serializable {
         this.email = email;
         this.phone = phone;
         this.pictureUrl = pictureUrl;
+        this.checkedInCount = "";
     }
 
     // Getters
+    public String getCheckedInCount() {
+        return checkedInCount;
+    }
+
+    // Setters
     public String getLastname() {
         return lastname;
     }
@@ -44,6 +51,11 @@ public class User implements Serializable {
 
     public String getPhone() {
         return phone;
+    }
+
+    // Setters
+    public void setCount(String count) {
+        this.checkedInCount = count;
     }
 
     // Setters
