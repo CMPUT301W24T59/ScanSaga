@@ -33,12 +33,19 @@
         android:src="@android:drawable/ic_input_add"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <ListView
-        android:id="@+id/event_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/add_event_button"
-        android:layout_marginTop="16dp"
-        />
+    <Button
+        android:id="@+id/existing_qr_button"
+        android:layout_width="274dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="322dp"
+        android:layout_marginEnd="66dp"
+        android:layout_marginBottom="236dp"
+        android:text="Use An Existing QR"
+        android:textSize="20dp" />
 
 </RelativeLayout>

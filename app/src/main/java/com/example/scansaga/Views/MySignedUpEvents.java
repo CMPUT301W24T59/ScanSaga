@@ -34,7 +34,7 @@ public class MySignedUpEvents extends AppCompatActivity {
     private CollectionReference eventsRef;
     private ListView listView;
     private EventArrayAdapter eventAdapter;
-    private ArrayList<Event> eventList;
+    public ArrayList<Event> eventList;
 
     /**
      * Called when the activity is created. Initializes UI elements, sets up Firestore
@@ -72,7 +72,7 @@ public class MySignedUpEvents extends AppCompatActivity {
      */
 
     @SuppressLint("RestrictedApi")
-    private void fetchEventsFromFirestore() {
+    public void fetchEventsFromFirestore() {
         eventsRef.whereArrayContains("signedUpAttendees", deviceId)
                 .addSnapshotListener((querySnapshots, error) -> {
                     if (error != null) {
@@ -102,7 +102,7 @@ public class MySignedUpEvents extends AppCompatActivity {
                 });
     }
 
-    private void DownloadEventFromFirestore() {
+    public void DownloadEventFromFirestore() {
 
         Log.d("CALL", "TESTINGGG");
         ImageView imageView = findViewById(R.id.poster_image);

@@ -21,7 +21,7 @@ public class ShowSignedUpAttendees extends AppCompatActivity {
 
     private static final String TAG = "ShowSignedUpAttendees";
     private FirebaseFirestore db;
-    private SignedUpAttendeesAdapter adapter;
+    public SignedUpAttendeesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

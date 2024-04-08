@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scansaga.R;
+import com.example.scansaga.Views.AddEvent;
 import com.example.scansaga.Views.AddEventFragment;
 
 import java.io.ByteArrayOutputStream;
@@ -68,7 +69,7 @@ public class QRImageAdapter extends RecyclerView.Adapter<QRImageAdapter.ViewHold
                 byte[] byteArray = stream.toByteArray();
 
                 // Start an activity for result and pass the bitmap byte array
-                Intent intent = new Intent(context, AddEventFragment.class);
+                Intent intent = new Intent(context, AddEvent.class);
                 intent.putExtra("bitmapByteArray", byteArray);
                 ((Activity) context).startActivityForResult(intent, 1);
             });

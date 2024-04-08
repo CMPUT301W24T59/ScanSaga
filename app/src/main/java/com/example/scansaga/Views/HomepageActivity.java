@@ -58,6 +58,7 @@ public class HomepageActivity extends AppCompatActivity {
         Button showAllUsers = findViewById(R.id.show_all_users_button);
         Button showAllSignedUpEvents = findViewById(R.id.show_all_signed_up_events);
         Button organizerEvents = findViewById(R.id.organizer_events);
+        Button useExistingQr = findViewById(R.id.show_old_qr);
         Switch geoLocation = findViewById(R.id.geo_location_switch);
 
 
@@ -74,6 +75,14 @@ public class HomepageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start ShowAllEventsActivity
                 Intent intent = new Intent(HomepageActivity.this, ShowAllEvents.class);
+                startActivity(intent);
+            }
+        });
+        useExistingQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start ShowAllEventsActivity
+                Intent intent = new Intent(HomepageActivity.this, UseExistingQr.class);
                 startActivity(intent);
             }
         });
