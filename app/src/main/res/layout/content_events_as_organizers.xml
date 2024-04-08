@@ -45,6 +45,16 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button_send_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:padding="10dp"
+        android:text="Send Event Alerts"
+        android:textSize="15sp"
+        android:onClick="sendNotification"/>
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

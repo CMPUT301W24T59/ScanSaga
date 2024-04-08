@@ -86,7 +86,7 @@ public class OrganizerEvents extends AppCompatActivity{
                             String name = doc.getString("Name");
                             String date = doc.getString("Date");
                             String venue = doc.getString("Venue");
-                            eventList.add(new Event(name, date, venue, null, null,null));
+                            eventList.add(new Event(name, date, venue, null, null));
                         }
 
                         Log.d(TAG, "EVENT LIST: " + eventList);

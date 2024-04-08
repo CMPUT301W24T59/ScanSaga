@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.scansaga.Controllers.ImageAdapter;
 import com.example.scansaga.Controllers.QRImageAdapter;
 import com.example.scansaga.R;
 import com.google.firebase.storage.FirebaseStorage;

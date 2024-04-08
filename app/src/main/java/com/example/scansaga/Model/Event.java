@@ -2,11 +2,6 @@ package com.example.scansaga.Model;
 
 import android.graphics.Bitmap;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import android.graphics.Bitmap;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -18,9 +13,9 @@ public class Event implements Serializable {
     private String date;
     private String limit;
     private String venue;
-    private String qrUrl;
+    private Bitmap qrCodeBitmap;
     private String imageUrl; // URL of the event's poster image
-
+    private String qrUrl;
 
     /**
      * Constructor for creating an Event object with QR code bitmap and image URL.
@@ -30,15 +25,23 @@ public class Event implements Serializable {
      * @param venue        The venue of the event.
      * @param imageUrl     The URL of the image associated with the event.
      */
-    public Event(String name, String date, String venue,  String imageUrl, String limit, String qrUrl) {
+    public Event(String name, String date, String venue,  String imageUrl, String qrUrl) {
         this.name = name;
         this.date = date;
         this.venue = venue;
         this.limit = limit;
         this.imageUrl = imageUrl;
+        this.qrCodeBitmap = null;
         this.qrUrl = qrUrl;
-    }
 
+        try {
+            this.qrCodeBitmap = generateQrCodeBitmap();
+        } catch (WriterException e) {
+            e.printStackTrace();
+            // Handle the exception
+            this.qrCodeBitmap = null;
+        }
+    }
 
     // Getter for the name of the event
     public String getName() {
@@ -80,6 +83,39 @@ public class Event implements Serializable {
         this.venue = venue;
     }
 
+    // Getter for the QR code bitmap of the event
+    public Bitmap getQrCodeBitmap() {
+        return qrCodeBitmap;
+    }
+    public Bitmap generateQrCodeBitmap() throws WriterException {
+        QRCodeWriter writer = new QRCodeWriter();
+        BitMatrix bitMatrix = writer.encode((this.name+this.venue).toString(), BarcodeFormat.QR_CODE, 512, 512);
+        int width = bitMatrix.getWidth();
+        int height = bitMatrix.getHeight();
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                bmp.setPixel(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+            }
+        }
+        return bmp;
+    }
+
+    // Setter for the QR code bitmap of the event
+    public void setQrCodeBitmap(Bitmap qrCodeBitmap) {
+        this.qrCodeBitmap = qrCodeBitmap;
+    }
+
+    // Getter for the QR code bitmap of the event
+    public String getQrUrl() {
+        return qrUrl;
+    }
+
+    // Setter for the QR code bitmap of the event
+    public void setQrCodeUrl(String qrUrl) {
+        this.qrUrl = qrUrl;
+    }
+
     // Getter for the image URL of the event's poster
     public String getImageUrl() {
         return imageUrl;
@@ -89,9 +125,4 @@ public class Event implements Serializable {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
-    public String getQrUrl() {return qrUrl;}
-    public void setQrCodeUrl(String qrUrl) {
-            this.qrUrl = qrUrl;
-        }
 }

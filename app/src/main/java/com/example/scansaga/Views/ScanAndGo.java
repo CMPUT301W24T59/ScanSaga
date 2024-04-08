@@ -1,5 +1,7 @@
 package com.example.scansaga.Views;
 
+import static com.example.scansaga.Model.MainActivity.token;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;

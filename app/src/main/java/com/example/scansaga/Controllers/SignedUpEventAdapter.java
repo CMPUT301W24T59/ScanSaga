@@ -9,13 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.Model.ShowCheckedInAttendeesActivity;
 import com.example.scansaga.R;
+import com.example.scansaga.Views.SendNotificationActivity;
 import com.example.scansaga.Views.ShowSignedUpAttendees;
 
 import java.util.ArrayList;
@@ -48,6 +51,7 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
         TextView eventName = convertView.findViewById(R.id.event_text);
         TextView eventDate = convertView.findViewById(R.id.time_text);
         Button show_attendees = convertView.findViewById(R.id.see_signed_up_attendees);
+        Button sendNotification = convertView.findViewById(R.id.button_send_notification);
         Button show_check_ins = convertView.findViewById(R.id.see_checked_in_attendees);
 
 
@@ -94,7 +98,17 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
                 context.startActivity(intent);
             }
         });
-
+        // Set OnClickListener for the send_notification button
+        sendNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Event event = events.get(position);
+                Intent intent = new Intent(context, SendNotificationActivity.class);
+                intent.putExtra("Name", event.getName());
+                intent.putExtra("Date", event.getDate());
+                context.startActivity(intent);
+            }
+        });
         // Return the completed view to render on screen
         return convertView;
     }
