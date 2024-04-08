@@ -23,9 +23,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDrpg54Jvi_yuF5T0FXGysxrfS8jXr6_7k" />
 
         <activity
             android:name=".Model.MainActivity"
@@ -101,6 +98,9 @@
         <activity
             android:name=".Views.UseExistingQr"
             android:exported="true" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDrpg54Jvi_yuF5T0FXGysxrfS8jXr6_7k" />
     </application>
 
 </manifest>

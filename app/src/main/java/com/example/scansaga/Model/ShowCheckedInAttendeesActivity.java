@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ShowCheckedInAttendeesActivity extends AppCompatActivity {
     private static final String EXTRA_EVENT_NAME_DATE = "extra_event_name_date"; // use a consistent key
@@ -64,27 +65,32 @@ public class ShowCheckedInAttendeesActivity extends AppCompatActivity {
         // Get the event's ID from the intent or however you pass it to this activity
         String eventId = eventNameDate; // Replace with actual event ID
 
-        // Get the document reference for the event
+        // First, fetch the event document to get the attendee check-in counts
         db.collection("events").document(eventId)
                 .get()
                 .addOnSuccessListener(eventDocument -> {
                     if (eventDocument.exists()) {
-                        List<String> checkedInUserIds = (List<String>) eventDocument.get("checkedInAttendees");
-                        if (checkedInUserIds != null) {
+                        Map<String, Long> attendeeCheckInCounts = (Map<String, Long>) eventDocument.get("attendeeCheckInCounts");
+                        List<String> checkedInUserIds = new ArrayList<>(attendeeCheckInCounts.keySet());
+                        if (!checkedInUserIds.isEmpty()) {
                             for (String userId : checkedInUserIds) {
                                 // Fetch each user's details
                                 db.collection("users").document(userId)
                                         .get()
                                         .addOnSuccessListener(userDocument -> {
                                             if (userDocument.exists()) {
-                                                // Create a user object
+                                                // Assume checkInCount is initialized to 0 if not present
+                                                Long checkInCount = attendeeCheckInCounts.getOrDefault(userId, 0L);
+
+                                                // Create a user object including the check-in count
                                                 User user = new User(
                                                         userDocument.getString("Firstname"),
                                                         userDocument.getString("Lastname"),
                                                         userDocument.getString("Email"),
                                                         userDocument.getString("PhoneNumber"),
-                                                        userDocument.getString("ProfilePicture") // This should be a URL to the picture
+                                                        userDocument.getString("ProfilePicture")
                                                 );
+                                                user.setCount(checkInCount.toString());
                                                 // Add user to the list
                                                 attendeesList.add(user);
 

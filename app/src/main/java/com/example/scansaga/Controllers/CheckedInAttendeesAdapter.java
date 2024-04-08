@@ -35,6 +35,8 @@ public class CheckedInAttendeesAdapter extends RecyclerView.Adapter<CheckedInAtt
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView firstnameTextView;
         public TextView lastnameTextView;
+        public TextView checkedInTitle;
+        public TextView checkedInCount;
         public ImageView profileDisplay;
 
         public ViewHolder(View itemView) {
@@ -42,6 +44,8 @@ public class CheckedInAttendeesAdapter extends RecyclerView.Adapter<CheckedInAtt
             firstnameTextView = itemView.findViewById(R.id.textview_firstname);
             lastnameTextView = itemView.findViewById(R.id.textview_lastname);
             profileDisplay = itemView.findViewById(R.id.checked_in_profile_image);
+            checkedInTitle = itemView.findViewById(R.id.checked_in_count_title);
+            checkedInCount = itemView.findViewById(R.id.check_in_count);
         }
     }
 
@@ -57,6 +61,8 @@ public class CheckedInAttendeesAdapter extends RecyclerView.Adapter<CheckedInAtt
         User attendee = attendeesList.get(position);
         holder.firstnameTextView.setText(attendee.getFirstname());
         holder.lastnameTextView.setText(attendee.getLastname());
+        if (attendee.getCheckedInCount()=="0"){attendee.setCount("1");}
+        holder.checkedInCount.setText(attendee.getCheckedInCount());
 
         // Always generate a unique profile picture
         generateUniqueProfilePicture(attendee.getFirstname(), attendee.getLastname(), holder.profileDisplay);

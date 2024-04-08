@@ -125,32 +125,26 @@ public class ScanAndGo extends AppCompatActivity {
         Log.d("ScanAndGo", "Passed content:" + url);
         db.collection("events").document(url).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult().exists()) {
-                Log.d("ScanAndGo", url+ " info exists");
+                Log.d("ScanAndGo", url + " info exists");
                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                // Check if the user is already checked in
                 DocumentSnapshot eventDoc = task.getResult();
-                Log.d("ScanAndGo", "EventDoc: " + eventDoc);
-                if (eventDoc.contains("checkedInAttendees") && eventDoc.get("checkedInAttendees") instanceof List) {
-                    List<String> checkedInAttendees = (List<String>) eventDoc.get("checkedInAttendees");
-                    Log.d("ScanAndGo", "User checked into event?");
-                    Log.d("ScanAndGo", "Checked in attendees we found:" + checkedInAttendees);
-                    if (checkedInAttendees.contains(deviceId)) {
-                        // User is already checked in, redirect to result page
-                        Log.d("ScanAndGo", "User is already checked into the event");
-                        redirectToCheckinResultPage("Checked In Again", true);
-                        return; // Stop further execution
-                    }
-                }
-                boolean locationPermission = GeoLocationManager.checkPermissions();
-                Log.d("ScanAndGo", "Checking user location");
-                if (locationPermission) {
-                    Log.d("ScanAndGo", "Location permitted");
-                    double latitude = GeoLocationManager.getLatitude();
-                    double longitude = GeoLocationManager.getLongitude();
-                    uploadLocationAndCheckInAttendee(url, deviceId, latitude, longitude);
+                if (eventDoc.contains("attendeeCheckInCounts") && eventDoc.get("attendeeCheckInCounts") instanceof Map) {
+                    Map<String, Long> attendeeCheckInCounts = (Map<String, Long>) eventDoc.get("attendeeCheckInCounts");
+                    Long currentCount = attendeeCheckInCounts.getOrDefault(deviceId, 0L);
+                    // Increment the count or add the user with a count of 1 if they're not in the map
+                    attendeeCheckInCounts.put(deviceId, currentCount + 1);
+                    // Update Firestore document with the new count
+                    db.collection("events").document(url).update("attendeeCheckInCounts", attendeeCheckInCounts).addOnSuccessListener(aVoid -> {
+                        Log.d("ScanAndGo", "Updated attendee check-in count");
+                        // Redirect based on if it's a first check-in or a repeat
+                        redirectToCheckinResultPage(currentCount > 0 ? "Checked In Again" : "First Check-In", true);
+                    });
                 } else {
-                    Log.d("ScanAndGo", "Location not permitted, checking in without location");
-                    checkInAttendeeWithoutLocation(url, deviceId);
+                    // No attendees have checked in yet, so add this user as the first
+                    Map<String, Long> firstCheckIn = new HashMap<>();
+                    firstCheckIn.put(deviceId, 1L);
+                    db.collection("events").document(url).update("attendeeCheckInCounts", firstCheckIn);
+                    redirectToCheckinResultPage("First Check-In", true);
                 }
             } else {
                 Log.d("ScanAndGo", "Couldn't check into event");
