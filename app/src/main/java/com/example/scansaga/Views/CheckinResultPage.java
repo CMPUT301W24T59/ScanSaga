@@ -47,9 +47,9 @@ public class CheckinResultPage extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             Intent redirectIntent;
             if (isUserAdmin) {
-                redirectIntent = new Intent(CheckinResultPage.this, HomepageActivity.class); // Assuming "Homepage" is the admin activity
+                redirectIntent = new Intent(CheckinResultPage.this, HomepageActivity.class);
             } else {
-                redirectIntent = new Intent(CheckinResultPage.this, AttendeeHomePage.class); // Assuming "AttendeeHomepage" is the attendee activity
+                redirectIntent = new Intent(CheckinResultPage.this, AttendeeHomePage.class);
             }
             startActivity(redirectIntent);
             finish();

@@ -120,16 +120,18 @@ public class ScanAndGo extends AppCompatActivity {
 
 
     private void checkUserInEvent(String url) {
-        Log.d("ScanAndGo", "Checking events");
+        Log.d("ScanAndGo", "Passed content:" + url);
         db.collection("events").document(url).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult().exists()) {
-                Log.d("ScanAndGo", "Event info exists");
+                Log.d("ScanAndGo", url+ " info exists");
                 String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                 // Check if the user is already checked in
                 DocumentSnapshot eventDoc = task.getResult();
+                Log.d("ScanAndGo", "EventDoc: " + eventDoc);
                 if (eventDoc.contains("checkedInAttendees") && eventDoc.get("checkedInAttendees") instanceof List) {
                     List<String> checkedInAttendees = (List<String>) eventDoc.get("checkedInAttendees");
                     Log.d("ScanAndGo", "User checked into event?");
+                    Log.d("ScanAndGo", "Checked in attendees we found:" + checkedInAttendees);
                     if (checkedInAttendees.contains(deviceId)) {
                         // User is already checked in, redirect to result page
                         Log.d("ScanAndGo", "User is already checked into the event");
