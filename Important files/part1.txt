@@ -1,0 +1,11 @@
+Group: CMPUT301W24T59
+Team Name: ScanSaga
+
+https://github.com/CMPUT301W24T59/ScanSaga
+
+budhatho  : Rosy Budhathoki 
+iqbal3	  : Fahim
+frashid2  : Farhan
+knice	    : Kaylem	
+manahil3  : Manahil	
+parinay   : Parinay
