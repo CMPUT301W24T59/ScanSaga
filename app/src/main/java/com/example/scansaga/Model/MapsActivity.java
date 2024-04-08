@@ -28,6 +28,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.List;
 
+/**
+ * MapsActivity is responsible for displaying a Google Map and placing markers on it
+ * based on the location data fetched from Firestore. This activity uses a custom info window
+ * adapter to display personalized information about each marker.
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final String EXTRA_EVENT_NAME_DATE = "extra_event_name_date"; // use a consistent key
 
@@ -46,6 +51,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * Callback that is triggered when the map is ready to be used.
+     * This method sets up the map and fetches location data based on the event name and date.
+     *
+     * @param googleMap The GoogleMap that is ready to be used.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -78,6 +89,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Adds a marker on the map for a given location fetched from Firestore.
+     * This method also fetches the user's name and last name to display in the marker's info window.
+     *
+     * @param locationDocument The Firestore document containing the location data.
+     */
     private void addLocationMarker(QueryDocumentSnapshot locationDocument) {
         double latitude = locationDocument.getDouble("latitude");
         double longitude = locationDocument.getDouble("longitude");
@@ -111,6 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
     private class UserMarkerInfo {
         final String firstName;
         final String lastName;
@@ -121,6 +139,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
+    /**
+     * Generates a unique profile picture based on the user's first name and last name.
+     * This method creates a bitmap with the user's initials on a colored background.
+     *
+     * @param firstName The user's first name.
+     * @param lastName The user's last name.
+     * @return A drawable representing the generated profile picture.
+     */
     private Drawable generateUniqueProfilePicture(String firstName, String lastName) {
         int color = generateBackgroundColor(firstName, lastName);
         char firstLetter = firstName.toLowerCase().charAt(0);
@@ -138,12 +164,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return new BitmapDrawable(getResources(), result);
     }
 
+    /**
+     * Generates a background color for the profile picture based on the user's name.
+     *
+     * @param firstName The user's first name.
+     * @param lastName The user's last name.
+     * @return An integer representing the generated color.
+     */
+
     private int generateBackgroundColor(String firstName, String lastName) {
         int hash = (firstName + lastName).hashCode();
         // Ensuring the alpha value is set to 255 (fully opaque)
         return Color.argb(255, Math.abs(hash) % 256, (Math.abs(hash) / 256) % 256, (Math.abs(hash) / (256 * 256)) % 256);
     }
 
+    /**
+     * Converts a Drawable to a Bitmap.
+     * This method is used to create a bitmap from the generated drawable profile pictures.
+     *
+     * @param drawable The drawable to convert.
+     * @return A bitmap representation of the drawable.
+     */
     private Bitmap drawableToBitmap(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
