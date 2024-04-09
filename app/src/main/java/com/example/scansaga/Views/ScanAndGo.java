@@ -1,5 +1,7 @@
 package com.example.scansaga.Views;
 
+import static com.example.scansaga.Model.MainActivity.token;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -161,6 +163,11 @@ public class ScanAndGo extends AppCompatActivity {
                     // Increment the count or add the user with a count of 1 if they're not in the map
                     attendeeCheckInCounts.put(deviceId, currentCount + 1);
                     // Update Firestore document with the new count
+                    db.collection("events").document(url).update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                            .addOnSuccessListener(v -> {
+                                Log.d("TOKEN", "Token successfully added in ScanAndGo");
+                            });
+
                     db.collection("events").document(url).update("attendeeCheckInCounts", attendeeCheckInCounts).addOnSuccessListener(aVoid -> {
                         Log.d("ScanAndGo", "Updated attendee check-in count");
                         // Redirect based on if it's a first check-in or a repeat
@@ -170,6 +177,12 @@ public class ScanAndGo extends AppCompatActivity {
                     // No attendees have checked in yet, so add this user as the first
                     Map<String, Long> firstCheckIn = new HashMap<>();
                     firstCheckIn.put(deviceId, 1L);
+
+                    db.collection("events").document(url).update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                            .addOnSuccessListener(v -> {
+                                Log.d("TOKEN", "Token successfully added in ScanAndGo");
+                            });
+
                     db.collection("events").document(url).update("attendeeCheckInCounts", firstCheckIn);
                     redirectToCheckinResultPage("First Check-In", true);
                 }
@@ -203,6 +216,11 @@ public class ScanAndGo extends AppCompatActivity {
                 .set(locationData)
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Location recorded & checked in successfully", true))
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error saving location data", false));
+
+        db.collection("events").document(url).update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                .addOnSuccessListener(v -> {
+                    Log.d("TOKEN", "Token successfully added in ScanAndGo");
+                });
     }
 
     /**
@@ -231,6 +249,11 @@ public class ScanAndGo extends AppCompatActivity {
         db.collection("events").document(url).update("checkedInAttendees", FieldValue.arrayUnion(deviceId))
                 .addOnSuccessListener(s -> redirectToCheckinResultPage("Checked in successfully", true))
                 .addOnFailureListener(f -> redirectToCheckinResultPage("Error checking in", false));
+
+        db.collection("events").document(url).update("signedUpAttendeeTokens", FieldValue.arrayUnion(token))
+                .addOnSuccessListener(v -> {
+                    Log.d("TOKEN", "Token successfully added in ScanAndGo");
+                });
     }
 
 }

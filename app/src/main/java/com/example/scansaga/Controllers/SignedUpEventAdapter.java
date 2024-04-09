@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.example.scansaga.Model.Event;
 import com.example.scansaga.Model.ShowCheckedInAttendeesActivity;
 import com.example.scansaga.R;
+import com.example.scansaga.Views.SendNotificationActivity;
 import com.example.scansaga.Views.ShowSignedUpAttendees;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
         TextView eventDate = convertView.findViewById(R.id.time_text);
         Button show_attendees = convertView.findViewById(R.id.see_signed_up_attendees);
         Button show_check_ins = convertView.findViewById(R.id.see_checked_in_attendees);
+        Button sendNotification = convertView.findViewById(R.id.button_send_notification);
 
 
         // Get the data item for this position
@@ -91,6 +93,17 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
                 intent.putExtra("Date", event.getDate());
 
                 // Start the activity
+                context.startActivity(intent);
+            }
+        });
+
+        sendNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Event event = events.get(position);
+                Intent intent = new Intent(context, SendNotificationActivity.class);
+                intent.putExtra("Name", event.getName());
+                intent.putExtra("Date", event.getDate());
                 context.startActivity(intent);
             }
         });
