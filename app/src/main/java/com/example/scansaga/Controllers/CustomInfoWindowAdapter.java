@@ -97,5 +97,3 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         return mWindow;
     }
 }
-
-
