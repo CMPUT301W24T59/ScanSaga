@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String NOTIFICATIONS_PERMISSION = "NotificationPermissions";
 
 
+
     // These isRunningTest is only used when trying to bypass the automatic sign in for andriodTest
 
     /**

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -82,46 +83,51 @@ public class ShowCheckedInAttendeesActivity extends AppCompatActivity {
         db.collection("events").document(eventId)
                 .get()
                 .addOnSuccessListener(eventDocument -> {
+                    Log.d("ScanAndGo", "document found");
                     if (eventDocument.exists()) {
                         Map<String, Long> attendeeCheckInCounts = (Map<String, Long>) eventDocument.get("attendeeCheckInCounts");
-                        List<String> checkedInUserIds = new ArrayList<>(attendeeCheckInCounts.keySet());
-                        if (!checkedInUserIds.isEmpty()) {
-                            for (String userId : checkedInUserIds) {
-                                // Fetch each user's details
-                                db.collection("users").document(userId)
-                                        .get()
-                                        .addOnSuccessListener(userDocument -> {
-                                            if (userDocument.exists()) {
-                                                // Assume checkInCount is initialized to 0 if not present
-                                                Long checkInCount = attendeeCheckInCounts.getOrDefault(userId, 0L);
+                        if (attendeeCheckInCounts != null && !attendeeCheckInCounts.isEmpty()) {
+                            List<String> checkedInUserIds = new ArrayList<>(attendeeCheckInCounts.keySet());
+                            if (!checkedInUserIds.isEmpty()) {
+                                for (String userId : checkedInUserIds) {
+                                    // Fetch each user's details
+                                    db.collection("users").document(userId)
+                                            .get()
+                                            .addOnSuccessListener(userDocument -> {
+                                                if (userDocument.exists()) {
+                                                    // Assume checkInCount is initialized to 0 if not present
+                                                    Long checkInCount = attendeeCheckInCounts.getOrDefault(userId, 0L);
 
-                                                // Create a user object including the check-in count
-                                                User user = new User(
-                                                        userDocument.getString("Firstname"),
-                                                        userDocument.getString("Lastname"),
-                                                        userDocument.getString("Email"),
-                                                        userDocument.getString("PhoneNumber"),
-                                                        userDocument.getString("ProfilePicture")
-                                                );
-                                                user.setCount(checkInCount.toString());
-                                                // Add user to the list
-                                                attendeesList.add(user);
+                                                    // Create a user object including the check-in count
+                                                    User user = new User(
+                                                            userDocument.getString("Firstname"),
+                                                            userDocument.getString("Lastname"),
+                                                            userDocument.getString("Email"),
+                                                            userDocument.getString("PhoneNumber"),
+                                                            userDocument.getString("ProfilePicture")
+                                                    );
+                                                    user.setCount(checkInCount.toString());
+                                                    // Add user to the list
+                                                    attendeesList.add(user);
 
-                                                // Notify the adapter that the data has changed
-                                                adapter.notifyDataSetChanged();
-                                            }
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            // Handle the error
-                                            Log.e("FetchUserError", "Error fetching user details", e);
-                                        });
+                                                    // Notify the adapter that the data has changed
+                                                    adapter.notifyDataSetChanged();
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                // Handle the error
+                                                Log.e("ScanAndGo", "Error fetching user details", e);
+                                            });
+                                }
                             }
-                        }
+                        } else {
+                            Log.d("ScanAndGo", "No attendees have checked in");
+                            Toast.makeText(ShowCheckedInAttendeesActivity.this, "No attendees have checked in", Toast.LENGTH_LONG).show();}
                     }
                 })
                 .addOnFailureListener(e -> {
                     // Handle the error
-                    Log.e("FetchEventError", "Error fetching event", e);
+                    Log.e("ScanAndGo", "Nopeople found", e);
                 });
     }
 
