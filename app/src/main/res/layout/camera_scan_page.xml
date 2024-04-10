@@ -69,11 +69,8 @@
             android:id="@+id/geo_location_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:height="48dp"
             android:forceHasOverlappingRendering="true"
-            android:foregroundGravity="center"
-            android:gravity="center"
             android:switchTextAppearance="@style/TextAppearance.AppCompat.Display1"
             android:text="@string/geo_location_label"
             android:textAlignment="viewEnd" />
