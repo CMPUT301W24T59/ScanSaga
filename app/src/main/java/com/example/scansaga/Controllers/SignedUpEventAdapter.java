@@ -2,6 +2,7 @@ package com.example.scansaga.Controllers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.appcompat.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 
@@ -18,12 +20,15 @@ import com.example.scansaga.Model.ShowCheckedInAttendeesActivity;
 import com.example.scansaga.R;
 import com.example.scansaga.Views.SendNotificationActivity;
 import com.example.scansaga.Views.ShowSignedUpAttendees;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.util.ArrayList;
 
 public class SignedUpEventAdapter extends ArrayAdapter<Event> {
     private ArrayList<Event> events;
     private Context context;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
      * Constructor for the EventArrayAdapter.
@@ -59,6 +64,32 @@ public class SignedUpEventAdapter extends ArrayAdapter<Event> {
         // Populate the data into the template view using the data object
         eventName.setText(event.getName());
         eventDate.setText(event.getDate());
+
+        convertView.setOnLongClickListener(v -> {
+            // Show AlertDialog to confirm deletion
+            new AlertDialog.Builder(context)
+                    .setTitle("Delete Event")
+                    .setMessage("Are you sure you want to delete this event?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Perform deletion of the event here
+                            String documentName = event.getName() + "_" + event.getDate();
+                            db.collection("events").document(documentName)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        events.remove(position); // Remove the event from the list
+                                        notifyDataSetChanged(); // Notify the adapter to refresh the ListView
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        // Handle failure
+                                    });
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            return true;
+        });
 
         show_check_ins.setOnClickListener(new View.OnClickListener() {
             @Override
