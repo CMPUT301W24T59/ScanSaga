@@ -8,7 +8,6 @@ package com.example.scansaga.Model;
  */
 public class GeoLocationManager {
 
-    private static boolean permissions = false;
     private static double latitude = 0.0;
     private static double longitude = 0.0;
 
@@ -17,13 +16,11 @@ public class GeoLocationManager {
 
     // Static method to update the latitude
     public static void setLatitude(double lat) {
-        permissions = true;
         latitude = lat;
     }
 
     // Static method to update the longitude
     public static void setLongitude(double lon) {
-        permissions = true;
         longitude = lon;
     }
 
@@ -36,10 +33,5 @@ public class GeoLocationManager {
     public static double getLongitude() {
         return longitude;
     }
-    public static void setPermissions(Boolean state){
-        permissions = state;
-    }
-    public static Boolean checkPermissions(){
-        return permissions;
-    }
+
 }
