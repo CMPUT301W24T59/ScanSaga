@@ -37,16 +37,4 @@
         android:textColorHint="#2D2D2D"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <Button
-        android:id="@+id/existing_qr_button"
-        android:layout_width="207dp"
-        android:layout_height="60dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="27dp"
-        android:layout_marginBottom="23dp"
-        android:background="#009688"
-        android:text="Use An Existing QR"
-        android:textSize="18dp" />
-
 </RelativeLayout>
