@@ -92,14 +92,6 @@
             android:layout_marginBottom="16dp"
             android:text="My Events" />
 
-        <Switch
-            android:id="@+id/geo_location_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="@string/geo_location_label" />
-
-
     </LinearLayout>
 
 </LinearLayout>
