@@ -4,7 +4,7 @@ Team Name: ScanSaga
 https://github.com/CMPUT301W24T59/ScanSaga
 
 budhatho  : Rosy Budhathoki 
-iqbal3	  : Fahim
+fiqbal3	  : Fahim
 frashid2  : Farhan
 knice	    : Kaylem	
 manahil3  : Manahil	
